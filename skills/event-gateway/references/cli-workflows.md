@@ -92,7 +92,9 @@ Create a connection with explicit parameters:
 hookdeck connection create \
   --name "stripe-to-api" \
   --source-name "stripe" \
+  --source-type WEBHOOK \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks
 ```
 
@@ -105,6 +107,7 @@ hookdeck connection create \
   --source-type STRIPE \
   --source-webhook-secret "whsec_..." \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks
 ```
 
@@ -114,7 +117,9 @@ With rules (filter, retry, transform):
 hookdeck connection create \
   --name "filtered" \
   --source-name "stripe" \
+  --source-type WEBHOOK \
   --destination-name "payments" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks \
   --rules '[{"type":"filter","body":{"type":{"$eq":"payment_intent.succeeded"}}}]'
 ```
@@ -123,8 +128,8 @@ List, pause, and unpause connections:
 
 ```sh
 hookdeck connection list
-hookdeck connection pause --connection-id web_xxx
-hookdeck connection unpause --connection-id web_xxx
+hookdeck connection pause web_xxx
+hookdeck connection unpause web_xxx
 ```
 
 For the full connection reference, fetch [/docs/cli/connection.md](https://hookdeck.com/docs/cli/connection.md).
@@ -135,7 +140,7 @@ Switch between projects:
 
 ```sh
 hookdeck project list
-hookdeck project use --project-id proj_xxx
+hookdeck project use my-org my-project
 ```
 
 For the full project reference, fetch [/docs/cli/project.md](https://hookdeck.com/docs/cli/project.md).

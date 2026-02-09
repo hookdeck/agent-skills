@@ -26,7 +26,9 @@ Filter by event type:
 hookdeck connection create \
   --name "stripe-payments" \
   --source-name "stripe" \
+  --source-type WEBHOOK \
   --destination-name "payments" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks \
   --rules '[{"type":"filter","body":{"type":{"$eq":"payment_intent.succeeded"}}}]'
 ```
@@ -146,7 +148,9 @@ Automatically retry failed deliveries (non-2xx responses) with configurable back
 hookdeck connection create \
   --name "with-retries" \
   --source-name "my-source" \
+  --source-type WEBHOOK \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks \
   --rules '[{"type":"retry","strategy":"exponential","interval":60000,"count":5}]'
 ```
@@ -187,7 +191,9 @@ Field-based deduplication:
 hookdeck connection create \
   --name "deduped" \
   --source-name "my-source" \
+  --source-type WEBHOOK \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks \
   --rules '[{"type":"deduplicate","window":3600000,"include_fields":["body.id"]}]'
 ```

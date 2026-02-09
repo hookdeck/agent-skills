@@ -47,6 +47,7 @@ hookdeck connection create \
   --source-type STRIPE \
   --source-webhook-secret "whsec_..." \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks/stripe
 ```
 
@@ -58,7 +59,9 @@ Source receives events from service A, Connection transforms the payload and rou
 hookdeck connection create \
   --name "crm-to-email" \
   --source-name "crm-events" \
+  --source-type WEBHOOK \
   --destination-name "email-service" \
+  --destination-type HTTP \
   --destination-url https://email-service.example.com/hooks \
   --rule-transform-code 'addHandler("transform", (request, context) => {
     request.body = { email: request.body.contact.email, event: request.body.type };
@@ -75,7 +78,9 @@ High-volume Source receives events from your own SDKs or devices. Multiple Conne
 hookdeck connection create \
   --name "devices-to-processor" \
   --source-name "device-events" \
+  --source-type WEBHOOK \
   --destination-name "event-processor" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/process \
   --rules '[{"type":"filter","body":{"type":{"$in":["telemetry","heartbeat"]}}}]'
 ```

@@ -66,7 +66,9 @@ For explicit control, use `hookdeck connection create`:
 hookdeck connection create \
   --name "stripe-to-api" \
   --source-name "stripe" \
+  --source-type WEBHOOK \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks
 ```
 
@@ -80,7 +82,9 @@ The CLI outputs your **Source URL** (e.g., `https://hkdk.events/xxx`). Configure
 hookdeck connection create \
   --name "stripe-webhooks" \
   --source-name "stripe" \
+  --source-type WEBHOOK \
   --destination-name "payments-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks/stripe
 ```
 
@@ -103,6 +107,7 @@ hookdeck connection create \
   --source-type STRIPE \
   --source-webhook-secret "whsec_..." \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks
 ```
 

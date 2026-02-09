@@ -34,6 +34,7 @@ hookdeck connection create \
   --source-type STRIPE \
   --source-webhook-secret "whsec_..." \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks
 ```
 
@@ -47,8 +48,10 @@ For the full list of Source Types, fetch [/docs/sources.md](https://hookdeck.com
 hookdeck connection create \
   --name "custom-auth" \
   --source-name "my-source" \
-  --source-verification '{"type":"api_key","configs":{"header_key":"x-api-key","api_key":"my-secret-key"}}' \
+  --source-type WEBHOOK \
+  --source-config '{"auth_type":"API_KEY","auth":{"header_key":"x-api-key","api_key":"my-secret-key"}}' \
   --destination-name "my-api" \
+  --destination-type HTTP \
   --destination-url http://localhost:3000/webhooks
 ```
 

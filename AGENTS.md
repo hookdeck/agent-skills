@@ -92,7 +92,10 @@ hookdeck/agent-skills/
       SKILL.md
   AGENTS.md                            # This file
   CLAUDE.md
+  CONTRIBUTING.md
+  LICENSE
   README.md
+  TESTING.md
 ```
 
 ### Naming convention

@@ -49,6 +49,14 @@ The `event-gateway` skill includes a staged integration workflow:
 - [Outpost docs](https://outpost.hookdeck.com/docs/)
 - [API reference](https://hookdeck.com/docs/api)
 
+## Contributing
+
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
 ## Related
 
 - [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills) -- Provider-specific webhook skills (Stripe, Shopify, GitHub, etc.)
+
+## License
+
+MIT

@@ -64,8 +64,10 @@ function getReadmeContent(resultDir: string): string {
 
 function getHandlerContent(resultDir: string, framework: Framework): string {
   switch (framework) {
-    case 'express':
-      return readFileSafe(resultDir, 'index.js');
+    case 'express': {
+      const root = readFileSafe(resultDir, 'index.js');
+      return root || readFileSafe(resultDir, 'src', 'index.js');
+    }
     case 'nextjs':
       return readFileSafe(resultDir, 'app', 'webhooks', 'route.ts');
     case 'fastapi':

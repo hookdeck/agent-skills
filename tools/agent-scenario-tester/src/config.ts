@@ -111,3 +111,48 @@ export function listScenarios(repoRoot: string): { name: string; displayName: st
   const doc = loadScenariosDoc(repoRoot);
   return doc.scenarios.map((s) => ({ name: s.name, displayName: s.displayName }));
 }
+
+/**
+ * Parse a result directory name to infer scenario, framework, and provider.
+ * Example: "receive-provider-webhooks-express-stripe-20260212145955" or
+ * "receive-provider-webhooks-express-stripe-20260212145955." (trailing dot allowed)
+ * Returns undefined if parsing fails.
+ */
+export function parseResultDirName(
+  dirName: string,
+  scenarioNames: string[]
+): { scenarioName: string; framework: Framework; provider?: string } | undefined {
+  const base = dirName.replace(/\.$/, '').trim();
+  const parts = base.split('-');
+  if (parts.length < 2) return undefined;
+
+  // Last segment is often a 15-digit timestamp; remove it
+  if (/^\d{14,16}$/.test(parts[parts.length - 1])) {
+    parts.pop();
+  }
+  if (parts.length < 2) return undefined;
+
+  // Find framework (rightmost match)
+  let framework: Framework | undefined;
+  let fwIndex = -1;
+  for (const fw of SUPPORTED_FRAMEWORKS) {
+    const i = parts.lastIndexOf(fw);
+    if (i !== -1) {
+      framework = fw as Framework;
+      fwIndex = i;
+      break;
+    }
+  }
+  if (!framework || fwIndex < 0) return undefined;
+
+  // Dir format: <scenario>-<framework>-<provider?>-<timestamp>. So before framework = scenario.
+  const beforeFramework = parts.slice(0, fwIndex).join('-');
+  const afterFramework = parts.slice(fwIndex + 1).join('-');
+  const provider = afterFramework || undefined;
+
+  // Match beforeFramework to a known scenario name
+  if (scenarioNames.includes(beforeFramework)) {
+    return { scenarioName: beforeFramework, framework, provider };
+  }
+  return undefined;
+}

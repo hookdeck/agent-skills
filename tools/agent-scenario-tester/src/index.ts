@@ -8,7 +8,7 @@ import { Command } from 'commander';
 import * as fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { findRepoRoot, listScenarios, loadScenario } from './config.js';
+import { findRepoRoot, listScenarios, loadScenario, parseResultDirName } from './config.js';
 import { checkAll } from './preflight.js';
 import { initializeProject } from './project.js';
 import { listGeneratedFiles, writeReport } from './results.js';
@@ -35,6 +35,73 @@ program
         console.log(`  ${s.name.padEnd(28)} ${s.displayName}`);
       }
       console.log('\nFrameworks: express, nextjs, fastapi');
+    } catch (e) {
+      console.error((e as Error).message);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('assess <resultDir>')
+  .description(
+    'Re-run the assessor on an existing result directory and update report.md (e.g. after fixing the assessor or when handler is in src/index.js)'
+  )
+  .action((resultDirArg: string) => {
+    try {
+      const repoRoot = findRepoRoot(process.cwd());
+      const resultsDir = path.join(repoRoot, 'test-results');
+      let resultDir: string;
+      if (path.isAbsolute(resultDirArg)) {
+        resultDir = resultDirArg;
+      } else if (fs.existsSync(resultDirArg)) {
+        resultDir = path.resolve(resultDirArg);
+      } else {
+        const withDot = path.join(resultsDir, resultDirArg);
+        const withoutDot = path.join(resultsDir, resultDirArg.replace(/\.$/, ''));
+        resultDir = fs.existsSync(withDot) ? withDot : withoutDot;
+      }
+
+      if (!fs.existsSync(resultDir) || !fs.statSync(resultDir).isDirectory()) {
+        console.error(`Result directory not found: ${resultDir}`);
+        process.exit(1);
+      }
+
+      const scenarioNames = listScenarios(repoRoot).map((s) => s.name);
+      const dirName = path.basename(resultDir);
+      const parsed = parseResultDirName(dirName, scenarioNames);
+      if (!parsed) {
+        console.error(
+          `Could not infer scenario/framework from directory name: ${dirName}. Use format: <scenario>-<framework>-<provider?>-<timestamp>`
+        );
+        process.exit(1);
+      }
+
+      const resolved = loadScenario(repoRoot, parsed.scenarioName, parsed.framework, parsed.provider);
+      const reportFile = path.join(resultDir, 'report.md');
+      const logFile = path.join(resultDir, 'run.log');
+      let duration = 0;
+      try {
+        const reportContent = fs.readFileSync(reportFile, 'utf-8');
+        const m = reportContent.match(/\*\*Duration:\*\*\s*([\d.]+)s/);
+        if (m) duration = parseFloat(m[1]);
+      } catch {
+        // keep 0
+      }
+
+      const result = {
+        scenario: resolved.config,
+        framework: resolved.framework,
+        provider: resolved.provider,
+        directory: resultDir,
+        duration,
+        filesGenerated: listGeneratedFiles(resultDir),
+        logFile,
+        reportFile,
+        prompt: resolved.prompt,
+      };
+      writeReport(result, reportFile);
+      console.log(`Updated ${reportFile}`);
+      console.log(`  Scenario: ${resolved.config.name}, Framework: ${resolved.framework}${resolved.provider ? `, Provider: ${resolved.provider}` : ''}`);
     } catch (e) {
       console.error((e as Error).message);
       process.exit(1);

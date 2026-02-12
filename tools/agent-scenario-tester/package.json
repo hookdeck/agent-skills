@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "tsx src/index.ts",
     "run": "tsx src/index.ts run",
-    "list": "tsx src/index.ts list"
+    "list": "tsx src/index.ts list",
+    "assess": "tsx src/index.ts assess"
   },
   "keywords": ["testing", "agent-skills", "scenarios", "evaluation"],
   "license": "ISC",

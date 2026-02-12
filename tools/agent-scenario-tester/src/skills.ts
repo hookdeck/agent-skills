@@ -1,8 +1,12 @@
 /**
- * Install agent-skills (event-gateway) and optionally webhook-skills provider skill.
+ * Install only the event-gateway skill for scenario runs.
+ * We do not install provider skills (e.g. stripe-webhooks) from webhook-skills.
+ * The event-gateway skill guides the agent that those skills exist and how to
+ * use them (layered composition); the agent may choose to install the provider
+ * skill (e.g. npx skills add hookdeck/webhook-skills --skill stripe-webhooks)
+ * and then use it.
  */
 
-import { execSync } from 'child_process';
 import * as fs from 'fs';
 import path from 'path';
 import type { ResolvedScenario } from './types.js';
@@ -26,36 +30,11 @@ export function installEventGatewaySkill(projectDir: string, repoRoot: string): 
 }
 
 /**
- * Install webhook-skills provider skill via npx skills add if available.
- * Falls back to no-op if npx skills add fails (e.g. repo not cloned).
+ * Install all skills required for the scenario. We only install event-gateway.
+ * Provider skills (stripe-webhooks, shopify-webhooks, etc.) are not installed
+ * here; the agent is guided by the event-gateway skill to discover and
+ * install them if needed.
  */
-export function installProviderSkill(
-  projectDir: string,
-  provider: string
-): void {
-  const skillName = `${provider}-webhooks`;
-  try {
-    execSync(
-      `npx skills add hookdeck/webhook-skills --skill ${skillName} --yes`,
-      { cwd: projectDir, stdio: 'pipe', timeout: 60000 }
-    );
-  } catch {
-    // Optional: if webhook-skills not available, agent may still use event-gateway only
-    const skillsDir = path.join(projectDir, '.claude', 'skills');
-    const fallbackDir = path.join(projectDir, '.agents', 'skills');
-    if (!fs.existsSync(path.join(skillsDir, 'event-gateway'))) {
-      throw new Error('event-gateway skill must be installed first');
-    }
-    // Provider skill is optional for composition; continue without it
-  }
-}
-
-/**
- * Install all skills required for the scenario: event-gateway + optional provider.
- */
-export function installSkills(projectDir: string, repoRoot: string, resolved: ResolvedScenario): void {
+export function installSkills(projectDir: string, repoRoot: string, _resolved: ResolvedScenario): void {
   installEventGatewaySkill(projectDir, repoRoot);
-  if (resolved.provider) {
-    installProviderSkill(projectDir, resolved.provider);
-  }
 }

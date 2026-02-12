@@ -1,7 +1,11 @@
 #!/bin/bash
 # Run agent scenario tests. Forwards to the TypeScript tool.
-# Usage: ./scripts/test-agent-scenario.sh run <scenario> <framework> [--provider stripe] [options]
-# Example: ./scripts/test-agent-scenario.sh run receive-webhooks express
+# Usage:
+#   run:   ./scripts/test-agent-scenario.sh run <scenario> <framework> [--provider stripe] [options]
+#   assess: ./scripts/test-agent-scenario.sh assess <resultDir>
+# Examples:
+#   ./scripts/test-agent-scenario.sh run receive-webhooks express
+#   ./scripts/test-agent-scenario.sh assess receive-provider-webhooks-express-stripe-20260212145955.
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -1,6 +1,6 @@
 {
   "name": "agent-skills",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Hookdeck agent skills - event-gateway, hookdeck router, outpost",
   "scripts": {

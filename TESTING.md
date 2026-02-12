@@ -121,12 +121,13 @@ The scenario tester installs skills, runs Claude Code with a scenario prompt, an
 **Usage:**
 
 ```bash
-# From repo root
+# From repo root (recommended)
 ./scripts/test-agent-scenario.sh run receive-webhooks express
 ./scripts/test-agent-scenario.sh run receive-provider-webhooks nextjs --provider stripe
 ./scripts/test-agent-scenario.sh list
+./scripts/test-agent-scenario.sh assess <resultDir>   # re-run assessor on existing result, update report.md
 
-# Or via npx
+# Or via npx from repo root
 npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
 ```
 
@@ -135,7 +136,7 @@ npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
 **Scenarios:** Defined in `scenarios.yaml`. Initial set:
 
 - **receive-webhooks** — Setup Hookdeck, build handler with signature verification, run `hookdeck listen`. Tests stages 01–03.
-- **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Tests composition with webhook-skills.
+- **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Only the event-gateway skill is pre-installed; the agent is expected to discover and use the provider skill from webhook-skills (e.g. stripe-webhooks) and use the provider SDK in the handler. Tests composition and the provider-webhooks checklist.
 
 ### Scenario run checklist
 
@@ -148,7 +149,7 @@ Run these and evaluate results; iterate on skills or prompts as needed.
 | 3 | receive-webhooks | FastAPI | `./scripts/test-agent-scenario.sh run receive-webhooks fastapi` | Done |
 | 4 | receive-provider-webhooks | Express | `./scripts/test-agent-scenario.sh run receive-provider-webhooks express --provider stripe` | Done |
 
-**Output:** `test-results/<scenario>-<framework>-<timestamp>.md` (report with checklist) and `.log` (full Claude output). Score manually using the checklist; use results to improve skills or scenario prompts.
+**Output:** `test-results/<scenario>-<framework>-<provider?>-<timestamp>/` containing `report.md` (checklist + automated score), `run.log` (full Claude output), and generated project files. To re-run only the assessor (e.g. after fixing the tool): `./scripts/test-agent-scenario.sh assess <resultDir>`.
 
 ### Iterative Improvement Workflow
 

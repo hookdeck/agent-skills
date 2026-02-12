@@ -39,7 +39,7 @@ npx skills add hookdeck/agent-skills --skill event-gateway
 The `event-gateway` skill includes a staged integration workflow:
 
 1. **Setup** -- Create account, install CLI, create connection
-2. **Scaffold** -- Build webhook handler with verification code
+2. **Scaffold** -- Build webhook handler with verification code (for provider webhooks like Stripe or Shopify, use event-gateway together with the matching skill from [webhook-skills](https://github.com/hookdeck/webhook-skills))
 3. **Listen** -- Start `hookdeck listen`, trigger test events
 4. **Iterate** -- Debug failures, fix code, replay events
 
@@ -48,6 +48,11 @@ The `event-gateway` skill includes a staged integration workflow:
 - [Event Gateway docs](https://hookdeck.com/docs/)
 - [Outpost docs](https://outpost.hookdeck.com/docs/)
 - [API reference](https://hookdeck.com/docs/api)
+
+## Testing
+
+- **Code examples:** Run `./scripts/test-examples.sh` or see [TESTING.md](TESTING.md).
+- **Agent scenarios:** Run the scenario tester to verify an agent follows the event-gateway workflow (and, for provider webhooks, uses webhook-skills). See [TESTING.md](TESTING.md#agent-scenario-testing-two-layers).
 
 ## Contributing
 

@@ -21,6 +21,8 @@ cd agent-skills
 
 ### Run Tests
 
+**Code example tests** (signature verification in examples):
+
 ```bash
 # Run all tests
 ./scripts/test-examples.sh
@@ -30,6 +32,8 @@ cd skills/event-gateway/examples/express && npm install && npm test
 cd skills/event-gateway/examples/nextjs && npm install && npm test
 cd skills/event-gateway/examples/fastapi && pip install -r requirements.txt && pytest test_webhook.py -v
 ```
+
+**Agent scenario tests** (end-to-end: install skills, run Claude, score report): see [TESTING.md](TESTING.md#agent-scenario-testing-two-layers). From repo root: `./scripts/test-agent-scenario.sh run receive-webhooks express` or `./scripts/test-agent-scenario.sh list`.
 
 ## Repository Structure
 

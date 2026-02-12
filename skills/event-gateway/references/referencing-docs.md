@@ -42,6 +42,19 @@ Each use case has an overview and a quickstart:
 | Metrics | `/docs/metrics.md` |
 | Bookmarks | `/docs/bookmarks.md` |
 
+## Production (going live)
+
+| Topic | Path | Notes |
+|-------|------|--------|
+| **Receive webhooks → production** | `/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint` | Deliver to production endpoint; use with Destinations, Retries, Issue triggers for full checklist |
+| **Destinations** | `/docs/destinations` | Set max delivery rate (rate limiting) on destinations |
+| **Retries** | `/docs/retries` | Configure automatic retries |
+| **Issue triggers** | `/docs/issue-triggers` | Define which issues trigger alerts and notifications |
+| **Issues & Notifications** | `/docs/issues` | Notifications, notification channels |
+| **Projects** | `/docs/projects` | Create a new project (e.g. for separate production environment) |
+
+Hookdeck docs are the source of truth; point users and agents to these paths for production details.
+
 ## CLI Reference
 
 | Page | Path |

@@ -75,6 +75,8 @@ hookdeck listen 3000 --path /webhooks
 
 The CLI creates a Source URL, a Destination pointing at `localhost:3000`, and a Connection linking them. Configure your webhook provider to send to the Source URL. Use `--path` to match your handler path (e.g. `--path /webhooks` when your handler is at `POST /webhooks`).
 
+**Production:** Two options. **(1) Same project:** Keep the same project and connections; update the [Destination](https://hookdeck.com/docs/destinations) to your production HTTPS endpoint (e.g. `https://api.example.com/webhooks`) via the [Dashboard](https://dashboard.hookdeck.com) or [API](https://hookdeck.com/docs/api). **(2) New project:** Create a [new project](https://hookdeck.com/docs/projects) in Hookdeck and duplicate your setup (Sources, Connections) with Destinations pointing to your production HTTPS URLs. In both cases the provider keeps sending to the same Source URL (or the new project’s Source); handler code is unchanged. Before going live, consider: **rate limiting / max delivery rate** ([Destinations](https://hookdeck.com/docs/destinations)), **configuring retries** ([Retries](https://hookdeck.com/docs/retries)), and **issue notifications** ([Issue triggers](https://hookdeck.com/docs/issue-triggers), [Issues & Notifications](https://hookdeck.com/docs/issues)). Hookdeck docs are the source of truth; see [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint) and the linked Destinations, Retries, and Issue triggers docs for the full production checklist.
+
 ## Reference Material
 
 Use as needed (not sequential):

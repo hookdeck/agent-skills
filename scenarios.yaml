@@ -1,0 +1,128 @@
+# Agent Scenario Testing Configuration
+# Used by: tools/agent-scenario-tester (npx tsx tools/agent-scenario-tester/src/index.ts run <scenario> <framework>)
+#
+# Usage:
+#   npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
+#   npx tsx tools/agent-scenario-tester/src/index.ts run receive-provider-webhooks nextjs --provider stripe
+#   npx tsx tools/agent-scenario-tester/src/index.ts list
+
+frameworks:
+  - express
+  - nextjs
+  - fastapi
+
+scenarios:
+  - name: receive-webhooks
+    displayName: Receive Webhooks (basic)
+    description: >
+      Basic Hookdeck setup: create connection, build handler with
+      Hookdeck signature verification, listen locally.
+    stages:
+      - setup
+      - scaffold
+      - listen
+    prompt: >
+      Set up Hookdeck for my {framework} app to receive webhooks.
+      Create a webhook handler at /webhooks that verifies the
+      Hookdeck signature. Use hookdeck listen for local development.
+      If you use the installed event-gateway skill, say which file you
+      referenced (e.g. verification-code.md or 02-scaffold.md).
+    evaluation:
+      - stage: Skill discovery
+        points: 2
+        checks:
+          - Agent read SKILL.md or referenced event-gateway skill
+          - Agent followed staged workflow order
+      - stage: Stage 01 - Setup
+        points: 3
+        checks:
+          - CLI installation referenced
+          - hookdeck listen or hookdeck login used
+          - Connection creation attempted
+      - stage: Stage 02 - Scaffold
+        points: 5
+        checks:
+          - Webhook handler created
+          - Hookdeck signature verification implemented
+          - Uses HMAC SHA-256 with base64 encoding
+          - Raw body preserved for verification
+          - Returns 200 on valid signature, 401 on invalid
+      - stage: Stage 03 - Listen
+        points: 3
+        checks:
+          - hookdeck listen <port> with correct port
+          - --path flag used if endpoint is not /
+          - Source URL noted or referenced
+      - stage: Code quality
+        points: 2
+        checks:
+          - Idiomatic to framework
+          - No syntax errors or obvious bugs
+
+  - name: receive-provider-webhooks
+    displayName: Receive Provider Webhooks (with composition)
+    description: >
+      Full integration: Hookdeck + provider-specific webhook handling.
+      Tests composition of event-gateway skill with webhook-skills.
+    stages:
+      - setup
+      - scaffold
+      - listen
+    providerDefault: stripe
+    providers:
+      - stripe
+      - github
+      - shopify
+    prompt: >
+      Set up Hookdeck for my {framework} app to receive {Provider}
+      webhooks. Create a handler that verifies the Hookdeck signature
+      and handles {events} events. Use hookdeck listen for local
+      development. If you use the installed skill(s), say which file(s)
+      you referenced (e.g. verification-code.md, 02-scaffold.md).
+    providerConfig:
+      stripe:
+        events:
+          - payment_intent.succeeded
+          - checkout.session.completed
+      github:
+        events:
+          - push
+          - pull_request
+      shopify:
+        events:
+          - orders/create
+          - orders/paid
+    evaluation:
+      - stage: Skill discovery
+        points: 2
+        checks:
+          - Agent read SKILL.md or referenced event-gateway skill
+          - Agent followed staged workflow order
+      - stage: Stage 01 - Setup
+        points: 3
+        checks:
+          - CLI installation referenced
+          - hookdeck listen or hookdeck login used
+          - Connection creation attempted
+      - stage: Stage 02 - Scaffold
+        points: 5
+        checks:
+          - Webhook handler created
+          - Hookdeck signature verification implemented
+          - Raw body preserved; proper status codes
+          - Provider-specific verification if applicable
+      - stage: Stage 03 - Listen
+        points: 3
+        checks:
+          - hookdeck listen <port> with correct port
+          - Source URL or connection noted
+      - stage: Composition
+        points: 2
+        checks:
+          - Referenced webhook-skills provider skill
+          - Correct provider verification
+      - stage: Code quality
+        points: 2
+        checks:
+          - Idiomatic to framework
+          - No syntax errors or obvious bugs

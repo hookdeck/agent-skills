@@ -96,3 +96,74 @@ skills/event-gateway/examples/
 
 Express and FastAPI test the full HTTP endpoint via Supertest / TestClient.
 Next.js tests the verification function directly (consistent with [webhook-skills](https://github.com/hookdeck/webhook-skills) approach for Next.js).
+
+---
+
+## Agent Scenario Testing (Two Layers)
+
+We use two layers to evaluate skills: **skill quality** (static) and **agent scenarios** (end-to-end). The goal is to iterate: run scenarios, evaluate results, then improve both the agent skills and the tester so skills become more effective over time.
+
+### Layer 1: Skill Quality (Tessl)
+
+[Tessl](https://tessl.io) provides static analysis of SKILL.md files.
+
+- **Lint** (format, frontmatter, Agent Skills spec): `npm run skill:lint` (from repo root). Runs in CI on every PR.
+- **Review** (quality scores): `npm run skill:review`. Run locally when you want 0–100% scores for description, content, and activation. Requires `tessl login` (Tessl is free during beta).
+
+Baseline: run `npm run skill:review` periodically and record scores; use them to guide skill improvements.
+
+### Layer 2: Agent Scenarios (Custom Tool)
+
+The scenario tester installs skills, runs Claude Code with a scenario prompt, and writes a scored report. Use it to check that an agent can actually follow the staged workflow.
+
+**Prerequisites:** [Claude Code CLI](https://claude.ai/download) installed and logged in (`ANTHROPIC_API_KEY` or `claude login`).
+
+**Usage:**
+
+```bash
+# From repo root
+./scripts/test-agent-scenario.sh run receive-webhooks express
+./scripts/test-agent-scenario.sh run receive-provider-webhooks nextjs --provider stripe
+./scripts/test-agent-scenario.sh list
+
+# Or via npx
+npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
+```
+
+**Options:** `--dry-run`, `--verbose`, `--timeout <seconds>` (default 300).
+
+**Scenarios:** Defined in `scenarios.yaml`. Initial set:
+
+- **receive-webhooks** — Setup Hookdeck, build handler with signature verification, run `hookdeck listen`. Tests stages 01–03.
+- **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Tests composition with webhook-skills.
+
+**Output:** `test-results/<scenario>-<framework>-<timestamp>.md` (report with checklist) and `.log` (full Claude output). Score manually using the checklist; use results to improve skills or scenario prompts.
+
+### Iterative Improvement Workflow
+
+1. **Run** scenarios (e.g. receive-webhooks across express, nextjs, fastapi).
+2. **Evaluate** results (scores, logs, where the agent failed or was confused).
+3. **Improve** in two directions:
+   - **Skills:** Update SKILL.md, reference files (01-setup, 02-scaffold, etc.), or examples so the agent discovers and follows the workflow better.
+   - **Tool:** Refine prompts in `scenarios.yaml`, adjust the evaluation rubric, or add scenarios.
+4. **Re-run** to confirm improvements; repeat as needed.
+
+CI runs scenario tests on-demand (workflow_dispatch) and weekly (schedule). Use artifacts to monitor regressions and guide further skill improvements.
+
+### Evaluation Rubric (receive-webhooks)
+
+| Criterion            | Points |
+|----------------------|--------|
+| Skill discovery      | 2      |
+| Stage 01: Setup      | 3      |
+| Stage 02: Scaffold    | 5      |
+| Stage 03: Listen      | 3      |
+| Code quality         | 2      |
+| **Total**            | **15** |
+
+For receive-provider-webhooks, add **Composition** (2 pts) → 17 total. See the generated report for the full checklist.
+
+### CI
+
+- **Layer 1:** `tessl skill lint` runs in `.github/workflows/test-examples.yml` on every PR.
+- **Layer 2:** `.github/workflows/test-agent-scenarios.yml` runs on workflow_dispatch and weekly (Monday 6am UTC). Requires `ANTHROPIC_API_KEY` secret. Results are uploaded as artifacts.

@@ -45,3 +45,7 @@ htmlcov/
 # Package lock files (not tracked for example projects)
 package-lock.json
 yarn.lock
+
+# Agent scenario tester
+test-results/
+tools/agent-scenario-tester/node_modules/

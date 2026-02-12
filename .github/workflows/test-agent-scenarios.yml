@@ -1,0 +1,57 @@
+# Agent scenario tests: run scenarios with Claude Code CLI.
+# Expensive (API calls); run on-demand or weekly, not on every PR.
+name: Agent Scenario Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: 'Scenario (receive-webhooks, receive-provider-webhooks)'
+        required: true
+        default: 'receive-webhooks'
+      framework:
+        description: 'Framework (express, nextjs, fastapi)'
+        required: true
+        default: 'express'
+      provider:
+        description: 'Provider for composition scenario (e.g. stripe)'
+        required: false
+  schedule:
+    - cron: '0 6 * * 1'  # Monday 6am UTC
+
+jobs:
+  agent-scenario:
+    name: "${{ github.event.inputs.scenario || 'receive-webhooks' }} - ${{ github.event.inputs.framework || 'express' }}"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install scenario tester
+        run: |
+          cd tools/agent-scenario-tester
+          npm install
+
+      - name: Run scenario
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          SCENARIO="${{ github.event.inputs.scenario || 'receive-webhooks' }}"
+          FRAMEWORK="${{ github.event.inputs.framework || 'express' }}"
+          PROVIDER="${{ github.event.inputs.provider }}"
+          cd tools/agent-scenario-tester
+          if [ -n "$PROVIDER" ]; then
+            npx tsx src/index.ts run "$SCENARIO" "$FRAMEWORK" --provider "$PROVIDER"
+          else
+            npx tsx src/index.ts run "$SCENARIO" "$FRAMEWORK"
+          fi
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: scenario-results-${{ github.run_id }}
+          path: test-results/

@@ -1,6 +1,21 @@
 /**
  * Automated assessment of scenario run output.
  * Reads project files and run.log, evaluates checklist items, returns scores.
+ *
+ * Design notes (why we might see 15/15 or false positives):
+ * - We use combinedDoc = run.log + readme for Setup and Listen. So if the agent
+ *   only says "hookdeck listen 3000" and "Source URL" in the chat (run.log) but
+ *   leaves README default, we still pass Stage 01/03. To reduce that: when the
+ *   project has a README that mentions Hookdeck, we require those checks to pass
+ *   from the README (so the agent must have documented in-repo).
+ * - Skill discovery passes if log or readme mentions verification-code.md or
+ *   hookdeck listen — can be loose if the agent cites the skill in the reply.
+ * - Stage 02 is code-based (handler content) so generally reliable.
+ * - Code quality: "idiomatic" is just handler length > 50; "no syntax errors" is
+ *   no literal "syntax error" in file — both are weak proxies.
+ * - Composition (provider): "Referenced provider skill" checks doc for
+ *   "stripe-webhooks|webhook-skills"; "Correct provider verification" checks code
+ *   for event types. Does not verify that Stripe SDK constructEvent was used.
  */
 
 import * as fs from 'fs';
@@ -60,15 +75,23 @@ function getHandlerContent(resultDir: string, framework: Framework): string {
   }
 }
 
+/** For Setup/Listen: prefer README when it has Hookdeck content (so we require in-repo docs, not just chat). */
+function getDocForSetupListen(combinedDoc: string, readme: string): string {
+  if (readme.length > 300 && /hookdeck/i.test(readme)) return readme;
+  return combinedDoc;
+}
+
 function passesCheck(
   check: string,
   stage: string,
   index: number,
   combinedDoc: string,
+  readme: string,
   handler: string,
   provider?: string
 ): boolean {
   const doc = combinedDoc;
+  const setupListenDoc = getDocForSetupListen(combinedDoc, readme);
   const code = handler;
 
   if (stage === 'Skill discovery') {
@@ -77,9 +100,9 @@ function passesCheck(
     return false;
   }
   if (stage === 'Stage 01 - Setup') {
-    if (index === 0) return /install.*hookdeck|brew.*hookdeck|npm.*hookdeck|hookdeck.*install|CLI/i.test(doc);
-    if (index === 1) return /hookdeck listen|hookdeck login/i.test(doc);
-    if (index === 2) return /Source URL|connection|Connection/i.test(doc);
+    if (index === 0) return /install.*hookdeck|brew.*hookdeck|npm.*hookdeck|hookdeck.*install|CLI/i.test(setupListenDoc);
+    if (index === 1) return /hookdeck listen|hookdeck login/i.test(setupListenDoc);
+    if (index === 2) return /Source URL|connection|Connection/i.test(setupListenDoc);
     return false;
   }
   if (stage === 'Stage 02 - Scaffold') {
@@ -92,10 +115,10 @@ function passesCheck(
     return false;
   }
   if (stage === 'Stage 03 - Listen') {
-    if (index === 0) return /hookdeck listen\s+\d+|hookdeck listen.*\d+/i.test(doc);
-    if (index === 1 && /--path/.test(check)) return /--path\s*\/webhooks|--path /i.test(doc);
-    if (index === 1 && !/--path/.test(check)) return /Source URL|connection|Connection/i.test(doc);
-    if (index === 2) return /Source URL|source URL|configure.*provider|webhook provider/i.test(doc);
+    if (index === 0) return /hookdeck listen\s+\d+|hookdeck listen.*\d+/i.test(setupListenDoc);
+    if (index === 1 && /--path/.test(check)) return /--path\s*\/webhooks|--path /i.test(setupListenDoc);
+    if (index === 1 && !/--path/.test(check)) return /Source URL|connection|Connection/i.test(setupListenDoc);
+    if (index === 2) return /Source URL|source URL|configure.*provider|webhook provider/i.test(setupListenDoc);
     return false;
   }
   if (stage === 'Code quality') {
@@ -105,7 +128,15 @@ function passesCheck(
   }
   if (stage === 'Composition') {
     if (index === 0) return !provider || new RegExp(`${provider}-webhooks|webhook-skills`, 'i').test(doc);
-    if (index === 1) return !provider || /payment_intent|checkout\.session|push|pull_request|orders/i.test(code);
+    if (index === 1) {
+      if (!provider) return true;
+      const hasEventHandling = /payment_intent|checkout\.session|push|pull_request|orders/i.test(code);
+      if (provider === 'stripe') {
+        const hasStripeSdk = /constructEvent|stripe\.webhooks/i.test(code);
+        return hasEventHandling && hasStripeSdk;
+      }
+      return hasEventHandling;
+    }
     return false;
   }
   return false;
@@ -130,7 +161,7 @@ export function assessResult(
   for (const section of scenario.evaluation) {
     const checks: CheckResult[] = section.checks.map((check, index) => ({
       check,
-      passed: passesCheck(check, section.stage, index, combinedDoc, handler, provider),
+      passed: passesCheck(check, section.stage, index, combinedDoc, readme, handler, provider),
     }));
     const passedCount = checks.filter(c => c.passed).length;
     const score = section.checks.length > 0 ? Math.round((passedCount / section.checks.length) * section.points) : 0;

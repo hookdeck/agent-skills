@@ -41,8 +41,7 @@ Follow these in order for a new Hookdeck integration:
 3. **[03-listen](references/03-listen.md)** -- Start `hookdeck listen`, trigger test events
 4. **[04-iterate](references/04-iterate.md)** -- Debug failures, fix code, replay events
 
-Stage 02 references provider-specific skills from `hookdeck/webhook-skills`
-(e.g., `stripe-webhooks` for Stripe verification and event types). Include Hookdeck setup and usage in the project README (run app, `hookdeck listen` with `--path`, Source URL for provider).
+Stage 02 uses provider-specific skills from [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills). To see which providers are supported: run `npx skills add hookdeck/webhook-skills --list`, or check the repo README or `skills/` directory; use the skill that matches the user's provider (e.g. stripe-webhooks, shopify-webhooks, chargebee-webhooks). Include Hookdeck setup and usage in the project README (run app, `hookdeck listen` with `--path`, Source URL for provider).
 
 ## Quick Start (Receive Webhooks)
 

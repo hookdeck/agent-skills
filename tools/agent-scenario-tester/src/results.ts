@@ -1,9 +1,11 @@
 /**
  * Collect generated files and write Markdown report + log path.
+ * Runs automated assessment to fill rubric and scores.
  */
 
 import * as fs from 'fs';
 import path from 'path';
+import { assessResult } from './assess.js';
 import type { ScenarioResult } from './types.js';
 
 const IGNORE_DIRS = new Set([
@@ -52,17 +54,27 @@ export function listGeneratedFiles(projectDir: string): string[] {
 
 /**
  * Write the Markdown report file for the scenario run.
+ * Runs automated assessment and fills the rubric (checkboxes + scores).
  */
 export function writeReport(result: ScenarioResult, reportPath: string): void {
   const { scenario, framework, provider, directory, duration, filesGenerated, logFile, prompt } = result;
   const logBasename = path.basename(logFile);
   const totalPoints = scenario.evaluation.reduce((s, e) => s + e.points, 0);
+
+  const assessment = assessResult(directory, scenario, framework, provider);
+
   const lines: string[] = [
     `# Agent Test Results: ${scenario.name} / ${framework}`,
     '',
     `**Date:** ${new Date().toLocaleString()}`,
     `**Duration:** ${duration}s`,
     `**Directory:** ${directory}`,
+    '',
+    '## Automated assessment',
+    '',
+    `**Total score: ${assessment.totalScore}/${assessment.totalMax}**`,
+    '',
+    'The checklist and scores below were filled by the tool from the generated files and run.log. Review and adjust if needed.',
     '',
     '## Configuration',
     '',
@@ -83,11 +95,13 @@ export function writeReport(result: ScenarioResult, reportPath: string): void {
     '## Evaluation Checklist',
     '',
   ];
-  for (const section of scenario.evaluation) {
+  for (let i = 0; i < scenario.evaluation.length; i++) {
+    const section = scenario.evaluation[i];
+    const sectionResult = assessment.sectionResults[i];
     lines.push(`### ${section.stage} (${section.points} pts)`);
     lines.push('');
-    for (const check of section.checks) {
-      lines.push(`- [ ] ${check}`);
+    for (const cr of sectionResult.checks) {
+      lines.push(`- [${cr.passed ? 'x' : ' '}] ${cr.check}`);
     }
     lines.push('');
   }
@@ -95,10 +109,12 @@ export function writeReport(result: ScenarioResult, reportPath: string): void {
   lines.push('');
   lines.push('| Criterion | Points | Score |');
   lines.push('|-----------|--------|-------|');
-  for (const section of scenario.evaluation) {
-    lines.push(`| ${section.stage} | ${section.points} | /${section.points} |`);
+  for (let i = 0; i < scenario.evaluation.length; i++) {
+    const section = scenario.evaluation[i];
+    const sectionResult = assessment.sectionResults[i];
+    lines.push(`| ${section.stage} | ${section.points} | ${sectionResult.score}/${section.points} |`);
   }
-  lines.push(`| **Total** | **${totalPoints}** | **/${totalPoints}** |`);
+  lines.push(`| **Total** | **${totalPoints}** | **${assessment.totalScore}/${totalPoints}** |`);
   lines.push('');
   lines.push('## Notes');
   lines.push('');

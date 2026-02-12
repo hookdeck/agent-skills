@@ -14,18 +14,28 @@ Every webhook handler follows the same pattern:
 
 ## Provider-Specific Code
 
-For provider-specific verification and event types, install the relevant skill from [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills):
+For provider-specific verification and event construction, use the **webhook-skills** repository. Each supported provider has a dedicated skill (e.g. Stripe, Shopify, Chargebee, GitHub, Paddle) with verification code, event types, and framework examples.
+
+### Discovering which providers are supported
+
+- **List skills from the repo:** run `npx skills add hookdeck/webhook-skills --list` to see available skills.
+- **Or inspect the repo:** open [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills) — the README has a "Provider Webhook Skills" table, and the `skills/` directory has one folder per skill (e.g. `stripe-webhooks`, `shopify-webhooks`, `chargebee-webhooks`). The skill name is usually `{provider}-webhooks`.
+
+Install the skill that matches the user's provider (Stripe is only one example; use the skill for whatever provider they need — Shopify, Chargebee, PayPal, GitHub, etc.):
 
 ```sh
-npx skills add hookdeck/webhook-skills --skill stripe-webhooks
-npx skills add hookdeck/webhook-skills --skill shopify-webhooks
-npx skills add hookdeck/webhook-skills --skill github-webhooks
+npx skills add hookdeck/webhook-skills --list   # see all available
+npx skills add hookdeck/webhook-skills --skill stripe-webhooks    # example: Stripe
+npx skills add hookdeck/webhook-skills --skill shopify-webhooks   # example: Shopify
+npx skills add hookdeck/webhook-skills --skill chargebee-webhooks # example: Chargebee
 ```
 
 Each provider skill includes:
-- Verification code for the provider's signature format
+- Verification code for that provider's signature format (SDK or HMAC — each provider is different)
 - Event type reference (which events to listen for)
 - Framework examples (Express, Next.js, FastAPI)
+
+**When a provider skill is installed, use it in your handler.** After verifying the Hookdeck signature (this skill), use the **provider skill's** verification reference and framework example to verify the event came from the provider and to construct the event object. Open that skill's `references/verification.md` and the example that matches your framework (e.g. `examples/express/`). Follow the provider's recommended method (e.g. Stripe SDK `constructEvent`, Shopify HMAC, Chargebee Basic Auth — the provider skill documents it). Do not only parse the JSON body; use the approach shown in the provider skill so signatures are verified and events are typed correctly.
 
 ## Hookdeck Signature Verification
 
@@ -71,6 +81,7 @@ When Source Authentication is enabled, forwarded requests include the `x-hookdec
 
 1. Configure Source Authentication on the Source (provider verification at the edge)
 2. Verify the Hookdeck signature in your handler (confirms the request came from Hookdeck)
+3. When using a provider (Stripe, Shopify, etc.), use the installed provider skill from webhook-skills in your handler to verify the provider signature and construct the event — see that skill's verification reference and examples
 
 ## Environment Setup
 
@@ -94,7 +105,7 @@ When you add a webhook handler to a project, add or update the project README (o
 3. That the **Source URL** shown by the CLI is the URL to configure in the webhook provider's settings
 4. Optionally: how to test (e.g. provider "Send test webhook" or curl to the Source URL)
 
-Do not leave the default framework README without Hookdeck setup and usage instructions. Add a section (e.g. "Receiving webhooks with Hookdeck") or replace with project-specific instructions that include the above.
+Do not leave the default framework README without Hookdeck setup and usage instructions. Add a section (e.g. "Receiving webhooks with Hookdeck") or replace with project-specific instructions that include the above. **If the project has no README** (e.g. a FastAPI app that only had `main.py`), **create one** with the above content.
 
 ## Next Step
 

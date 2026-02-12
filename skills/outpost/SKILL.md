@@ -134,5 +134,5 @@ Destination-specific skills (`outpost-webhooks`, `outpost-sqs`, `outpost-rabbitm
 
 ## Related Skills
 
-- [hookdeck](../hookdeck/SKILL.md) -- master router for all Hookdeck skills
-- [event-gateway](../event-gateway/SKILL.md) -- Hookdeck Event Gateway (inbound webhooks)
+- [hookdeck](https://github.com/hookdeck/agent-skills/blob/main/skills/hookdeck/SKILL.md) -- master router for all Hookdeck skills
+- [event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md) -- Hookdeck Event Gateway (inbound webhooks)

@@ -110,6 +110,8 @@ We use two layers to evaluate skills: **skill quality** (static) and **agent sce
 - **Lint** (format, frontmatter, Agent Skills spec): `npm run skill:lint` (from repo root). Runs in CI on every PR.
 - **Review** (quality scores): `npm run skill:review`. Run locally when you want 0–100% scores for description, content, and activation. Requires `tessl login` (Tessl is free during beta).
 
+**Cross-skill links:** Tessl lint treats each skill directory (with its `tile.json`) as one tile. Links in SKILL.md or reference files must not point outside that tile — e.g. `../event-gateway/SKILL.md` or `../outpost/SKILL.md` cause "Link in SKILL.md points outside tile" and lint fails. Use full URLs (e.g. `https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md`) to link to other skills in this repo. This rule is enforced by the Tessl CLI; it is not clearly documented in [Tessl's CLI reference](https://docs.tessl.io/reference/cli-commands) or the [Agent Skills spec](https://agentskills.io/specification) (which only covers relative paths within a single skill).
+
 Baseline: run `npm run skill:review` periodically and record scores; use them to guide skill improvements.
 
 ### Layer 2: Agent Scenarios (Custom Tool)

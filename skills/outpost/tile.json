@@ -1,0 +1,11 @@
+{
+  "name": "hookdeck/outpost",
+  "version": "0.1.0",
+  "summary": "Hookdeck Outpost skill — self-hosted relay",
+  "private": false,
+  "skills": {
+    "outpost": {
+      "path": "SKILL.md"
+    }
+  }
+}

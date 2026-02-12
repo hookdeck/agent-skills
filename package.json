@@ -1,11 +1,11 @@
 {
   "name": "agent-skills",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Hookdeck agent skills - event-gateway, hookdeck router, outpost",
   "scripts": {
     "test:examples": "./scripts/test-examples.sh",
-    "skill:lint": "tessl skill lint skills/hookdeck/SKILL.md skills/event-gateway/SKILL.md skills/outpost/SKILL.md",
+    "skill:lint": "tessl skill lint skills/hookdeck && tessl skill lint skills/event-gateway && tessl skill lint skills/outpost",
     "skill:review": "tessl skill review skills/hookdeck/SKILL.md skills/event-gateway/SKILL.md skills/outpost/SKILL.md"
   },
   "devDependencies": {

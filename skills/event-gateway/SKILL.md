@@ -1,6 +1,6 @@
 ---
 name: event-gateway
-description: "Comprehensive guide to the Hookdeck Event Gateway for receiving, routing, and delivering webhooks and events. Covers setup, connections, authentication, local development, monitoring, and API automation. Use for any Hookdeck Event Gateway task including receiving webhooks, third-party routing, asynchronous APIs, or local webhook development."
+description: "Comprehensive guide to the Hookdeck Event Gateway for receiving, routing, and delivering webhooks and events. Covers setup, connections, authentication, local development, monitoring, and API automation. Use for any Hookdeck Event Gateway task including receiving webhooks, third-party routing, asynchronous APIs, or local webhook development. For provider webhooks (Stripe, Shopify, Chargebee, GitHub, etc.), use together with the matching skill from hookdeck/webhook-skills; do not only parse JSON — use provider SDK verification and event construction (e.g. Stripe constructEvent)."
 allowed-tools: WebFetch
 ---
 
@@ -24,6 +24,20 @@ See [references/referencing-docs.md](references/referencing-docs.md) for how to 
 
 > **Sending webhooks to customers?** Use [Outpost](../outpost/SKILL.md) instead.
 
+## Provider webhooks: use two skills together (layered composition)
+
+When the user is working with a **specific provider** (Stripe, Shopify, Chargebee, GitHub, Paddle, Twilio, etc.), you **must** also use the provider skill from [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills). Do not implement provider verification or event parsing from scratch. Use the **constructs provided by the provider's SDK** (e.g. Stripe's `constructEvent`, Shopify HMAC)—not only `JSON.parse`.
+
+**Before scaffolding:** Follow [references/provider-webhooks-checklist.md](references/provider-webhooks-checklist.md). Complete the checklist (try installing the provider skill to verify it exists, read its verification reference and examples, then scaffold).
+
+**Strong guidance:**
+
+1. **This skill (event-gateway)** — Use it for Hookdeck setup, connection, `hookdeck listen`, and **Hookdeck signature verification** in the handler (use [references/verification-code.md](references/verification-code.md)).
+2. **The provider skill** — Try installing first: `npx skills add hookdeck/webhook-skills --skill {provider}-webhooks` (e.g. `stripe-webhooks`, `shopify-webhooks`). If install succeeds, use the installed skill; if it fails, the provider may not be in webhook-skills — look up the [repo](https://github.com/hookdeck/webhook-skills) and the provider's `references/verification.md` and examples. Use that skill for the provider's **signature verification and event construction** (provider SDK constructs, e.g. Stripe `constructEvent`, Shopify HMAC).
+3. **Recommend to the user:** Suggest installing the provider webhook skill, e.g. "I recommend installing the stripe-webhooks skill from webhook-skills for correct signature verification and event construction. Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks`."
+
+**Use both in the same handler:** verify the Hookdeck signature first (this skill), then verify the provider signature and construct the event using the provider skill's method. Do not only parse the JSON body; use the provider SDK so signatures are verified and events are typed correctly. This applies to all supported providers in webhook-skills.
+
 ## Signature Verification (Use This Skill)
 
 When the user asks to verify the Hookdeck signature or build a webhook handler that verifies Hookdeck:
@@ -41,7 +55,7 @@ Follow these in order for a new Hookdeck integration:
 3. **[03-listen](references/03-listen.md)** -- Start `hookdeck listen`, trigger test events
 4. **[04-iterate](references/04-iterate.md)** -- Debug failures, fix code, replay events
 
-Stage 02 uses provider-specific skills from [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills). To see which providers are supported: run `npx skills add hookdeck/webhook-skills --list`, or check the repo README or `skills/` directory; use the skill that matches the user's provider (e.g. stripe-webhooks, shopify-webhooks, chargebee-webhooks). Include Hookdeck setup and usage in the project README (run app, `hookdeck listen` with `--path`, Source URL for provider).
+Stage 02: when the user is working with a provider (Stripe, Shopify, etc.), complete [references/provider-webhooks-checklist.md](references/provider-webhooks-checklist.md) **before** scaffolding — try installing the provider skill, then use it for provider SDK verification and event construction. Include Hookdeck setup and usage in the project README (run app, `hookdeck listen` with `--path`, Source URL for provider).
 
 ## Quick Start (Receive Webhooks)
 
@@ -93,4 +107,5 @@ Use as needed (not sequential):
 | Area | Resource | When to use |
 |------|----------|-------------|
 | Code | [references/verification-code.md](references/verification-code.md) | Hookdeck signature verification (Express, Next.js, FastAPI) |
+| **Provider webhooks** | [references/provider-webhooks-checklist.md](references/provider-webhooks-checklist.md) | When a provider is named (Stripe, Shopify, etc.): checklist before scaffolding, try install, use provider SDK constructs |
 | **Example codebases** | [examples/express/](examples/express/), [examples/nextjs/](examples/nextjs/), [examples/fastapi/](examples/fastapi/) | Runnable, proven, tested verification handlers — use these as the reference implementation for the user's framework |

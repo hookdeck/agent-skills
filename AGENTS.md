@@ -72,6 +72,7 @@ hookdeck/agent-skills/
         # Staged workflow (sequential -- new integration)
         01-setup.md                    # Account, CLI, project, create connection
         02-scaffold.md                 # Build handler (references webhook-skills for provider code)
+        provider-webhooks-checklist.md # When provider named: checklist before scaffold, try install, use provider SDK
         03-listen.md                   # hookdeck listen, test events
         04-iterate.md                  # Debug, fix, replay (CLI TUI, web console, Dashboard)
 
@@ -119,7 +120,11 @@ Follow these stages in order for a new Hookdeck integration. The reference files
 
 ### Composition with webhook-skills
 
-Stage 02 is the **composition point** where provider-specific knowledge from [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills) meets Hookdeck integration code from this repo. The agent uses provider skills (e.g., `stripe-webhooks`) for provider verification and event types, then layers Hookdeck signature verification on top using `verification-code.md` and `examples/`.
+Stage 02 is the **composition point** where provider-specific knowledge from [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills) meets Hookdeck integration code from this repo. When a provider is named (Stripe, Shopify, etc.):
+
+- **Before scaffolding:** Follow `event-gateway/references/provider-webhooks-checklist.md`. Try installing the provider skill first (`npx skills add hookdeck/webhook-skills --skill <provider>-webhooks`) to verify it exists; if install fails, the provider may not be in webhook-skills. Recommend to the user that they install the provider webhook skill.
+- Use **provider SDK constructs** (e.g. Stripe `constructEvent`, Shopify HMAC)—not only `JSON.parse`. Keep guidance generic: refer to "provider SDK verification and event construction" and use Stripe/Shopify as examples.
+- Layer Hookdeck signature verification on top using `verification-code.md` and `examples/`.
 
 ---
 
@@ -164,6 +169,22 @@ This repo (`hookdeck/agent-skills`) is the **depth layer**. The [`hookdeck/webho
 | [`outpost`](https://github.com/hookdeck/webhook-skills/tree/main/skills/outpost) | `outpost` | webhook-skills has product overview; this repo has setup + detailed configuration |
 
 This repo is self-contained -- Hookdeck users should not need to install skills from webhook-skills for Hookdeck-specific tasks. Provider-specific webhook knowledge (Stripe event types, Shopify verification, etc.) lives in webhook-skills and is referenced from `02-scaffold.md`.
+
+---
+
+## Adding or updating Hookdeck skills
+
+When you are **adding a new skill** or **updating an existing skill** in this repo:
+
+1. **Read this file (AGENTS.md) first.** Follow the Specification, Terminology glossary, Repository structure, and Content principles above.
+2. **Use the Skill authoring checklist** at the end of this file before considering the work complete.
+3. **When updating the event-gateway skill** (especially provider webhooks, Stage 02, or composition with webhook-skills):
+   - Follow and reference `event-gateway/references/provider-webhooks-checklist.md`. The checklist is mandatory before scaffolding when a provider is named.
+   - Prefer **try install first:** have the agent run `npx skills add hookdeck/webhook-skills --skill <provider>-webhooks` to verify the provider skill exists; if install fails, fall back to looking up the webhook-skills repo or informing the user.
+   - Keep provider guidance **generic:** refer to "provider SDK verification and event construction" and "constructs provided by the provider's SDK" (e.g. Stripe `constructEvent`, Shopify HMAC as examples, not Stripe-only).
+   - Instruct the agent to **recommend to the user** that they install the provider webhook skill (e.g. "I recommend installing the stripe-webhooks skill... Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks`").
+4. **One level deep:** All references from SKILL.md must be to files directly in that skill's directory (e.g. `references/...`). Reference files do not chain to other reference files.
+5. **Link to live docs** inline where a concept or feature is first mentioned; do not consolidate links in a single section.
 
 ---
 

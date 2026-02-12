@@ -24,6 +24,14 @@ See [references/referencing-docs.md](references/referencing-docs.md) for how to 
 
 > **Sending webhooks to customers?** Use [Outpost](../outpost/SKILL.md) instead.
 
+## Signature Verification (Use This Skill)
+
+When the user asks to verify the Hookdeck signature or build a webhook handler that verifies Hookdeck:
+
+- **Use the code in [references/verification-code.md](references/verification-code.md)** — copy the handler pattern for the user's framework (Express, Next.js, FastAPI). That file is the canonical implementation (HMAC SHA-256, base64).
+- **Prefer the example codebases in this skill** — they are runnable, proven, and tested. Point the user at the right one for their framework: [examples/express/](examples/express/), [examples/nextjs/](examples/nextjs/), [examples/fastapi/](examples/fastapi/).
+- Do not use third-party webhook libraries; use only the verification code from this skill.
+
 ## Workflow Stages
 
 Follow these in order for a new Hookdeck integration:
@@ -86,4 +94,4 @@ Use as needed (not sequential):
 | Area | Resource | When to use |
 |------|----------|-------------|
 | Code | [references/verification-code.md](references/verification-code.md) | Hookdeck signature verification (Express, Next.js, FastAPI) |
-| Examples | [examples/](examples/) | Full working verification handlers |
+| **Example codebases** | [examples/express/](examples/express/), [examples/nextjs/](examples/nextjs/), [examples/fastapi/](examples/fastapi/) | Runnable, proven, tested verification handlers — use these as the reference implementation for the user's framework |

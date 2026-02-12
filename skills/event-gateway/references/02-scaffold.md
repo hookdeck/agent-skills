@@ -31,7 +31,7 @@ Each provider skill includes:
 
 When Hookdeck forwards events to your destination, it adds an `x-hookdeck-signature` header (HMAC SHA-256, base64-encoded). Verify this to confirm the request came from Hookdeck.
 
-See [verification-code.md](verification-code.md) for complete handler code in Express, Next.js, and FastAPI. Working examples are in [examples/](../examples/).
+**Implement verification from [verification-code.md](verification-code.md)** — complete handler code for Express, Next.js, and FastAPI. This skill includes runnable, proven, tested example codebases: [examples/express/](../examples/express/), [examples/nextjs/](../examples/nextjs/), [examples/fastapi/](../examples/fastapi/). Use these as the reference implementation; do not use third-party webhook libraries.
 
 ### Quick Reference (Express)
 

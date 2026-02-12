@@ -79,7 +79,7 @@ Enabled by default on all Destinations. Hookdeck adds an `x-hookdeck-signature` 
 
 Your signing secret is at: [Dashboard > Settings > Secrets](https://dashboard.hookdeck.com/settings/project/secrets)
 
-For verification code, see [verification-code.md](verification-code.md) and [examples/](../examples/).
+For verification code, see [verification-code.md](verification-code.md). Runnable, proven, tested example codebases: [examples/express/](../examples/express/), [examples/nextjs/](../examples/nextjs/), [examples/fastapi/](../examples/fastapi/).
 
 ## Can You Use Both?
 

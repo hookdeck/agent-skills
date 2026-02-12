@@ -1,5 +1,9 @@
 # Hookdeck Signature Verification Code
 
+Use the code in this file for Hookdeck signature verification. Do not substitute third-party webhook libraries; this is the canonical implementation (HMAC SHA-256, base64).
+
+**Example codebases in this skill are runnable, proven, and tested** — [Express](../examples/express/), [Next.js](../examples/nextjs/), [FastAPI](../examples/fastapi/). Prefer copying from the example that matches the user's framework.
+
 ## Contents
 
 - [Environment Variables](#environment-variables)
@@ -57,7 +61,7 @@ app.post('/webhooks',
 );
 ```
 
-> **Full working example:** [examples/express/](../examples/express/)
+> **Runnable, proven, tested example codebase:** [examples/express/](../examples/express/)
 
 ## Next.js Handler (App Router)
 
@@ -90,7 +94,7 @@ export async function POST(request: NextRequest) {
 }
 ```
 
-> **Full working example:** [examples/nextjs/](../examples/nextjs/)
+> **Runnable, proven, tested example codebase:** [examples/nextjs/](../examples/nextjs/)
 
 ## FastAPI Handler
 
@@ -126,7 +130,7 @@ async def webhook(request: Request):
     return {"received": True}
 ```
 
-> **Full working example:** [examples/fastapi/](../examples/fastapi/)
+> **Runnable, proven, tested example codebase:** [examples/fastapi/](../examples/fastapi/)
 
 ## Hookdeck Headers Reference
 

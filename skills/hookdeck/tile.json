@@ -2,7 +2,7 @@
   "name": "hookdeck/hookdeck",
   "version": "0.1.0",
   "summary": "Hookdeck router skill — routes to event-gateway, outpost, and webhook-skills",
-  "private": true,
+  "private": false,
   "skills": {
     "hookdeck": {
       "path": "SKILL.md"

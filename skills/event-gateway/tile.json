@@ -2,7 +2,7 @@
   "name": "hookdeck/event-gateway",
   "version": "0.1.0",
   "summary": "Hookdeck Event Gateway skill — staged workflow and reference docs",
-  "private": true,
+  "private": false,
   "skills": {
     "event-gateway": {
       "path": "SKILL.md"

@@ -15,7 +15,10 @@ client = TestClient(app)
 
 TEST_SECRET = "test_webhook_signing_secret_123"
 TEST_PAYLOAD = json.dumps(
-    {"type": "payment_intent.succeeded", "data": {"object": {"id": "pi_123", "amount": 2000}}}
+    {
+        "type": "payment_intent.succeeded",
+        "data": {"object": {"id": "pi_123", "amount": 2000}},
+    }
 )
 
 
@@ -33,7 +36,9 @@ class TestVerifyHookdeckSignature:
 
     def test_invalid_signature(self):
         raw_body = TEST_PAYLOAD.encode("utf-8")
-        assert verify_hookdeck_signature(raw_body, "bad_signature", TEST_SECRET) is False
+        assert (
+            verify_hookdeck_signature(raw_body, "bad_signature", TEST_SECRET) is False
+        )
 
     def test_missing_signature(self):
         raw_body = TEST_PAYLOAD.encode("utf-8")

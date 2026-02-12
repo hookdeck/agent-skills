@@ -54,11 +54,13 @@ Or create a [Hookdeck account](https://dashboard.hookdeck.com) first, then log i
 
 ## Create a Connection
 
-The simplest approach -- `hookdeck listen` creates one automatically:
+The simplest approach -- `hookdeck listen` creates one automatically. If your webhook handler is at `/webhooks`, use `--path` so the Source URL maps to it:
 
 ```sh
-hookdeck listen 3000
+hookdeck listen 3000 --path /webhooks
 ```
+
+(Use `hookdeck listen 3000` without `--path` only if your app serves webhooks at the root path.)
 
 For explicit control, use `hookdeck connection create`:
 

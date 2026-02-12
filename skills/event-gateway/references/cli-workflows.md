@@ -68,7 +68,13 @@ hookdeck listen 3000
 
 ### Path-Specific Tunneling
 
-Route to a specific path:
+When your webhook handler is at a path like `/webhooks`, use `--path` so the Source URL maps to it:
+
+```sh
+hookdeck listen 3000 --path /webhooks
+```
+
+For provider-specific paths (e.g. `/webhooks/stripe`):
 
 ```sh
 hookdeck listen 3000 --path /webhooks/stripe

@@ -23,7 +23,13 @@ hookdeck listen 3000
 
 ## Path-Specific Tunneling
 
-Route events to a specific path on your local server:
+When your webhook handler is not at the root path, use `--path` so the Source URL maps to that path. For a handler at `POST /webhooks`, use:
+
+```sh
+hookdeck listen 3000 --path /webhooks
+```
+
+For provider-specific paths (e.g. `/webhooks/stripe`):
 
 ```sh
 hookdeck listen 3000 --path /webhooks/stripe

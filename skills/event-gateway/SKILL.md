@@ -50,17 +50,17 @@ No account required -- `hookdeck listen` works immediately:
 
 ```sh
 brew install hookdeck/hookdeck/hookdeck   # or: npm i -g hookdeck-cli
-hookdeck listen 3000
+hookdeck listen 3000 --path /webhooks
 ```
 
 With a Hookdeck account (Event Gateway project with full features):
 
 ```sh
 hookdeck login
-hookdeck listen 3000
+hookdeck listen 3000 --path /webhooks
 ```
 
-The CLI creates a Source URL, a Destination pointing at `localhost:3000`, and a Connection linking them. Configure your webhook provider to send to the Source URL.
+The CLI creates a Source URL, a Destination pointing at `localhost:3000`, and a Connection linking them. Configure your webhook provider to send to the Source URL. Use `--path` to match your handler path (e.g. `--path /webhooks` when your handler is at `POST /webhooks`).
 
 ## Reference Material
 

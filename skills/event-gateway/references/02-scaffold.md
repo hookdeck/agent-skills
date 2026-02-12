@@ -87,4 +87,4 @@ HOOKDECK_WEBHOOK_SECRET=your_webhook_signing_secret
 
 ## Next Step
 
-Proceed to [03-listen.md](03-listen.md) to start receiving events locally.
+Proceed to [03-listen.md](03-listen.md) to start receiving events locally. When you run `hookdeck listen`, use `--path` to match your handler (e.g. `hookdeck listen 3000 --path /webhooks` for a handler at `POST /webhooks`).

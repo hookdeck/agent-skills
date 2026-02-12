@@ -137,6 +137,17 @@ npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
 - **receive-webhooks** — Setup Hookdeck, build handler with signature verification, run `hookdeck listen`. Tests stages 01–03.
 - **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Tests composition with webhook-skills.
 
+### Scenario run checklist
+
+Run these and evaluate results; iterate on skills or prompts as needed.
+
+| # | Scenario | Framework | Command | Status |
+|---|----------|-----------|---------|--------|
+| 1 | receive-webhooks | Express | `./scripts/test-agent-scenario.sh run receive-webhooks express` | Done |
+| 2 | receive-webhooks | Next.js | `./scripts/test-agent-scenario.sh run receive-webhooks nextjs` | To do |
+| 3 | receive-webhooks | FastAPI | `./scripts/test-agent-scenario.sh run receive-webhooks fastapi` | To do |
+| 4 | receive-provider-webhooks | (e.g. Express or Next.js) | `./scripts/test-agent-scenario.sh run receive-provider-webhooks express --provider stripe` | To do |
+
 **Output:** `test-results/<scenario>-<framework>-<timestamp>.md` (report with checklist) and `.log` (full Claude output). Score manually using the checklist; use results to improve skills or scenario prompts.
 
 ### Iterative Improvement Workflow

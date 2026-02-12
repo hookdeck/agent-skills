@@ -42,7 +42,7 @@ Follow these in order for a new Hookdeck integration:
 4. **[04-iterate](references/04-iterate.md)** -- Debug failures, fix code, replay events
 
 Stage 02 references provider-specific skills from `hookdeck/webhook-skills`
-(e.g., `stripe-webhooks` for Stripe verification and event types).
+(e.g., `stripe-webhooks` for Stripe verification and event types). Include Hookdeck setup and usage in the project README (run app, `hookdeck listen` with `--path`, Source URL for provider).
 
 ## Quick Start (Receive Webhooks)
 

@@ -85,6 +85,17 @@ HOOKDECK_WEBHOOK_SECRET=your_webhook_signing_secret
 # STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
+## Documentation
+
+When you add a webhook handler to a project, add or update the project README (or equivalent setup doc) so the user has written instructions in the repo. Include:
+
+1. How to set `HOOKDECK_WEBHOOK_SECRET` and run the app
+2. How to run `hookdeck listen <port> --path /webhooks` (or the path that matches the handler) and that this creates the connection
+3. That the **Source URL** shown by the CLI is the URL to configure in the webhook provider's settings
+4. Optionally: how to test (e.g. provider "Send test webhook" or curl to the Source URL)
+
+Do not leave the default framework README without Hookdeck setup and usage instructions. Add a section (e.g. "Receiving webhooks with Hookdeck") or replace with project-specific instructions that include the above.
+
 ## Next Step
 
 Proceed to [03-listen.md](03-listen.md) to start receiving events locally. When you run `hookdeck listen`, use `--path` to match your handler (e.g. `hookdeck listen 3000 --path /webhooks` for a handler at `POST /webhooks`).

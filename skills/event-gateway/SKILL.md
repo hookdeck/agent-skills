@@ -22,7 +22,7 @@ See [references/referencing-docs.md](references/referencing-docs.md) for how to 
 | **Asynchronous APIs** | Event ingestion at scale from IoT devices, SDKs, web analytics | [quickstart](https://hookdeck.com/docs/use-cases/asynchronous-apis/quickstart) |
 | **Test & debug localhost** | Local webhook development with the CLI | [quickstart](https://hookdeck.com/docs/use-cases/test-debug-localhost/quickstart) |
 
-> **Sending webhooks to customers?** Use [Outpost](../outpost/SKILL.md) instead.
+> **Sending webhooks to customers?** Use [Outpost](https://github.com/hookdeck/agent-skills/blob/main/skills/outpost/SKILL.md) instead.
 
 ## Provider webhooks: use two skills together (layered composition)
 

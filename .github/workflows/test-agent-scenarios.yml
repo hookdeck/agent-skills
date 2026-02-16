@@ -31,6 +31,15 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install Claude CLI
+        run: |
+          curl -fsSL https://claude.ai/install.sh | bash
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/bin" >> $GITHUB_ENV
+
+      - name: Verify Claude CLI
+        run: claude --version
+
       - name: Install scenario tester
         run: |
           cd tools/agent-scenario-tester

@@ -27,7 +27,7 @@ npx skills add hookdeck/agent-skills --skill outpost
 
 | Skill | Purpose | Use when... |
 |---|---|---|
-| `hookdeck` | Master router | You need help with any Hookdeck product and aren't sure which skill to use |
+| `hookdeck` | Skill router | You need help with any Hookdeck product and aren't sure which skill to use |
 | `event-gateway` | Receive, route, and deliver webhooks | Getting started with Hookdeck, receiving webhooks, configuring connections, local development, monitoring, or API automation |
 | `outpost` | Send webhooks to customers | Sending events to customer endpoints via HTTP, SQS, RabbitMQ, Pub/Sub, or other destinations |
 

@@ -1,6 +1,6 @@
 ---
 name: outpost
-description: "Sets up and configures Hookdeck Outpost for outbound event delivery to customer endpoints. Use when sending webhooks to customers, configuring delivery destinations like HTTP, SQS, RabbitMQ, Pub/Sub, EventBridge, or Kafka, or managing tenants and subscriptions in Outpost."
+description: "Sets up and configures Hookdeck Outpost for outbound event delivery to customer endpoints. Use when sending webhooks to customers, building webhook delivery infrastructure, configuring destinations (HTTP, SQS, RabbitMQ, Pub/Sub, EventBridge, Kafka), or managing tenants and subscriptions in Outpost."
 allowed-tools: WebFetch
 ---
 

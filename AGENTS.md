@@ -217,3 +217,45 @@ Before merging a new or updated skill, verify:
 - [ ] Decision trees or conditional workflows where multiple paths exist
 - [ ] Cross-references related skills where appropriate
 - [ ] Links work (documentation URLs, relative file paths to references)
+
+---
+
+## Cursor plugin (marketplace)
+
+This repo is packaged as a Cursor Marketplace plugin. The plugin structure lives alongside the Agent Skills format.
+
+### Plugin structure
+
+```
+.cursor-plugin/plugin.json    # Manifest (name, displayName, description, version, keywords, skills, rules, logo)
+assets/logo.svg               # Hookdeck brand icon (1:1/square)
+rules/*.mdc                   # Cursor rules (optional)
+CHANGELOG.md                  # Keep a Changelog format, required for marketplace
+```
+
+### Skill cross-references
+
+When skills reference other skills, use **fully qualified GitHub URLs**: `[event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md)`. Relative paths are for files within the same skill only (e.g. `references/`).
+
+### Cursor rules (rules/*.mdc)
+
+Rules provide concise, always-on guidance. Keep them minimal; link to skills for depth.
+
+- **Frontmatter:** `description` is required (Cursor validation). Optional: `globs` for file-pattern activation.
+- **Format:** No official published spec. Use YAML frontmatter + markdown body. Community conventions vary; the plugin template validates only `description`.
+- **Content:** Rules should point to skills via full GitHub URLs. Draw from website mdocs for accuracy.
+- **Naming:** Use kebab-case filenames (e.g. `webhook-best-practices.mdc`, `local-webhook-development.mdc`).
+
+### README and install methods
+
+- **Cursor first:** Lead with Cursor plugin install (`/add-plugin hookdeck`). What the plugin does.
+- **Retain generic skills:** Keep `npx skills add hookdeck/agent-skills` and full Agent Skills usage for Claude, ChatGPT, and other agents. Do not remove the generic install path.
+
+### Plugin description and keywords
+
+- **Description:** Cover both Event Gateway (receive, queue, route, deliver) and Outpost (send webhooks). Include "test locally with the Hookdeck CLI."
+- **Keywords:** Include `webhooks`, `webhook-delivery`, `send-webhooks`, `event-gateway`, `event-destinations`, `local-development`, plus discovery terms from the analysis.
+
+### Worktrees
+
+Use `.worktrees/` for feature branches (gitignored). Example: `git worktree add -b cursor-plugin .worktrees/cursor-plugin main`.

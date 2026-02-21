@@ -1,0 +1,15 @@
+---
+description: Webhook handler rules—enable source authentication, verify the Hookdeck signature, and ensure idempotency.
+---
+
+# Webhook Best Practices
+
+When building webhook handlers:
+
+1. **Always enable authentication at the source.** Configure [source authentication](https://hookdeck.com/docs/sources#add-source-authentication) so Hookdeck verifies incoming requests (HMAC, Basic Auth, or API Key). Hookdeck rejects unverified requests and labels them "Verification Failed."
+
+2. **Always verify the Hookdeck signature.** Hookdeck adds `x-hookdeck-signature` to requests forwarded to your handler. Verify this header before processing. When source verification is enabled, Hookdeck also sets `x-hookdeck-verified` to `true` on requests that passed source verification—you do not need to verify the provider's signature separately; verifying the Hookdeck signature is sufficient. See [Hookdeck webhook signature verification](https://hookdeck.com/docs/authentication#hookdeck-webhook-signature-verification).
+
+3. **Handlers must be idempotent.** Webhooks can be retried and may arrive multiple times. Design handlers to safely handle duplicates (e.g., check for existing records before creating, use idempotency keys).
+
+Docs: [authentication](https://hookdeck.com/docs/authentication), [sources](https://hookdeck.com/docs/sources). For verification code and setup, use the [event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md) skill.

@@ -1,0 +1,37 @@
+{
+  "name": "hookdeck",
+  "displayName": "Hookdeck",
+  "description": "Receive, queue, route, and deliver webhooks and events with Hookdeck Event Gateway. Send webhooks to customers with Outpost. Set up webhook endpoints, test locally with the Hookdeck CLI, configure event routing and filtering, manage connections via the API, and troubleshoot delivery issues.",
+  "version": "0.2.0",
+  "author": {
+    "name": "Hookdeck",
+    "email": "support@hookdeck.com"
+  },
+  "homepage": "https://hookdeck.com",
+  "repository": "https://github.com/hookdeck/agent-skills",
+  "license": "MIT",
+  "keywords": [
+    "webhooks",
+    "webhook-delivery",
+    "send-webhooks",
+    "event-gateway",
+    "event-driven",
+    "event-destinations",
+    "hookdeck",
+    "queue",
+    "event-queue",
+    "serverless-queue",
+    "webhook-relay",
+    "event-processing",
+    "async-messaging",
+    "webhook-infrastructure",
+    "webhook-testing",
+    "webhook-retry",
+    "event-routing",
+    "webhook-verification",
+    "local-development"
+  ],
+  "skills": "./skills/",
+  "rules": "./rules/",
+  "logo": "assets/logo.svg"
+}

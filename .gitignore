@@ -49,3 +49,6 @@ yarn.lock
 # Agent scenario tester
 test-results/
 tools/agent-scenario-tester/node_modules/
+
+# Worktrees
+.worktrees/

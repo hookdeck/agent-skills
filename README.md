@@ -1,8 +1,14 @@
 # Hookdeck Agent Skills
 
-Agent Skills for working with [Hookdeck](https://hookdeck.com) products. Follows the [Agent Skills specification](https://agentskills.io/).
+Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, and build outbound webhook delivery with [Outpost](https://outpost.hookdeck.com).
 
-## Install
+## Install (Cursor)
+
+**Cursor users:** Add the Hookdeck plugin from the [Cursor Marketplace](https://cursor.com/marketplace) or use `/add-plugin hookdeck` in Cursor. The plugin provides skills for Event Gateway and Outpost.
+
+## Install (Agent Skills / Other Agents)
+
+For Claude, ChatGPT, and other agents that support the [Agent Skills specification](https://agentskills.io/):
 
 ```bash
 npx skills add hookdeck/agent-skills
@@ -12,6 +18,7 @@ Or install a specific skill:
 
 ```bash
 npx skills add hookdeck/agent-skills --skill event-gateway
+npx skills add hookdeck/agent-skills --skill outpost
 ```
 
 ## Available Skills
@@ -43,6 +50,18 @@ The `event-gateway` skill includes a staged integration workflow:
 3. **Listen** -- Start `hookdeck listen`, trigger test events
 4. **Iterate** -- Debug failures, fix code, replay events
 
+## Roadmap
+
+### Hookdeck MCP Server (coming soon)
+
+The Hookdeck CLI will host an MCP server (`hookdeck mcp`), giving your coding agent direct access to the full CLI toolchain. Beyond resource management, this enables a real-time development loop:
+
+- **Live event tools:** List, inspect, and retry events and deliveries without leaving your editor
+- **Webhook tunnel in the agent loop:** The MCP runs `hookdeck listen` in-process. When webhook events arrive (or deliveries fail), the MCP pushes updates to the agent. Your agent writes the webhook handler, receives a live event, sees the result, and iterates on the code—all in a single session with no context switching.
+- **Both skill repos as MCP resources:** Agent-skills (Hookdeck product knowledge) and webhook-skills (provider-specific webhook knowledge for Stripe, Shopify, GitHub, etc.) served as `hookdeck://` and `webhooks://` resources.
+
+This turns the plugin from a knowledge layer into an interactive development environment for webhook integrations.
+
 ## Documentation
 
 - [Event Gateway docs](https://hookdeck.com/docs/)
@@ -52,7 +71,7 @@ The `event-gateway` skill includes a staged integration workflow:
 ## Testing
 
 - **Code examples:** Run `./scripts/test-examples.sh` or see [TESTING.md](TESTING.md).
-- **Agent scenarios:** Run the scenario tester to verify an agent follows the event-gateway workflow (and, for provider webhooks, uses webhook-skills). See [TESTING.md](TESTING.md#agent-scenario-testing-two-layers).
+- **Agent scenarios:** Run the scenario tester to verify an agent follows the event-gateway workflow. See [TESTING.md](TESTING.md#agent-scenario-testing-two-layers).
 
 ## Contributing
 

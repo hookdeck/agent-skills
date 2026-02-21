@@ -61,7 +61,7 @@ ALWAYS use these exact terms. Inconsistency confuses agents and users.
 ```
 hookdeck/agent-skills/
   skills/
-    hookdeck/                          # Master router -- dispatches to product skills
+    hookdeck/                          # Skill router -- dispatches to product skills
       SKILL.md
     event-gateway/                     # ONE comprehensive skill
       SKILL.md                         # ~90 lines: use cases, staged workflow, reference tables
@@ -208,7 +208,7 @@ Before merging a new or updated skill, verify:
 - [ ] No general webhook/API education that agents already know
 - [ ] No time-sensitive information (dates, version predictions)
 - [ ] Consistent terminology throughout all files in the skill
-- [ ] Skill name has product prefix (`event-gateway` or `outpost`, or `hookdeck` for the master router)
+- [ ] Skill name has product prefix (`event-gateway` or `outpost`, or `hookdeck` for the skill router)
 
 ### Quality
 

@@ -2,9 +2,11 @@
 
 Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, and build outbound webhook delivery with [Outpost](https://outpost.hookdeck.com).
 
+<!-- Cursor plugin pending marketplace acceptance
 ## Install (Cursor)
 
 **Cursor users:** Add the Hookdeck plugin from the [Cursor Marketplace](https://cursor.com/marketplace) or use `/add-plugin hookdeck` in Cursor. The plugin provides skills for Event Gateway and Outpost.
+-->
 
 ## Install (Agent Skills / Other Agents)
 

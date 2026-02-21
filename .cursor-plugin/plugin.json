@@ -22,7 +22,6 @@
     "event-queue",
     "serverless-queue",
     "webhook-relay",
-    "api-gateway",
     "event-processing",
     "async-messaging",
     "webhook-infrastructure",

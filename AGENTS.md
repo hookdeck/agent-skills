@@ -54,6 +54,8 @@ ALWAYS use these exact terms. Inconsistency confuses agents and users.
 - **[Attempt](https://hookdeck.com/docs/events)** -- a single delivery try to a Destination. Documented on the [Events & Attempts](https://hookdeck.com/docs/events) page. NOT "delivery" when referring to the Hookdeck data model specifically.
 - **[Rules](https://hookdeck.com/docs/connections)** -- processing logic attached to a Connection: [filter](https://hookdeck.com/docs/filters), [transform](https://hookdeck.com/docs/transformations), [retry](https://hookdeck.com/docs/retries), delay, [deduplicate](https://hookdeck.com/docs/deduplication). NOT "middleware" or "plugins."
 
+**Request → event → attempt ordering:** When listing or describing these three together (in prose, CLI examples, doc links, or tables), always use the order **request, then event, then attempt**. This reflects the data flow: a [Request](https://hookdeck.com/docs/requests) (raw inbound webhook) produces one or more [Events](https://hookdeck.com/docs/events) (processed deliveries), and each Event has one or more [Attempts](https://hookdeck.com/docs/events) (delivery tries). Using that order consistently helps agents and users follow the lifecycle.
+
 ---
 
 ## Repository structure
@@ -204,6 +206,7 @@ Before merging a new or updated skill, verify:
 ### Hookdeck conventions
 
 - [ ] Uses correct terminology from the glossary above
+- [ ] When mentioning requests, events, and attempts together, uses order **request → event → attempt** (data flow)
 - [ ] Links to at least one live documentation page
 - [ ] No general webhook/API education that agents already know
 - [ ] No time-sensitive information (dates, version predictions)

@@ -62,10 +62,10 @@ hookdeck listen 3000 --path /webhooks
 
 (Use `hookdeck listen 3000` without `--path` only if your app serves webhooks at the root path.)
 
-For explicit control, use `hookdeck connection create`:
+For explicit control, use `hookdeck gateway connection create`:
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "stripe-to-api" \
   --source-name "stripe" \
   --source-type WEBHOOK \
@@ -81,7 +81,7 @@ The CLI outputs your **Source URL** (e.g., `https://hkdk.events/xxx`). Configure
 **Receive webhooks** (default): One Source per provider, one or more Connections to your API endpoints.
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "stripe-webhooks" \
   --source-name "stripe" \
   --source-type WEBHOOK \
@@ -94,18 +94,18 @@ hookdeck connection create \
 
 **Asynchronous APIs**: Source receives high-volume events from your own SDKs/devices, Connections fan out to multiple processors.
 
-**Localhost only**: Just use `hookdeck listen <port>` -- no further setup needed.
+**Localhost only**: Just use `hookdeck listen <source-name> <port>` -- no further setup needed.
 
 **Production:** **(1) Same project:** Keep the same project and connections; update the [Destination](https://hookdeck.com/docs/destinations) to your production HTTPS URL (Dashboard or [API](https://hookdeck.com/docs/api)). **(2) New project:** [Create a new project](https://hookdeck.com/docs/projects) and duplicate setup with Destinations pointing to production HTTPS. Before going live: configure [rate limiting / max delivery rate](https://hookdeck.com/docs/destinations), [retries](https://hookdeck.com/docs/retries), and [issue triggers / notifications](https://hookdeck.com/docs/issue-triggers). See [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint) and the linked docs — Hookdeck docs are the source of truth.
 
 See [connection-architecture.md](connection-architecture.md) for detailed patterns (fan-out, fan-in, use-case-specific architectures).
 
-## Configure Source Authentication (Optional)
+## Configure Source Authentication (Optional, but highly recommended)
 
 If your provider signs webhooks (Stripe, Shopify, GitHub, etc.), configure [Source Authentication](https://hookdeck.com/docs/authentication) so Hookdeck verifies signatures before forwarding:
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "stripe-verified" \
   --source-name "stripe" \
   --source-type STRIPE \

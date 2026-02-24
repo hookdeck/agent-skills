@@ -9,6 +9,7 @@
 - [Troubleshooting Flowchart](#troubleshooting-flowchart)
 - [Issues and Notifications](#issues-and-notifications)
 - [Replay](#replay)
+- [Documentation](#documentation)
 
 How to monitor webhook deliveries, debug failures, and replay events.
 
@@ -58,6 +59,25 @@ When using an Event Gateway project, the [Hookdeck Dashboard](https://dashboard.
 - **Issues**: Track patterns of failures (delivery issues, transformation errors, backpressure)
 - **Replay**: Re-deliver individual Events or bulk replay filtered sets
 - **Bookmarks**: Save representative Requests for repeated testing
+
+### CLI request/event/attempt inspection
+
+From the terminal you can list, inspect, and retry without opening the Dashboard. Order reflects data flow: request → events → attempts.
+
+```sh
+hookdeck gateway request list
+hookdeck gateway request get req_xxx
+hookdeck gateway request retry req_xxx
+hookdeck gateway event list
+hookdeck gateway event get evt_xxx
+hookdeck gateway event retry evt_xxx
+hookdeck gateway attempt list --event-id evt_xxx
+hookdeck gateway attempt get att_xxx
+```
+
+See [Request commands](https://hookdeck.com/docs/cli/request.md), [Event commands](https://hookdeck.com/docs/cli/event.md), and [Attempt commands](https://hookdeck.com/docs/cli/attempt.md) for full options.
+
+**Metrics:** CLI metrics commands (e.g. request/event/attempt counts over time) may be added in a future release. Until then, use the [Dashboard](https://dashboard.hookdeck.com) or [Metrics API](https://hookdeck.com/docs/metrics).
 
 ### REST API
 
@@ -122,3 +142,4 @@ curl -X POST https://api.hookdeck.com/$API_VERSION/bulk/events/retry \
 - [Issue triggers](https://hookdeck.com/docs/issue-triggers)
 - [Metrics](https://hookdeck.com/docs/metrics)
 - [Bookmarks](https://hookdeck.com/docs/bookmarks)
+- CLI: [request](https://hookdeck.com/docs/cli/request.md) · [event](https://hookdeck.com/docs/cli/event.md) · [attempt](https://hookdeck.com/docs/cli/attempt.md) · [source](https://hookdeck.com/docs/cli/source.md) · [destination](https://hookdeck.com/docs/cli/destination.md) · [transformation](https://hookdeck.com/docs/cli/transformation.md)

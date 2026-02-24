@@ -28,7 +28,7 @@ How the Hookdeck Event Gateway authenticates requests -- both inbound (from webh
 Source Types are platform presets that auto-configure signature verification for a provider:
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "stripe-verified" \
   --source-name "stripe" \
   --source-type STRIPE \
@@ -45,7 +45,7 @@ For the full list of Source Types, fetch [/docs/sources.md](https://hookdeck.com
 ### API Key Authentication
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "custom-auth" \
   --source-name "my-source" \
   --source-type WEBHOOK \

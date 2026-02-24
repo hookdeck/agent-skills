@@ -140,7 +140,7 @@ program
           await checkAll();
         }
 
-        const timestamp = new Date().toISOString().replace(/[-:T]/g, '').slice(0, 15);
+        const timestamp = new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14);
         const scenarioSlug = opts.provider
           ? `${resolved.config.name}-${framework}-${opts.provider}`
           : `${resolved.config.name}-${framework}`;

@@ -118,7 +118,7 @@ Baseline: run `npm run skill:review` periodically and record scores; use them to
 
 The scenario tester installs skills, runs Claude Code with a scenario prompt, and writes a scored report. Use it to check that an agent can actually follow the staged workflow.
 
-**Prerequisites:** [Claude Code CLI](https://claude.ai/download) installed and logged in (`ANTHROPIC_API_KEY` or `claude login`).
+**Prerequisites:** [Claude Code CLI](https://claude.ai/download) installed and logged in (`ANTHROPIC_API_KEY` or `claude login`). The tool runs a preflight that sends a short prompt to the CLI; if you see "Claude CLI did not respond within 15s", the CLI may be blocked (e.g. in a restricted sandbox). Run with a full environment or ensure the CLI can reach the API.
 
 **Usage:**
 
@@ -137,7 +137,7 @@ npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
 
 **Scenarios:** Defined in `scenarios.yaml`. Initial set:
 
-- **receive-webhooks** — Setup Hookdeck, build handler with signature verification, run `hookdeck listen`. Tests stages 01–03.
+- **receive-webhooks** — Setup Hookdeck, build handler with signature verification, run `hookdeck listen`, document inspect/retry workflow. Tests stages 01–04 (iterate is documentation-only: agent documents how to list request → event → attempt and retry; no live traffic required).
 - **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Only the event-gateway skill is pre-installed; the agent is expected to discover and use the provider skill from webhook-skills (e.g. stripe-webhooks) and use the provider SDK in the handler. Tests composition and the provider-webhooks checklist.
 
 ### Scenario run checklist
@@ -171,11 +171,14 @@ CI runs scenario tests on-demand (workflow_dispatch) and weekly (schedule). Use 
 | Skill discovery      | 2      |
 | Stage 01: Setup      | 3      |
 | Stage 02: Scaffold    | 5      |
-| Stage 03: Listen      | 3      |
+| Stage 03: Listen     | 3      |
+| Stage 04: Iterate    | 2      |
 | Code quality         | 2      |
-| **Total**            | **15** |
+| **Total**            | **17** |
 
-For receive-provider-webhooks, add **Composition** (2 pts) → 17 total. See the generated report for the full checklist.
+**Stage 04 - Iterate** (documentation-only): Agent must document how to inspect and retry once traffic exists (e.g. after sending a test webhook). Checks: references 04-iterate, cli-workflows, or monitoring-debugging; documents `hookdeck gateway` request/event/attempt list and retry; request → event → attempt order in the doc. No live requests/events/attempts are required during the run.
+
+For receive-provider-webhooks, add **Composition** (2 pts) → 19 total. See the generated report for the full checklist.
 
 ### CI
 

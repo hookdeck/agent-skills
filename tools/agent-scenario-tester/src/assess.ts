@@ -123,6 +123,20 @@ function passesCheck(
     if (index === 2) return /Source URL|source URL|configure.*provider|webhook provider/i.test(setupListenDoc);
     return false;
   }
+  if (stage === 'Stage 04 - Iterate') {
+    if (index === 0) return /04-iterate|cli-workflows|monitoring-debugging/i.test(doc);
+    if (index === 1) {
+      const hasGateway = /hookdeck gateway/i.test(doc);
+      const hasList = /request list|event list|attempt list|list requests|list events|list attempts/i.test(doc);
+      const hasRetry = /retry|event retry/i.test(doc);
+      return hasGateway && hasList && hasRetry;
+    }
+    if (index === 2) {
+      const docNorm = doc.replace(/\s+/g, ' ').toLowerCase();
+      return /request.*event.*attempt/i.test(docNorm);
+    }
+    return false;
+  }
   if (stage === 'Code quality') {
     if (index === 0) return code.length > 50;
     if (index === 1) return code.length > 0 && !/syntax error|SyntaxError/i.test(code);

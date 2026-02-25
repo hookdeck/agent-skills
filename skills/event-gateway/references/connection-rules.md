@@ -23,7 +23,7 @@ Accept or reject [Events](https://hookdeck.com/docs/events) based on request pro
 Filter by event type:
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "stripe-payments" \
   --source-name "stripe" \
   --source-type WEBHOOK \
@@ -145,7 +145,7 @@ Automatically retry failed deliveries (non-2xx responses) with configurable back
 **CLI example:**
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "with-retries" \
   --source-name "my-source" \
   --source-type WEBHOOK \
@@ -188,7 +188,7 @@ Field-based deduplication:
 **CLI example:**
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "deduped" \
   --source-name "my-source" \
   --source-type WEBHOOK \

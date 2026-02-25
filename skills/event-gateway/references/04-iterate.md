@@ -32,6 +32,30 @@ When using an Event Gateway project, access the full [Hookdeck Dashboard](https:
 - **Replay**: Re-deliver individual Events or bulk replay filtered sets
 - **[Bookmarks](https://hookdeck.com/docs/bookmarks)**: Save representative requests for repeated testing
 
+### CLI inspection and retry
+
+Use `hookdeck gateway` commands to list, inspect, and retry requests, events, and attempts from the terminal (useful for scripting, CI, or when you prefer not to open the Dashboard). Order reflects data flow: request → events → attempts.
+
+```sh
+# Requests (raw inbound webhooks)
+hookdeck gateway request list
+hookdeck gateway request get req_xxx
+hookdeck gateway request retry req_xxx
+
+# Events (processed deliveries)
+hookdeck gateway event list
+hookdeck gateway event list --status FAILED --limit 20
+hookdeck gateway event get evt_xxx
+hookdeck gateway event retry evt_xxx
+hookdeck gateway event raw-body evt_xxx
+
+# Attempts (delivery tries for an event)
+hookdeck gateway attempt list --event-id evt_xxx
+hookdeck gateway attempt get att_xxx
+```
+
+For full options and flags, fetch [Request commands](https://hookdeck.com/docs/cli/request.md), [Event commands](https://hookdeck.com/docs/cli/event.md), and [Attempt commands](https://hookdeck.com/docs/cli/attempt.md).
+
 ## Troubleshooting Flowchart
 
 **Events not arriving at your Source?**
@@ -58,9 +82,9 @@ When using an Event Gateway project, access the full [Hookdeck Dashboard](https:
 The replay loop is the core of the iterate stage:
 
 1. Send or receive a webhook event
-2. Inspect the event and response in the CLI TUI, web console, or Dashboard
+2. Inspect the event and response in the CLI TUI, web console, Dashboard, or via `hookdeck gateway request get` / `event get` / `attempt list`
 3. If the delivery failed, fix your handler code
-4. Replay the same event (from CLI TUI, web console, or Dashboard)
+4. Replay the same event (from CLI TUI, web console, Dashboard, or `hookdeck gateway event retry evt_xxx`)
 5. Repeat until successful
 
 This avoids having to re-trigger events from the provider each time you make a change.

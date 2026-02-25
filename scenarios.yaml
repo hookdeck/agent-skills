@@ -16,17 +16,23 @@ scenarios:
     displayName: Receive Webhooks (basic)
     description: >
       Basic Hookdeck setup: create connection, build handler with
-      Hookdeck signature verification, listen locally.
+      Hookdeck signature verification, listen locally, document iterate workflow.
     stages:
       - setup
       - scaffold
       - listen
+      - iterate
     prompt: >
       Set up Hookdeck for my {framework} app to receive webhooks.
       Create a webhook handler at /webhooks that verifies the
       Hookdeck signature. Use hookdeck listen for local development.
-      If you use the installed event-gateway skill, say which file you
-      referenced (e.g. verification-code.md or 02-scaffold.md).
+      Assume the user has already received at least one webhook (e.g. by running
+      hookdeck listen and sending a test request to the Source URL). In the
+      README or docs, add a section that explains how to inspect and retry:
+      list requests, then events, then attempts (in that order), and how to
+      retry a failed event using the CLI. If you use the installed event-gateway
+      skill, say which file you referenced (e.g. verification-code.md,
+      02-scaffold.md, 04-iterate.md).
     evaluation:
       - stage: Skill discovery
         points: 2
@@ -53,6 +59,12 @@ scenarios:
           - hookdeck listen <port> with correct port
           - --path flag used if endpoint is not /
           - Source URL noted or referenced
+      - stage: Stage 04 - Iterate
+        points: 2
+        checks:
+          - References 04-iterate, cli-workflows, or monitoring-debugging
+          - Documents hookdeck gateway request/event/attempt list and retry
+          - Request then event then attempt order in documentation
       - stage: Code quality
         points: 2
         checks:

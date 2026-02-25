@@ -1,5 +1,12 @@
 # Connection Architecture
 
+## Contents
+
+- [Core Model](#core-model)
+- [Patterns](#patterns)
+- [Decision Tree](#decision-tree)
+- [Documentation](#documentation)
+
 How to structure [Connections](https://hookdeck.com/docs/connections) for different use cases. A Connection links a [Source](https://hookdeck.com/docs/sources) to a [Destination](https://hookdeck.com/docs/destinations) with optional [Rules](https://hookdeck.com/docs/connections).
 
 ## Core Model
@@ -41,7 +48,7 @@ GitHub Source  ──> Connection C ──> Webhook Handler
 One Source per provider, one Connection to your API. Optionally add filters and transforms per Connection.
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "stripe-to-api" \
   --source-name "stripe" \
   --source-type STRIPE \
@@ -56,7 +63,7 @@ hookdeck connection create \
 Source receives events from service A, Connection transforms the payload and routes to service B.
 
 ```sh
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "crm-to-email" \
   --source-name "crm-events" \
   --source-type WEBHOOK \
@@ -75,7 +82,7 @@ High-volume Source receives events from your own SDKs or devices. Multiple Conne
 
 ```sh
 # Source for all device events
-hookdeck connection create \
+hookdeck gateway connection create \
   --name "devices-to-processor" \
   --source-name "device-events" \
   --source-type WEBHOOK \

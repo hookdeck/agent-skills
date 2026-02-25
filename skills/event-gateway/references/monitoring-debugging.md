@@ -9,6 +9,7 @@
 - [Troubleshooting Flowchart](#troubleshooting-flowchart)
 - [Issues and Notifications](#issues-and-notifications)
 - [Replay](#replay)
+- [Documentation](#documentation)
 
 How to monitor webhook deliveries, debug failures, and replay events.
 
@@ -59,6 +60,25 @@ When using an Event Gateway project, the [Hookdeck Dashboard](https://dashboard.
 - **Replay**: Re-deliver individual Events or bulk replay filtered sets
 - **Bookmarks**: Save representative Requests for repeated testing
 
+### CLI request/event/attempt inspection
+
+From the terminal you can list, inspect, and retry without opening the Dashboard. Order reflects data flow: request → events → attempts.
+
+```sh
+hookdeck gateway request list
+hookdeck gateway request get req_xxx
+hookdeck gateway request retry req_xxx
+hookdeck gateway event list
+hookdeck gateway event get evt_xxx
+hookdeck gateway event retry evt_xxx
+hookdeck gateway attempt list --event-id evt_xxx
+hookdeck gateway attempt get att_xxx
+```
+
+See [Request commands](https://hookdeck.com/docs/cli/request.md), [Event commands](https://hookdeck.com/docs/cli/event.md), and [Attempt commands](https://hookdeck.com/docs/cli/attempt.md) for full options.
+
+**Metrics:** CLI metrics commands (e.g. request/event/attempt counts over time) may be added in a future release. Until then, use the [Dashboard](https://dashboard.hookdeck.com) or [Metrics API](https://hookdeck.com/docs/metrics).
+
 ### REST API
 
 Use the API programmatically -- see [api-patterns.md](api-patterns.md).
@@ -75,7 +95,7 @@ Use the API programmatically -- see [api-patterns.md](api-patterns.md).
 
 1. Check the Attempt response in the CLI TUI or web UI
 2. Is your handler running and listening on the correct port?
-3. Is the route correct (e.g., `/webhooks` vs `/webhook`)?
+3. Is the endpoint path correct (e.g., `/webhooks` vs `/webhook`)?
 4. Is the handler returning a 2xx status? Non-2xx triggers retries.
 
 **Signature verification failing in your handler?**
@@ -122,3 +142,4 @@ curl -X POST https://api.hookdeck.com/$API_VERSION/bulk/events/retry \
 - [Issue triggers](https://hookdeck.com/docs/issue-triggers)
 - [Metrics](https://hookdeck.com/docs/metrics)
 - [Bookmarks](https://hookdeck.com/docs/bookmarks)
+- CLI: [request](https://hookdeck.com/docs/cli/request) · [event](https://hookdeck.com/docs/cli/event) · [attempt](https://hookdeck.com/docs/cli/attempt) · [source](https://hookdeck.com/docs/cli/source) · [destination](https://hookdeck.com/docs/cli/destination) · [transformation](https://hookdeck.com/docs/cli/transformation)

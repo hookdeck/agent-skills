@@ -63,6 +63,12 @@ Hookdeck docs are the source of truth; point users and agents to these paths for
 | Listen command | `/docs/cli/listen.md` |
 | Connection commands | `/docs/cli/connection.md` |
 | Project commands | `/docs/cli/project.md` |
+| Source commands | `/docs/cli/source.md` |
+| Destination commands | `/docs/cli/destination.md` |
+| Transformation commands | `/docs/cli/transformation.md` |
+| Request commands | `/docs/cli/request.md` |
+| Event commands | `/docs/cli/event.md` |
+| Attempt commands | `/docs/cli/attempt.md` |
 
 ## API Reference
 

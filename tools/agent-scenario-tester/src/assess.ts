@@ -133,7 +133,7 @@ function passesCheck(
     }
     if (index === 2) {
       const docNorm = doc.replace(/\s+/g, ' ').toLowerCase();
-      return /request.*event.*attempt/i.test(docNorm);
+      return /request.*event.*attempt/.test(docNorm);
     }
     return false;
   }

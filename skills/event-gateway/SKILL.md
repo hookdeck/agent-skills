@@ -103,6 +103,7 @@ Use as needed (not sequential):
 | CLI | [references/cli-workflows.md](references/cli-workflows.md) | CLI installation, connection management, project switching |
 | API | [references/api-patterns.md](references/api-patterns.md) | REST API automation, bulk operations, publish |
 | Monitoring | [references/monitoring-debugging.md](references/monitoring-debugging.md) | Failed deliveries, event lifecycle, troubleshooting |
+| Iterate | [references/04-iterate.md](references/04-iterate.md) | Debug failures, replay events, CLI inspect/retry workflow |
 
 ### Verification Code
 

@@ -94,7 +94,7 @@ hookdeck gateway connection create \
 
 **Asynchronous APIs**: Source receives high-volume events from your own SDKs/devices, Connections fan out to multiple processors.
 
-**Localhost only**: Just use `hookdeck listen <source-name> <port>` -- no further setup needed.
+**Localhost only**: Just use `hookdeck listen <port>` (the CLI will prompt for a source name) or `hookdeck listen <port> <source>` to name the source up front -- no further setup needed.
 
 **Production:** **(1) Same project:** Keep the same project and connections; update the [Destination](https://hookdeck.com/docs/destinations) to your production HTTPS URL (Dashboard or [API](https://hookdeck.com/docs/api)). **(2) New project:** [Create a new project](https://hookdeck.com/docs/projects) and duplicate setup with Destinations pointing to production HTTPS. Before going live: configure [rate limiting / max delivery rate](https://hookdeck.com/docs/destinations), [retries](https://hookdeck.com/docs/retries), and [issue triggers / notifications](https://hookdeck.com/docs/issue-triggers). See [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint) and the linked docs — Hookdeck docs are the source of truth.
 

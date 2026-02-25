@@ -1,5 +1,12 @@
 # Connection Architecture
 
+## Contents
+
+- [Core Model](#core-model)
+- [Patterns](#patterns)
+- [Decision Tree](#decision-tree)
+- [Documentation](#documentation)
+
 How to structure [Connections](https://hookdeck.com/docs/connections) for different use cases. A Connection links a [Source](https://hookdeck.com/docs/sources) to a [Destination](https://hookdeck.com/docs/destinations) with optional [Rules](https://hookdeck.com/docs/connections).
 
 ## Core Model

@@ -95,7 +95,7 @@ Use the API programmatically -- see [api-patterns.md](api-patterns.md).
 
 1. Check the Attempt response in the CLI TUI or web UI
 2. Is your handler running and listening on the correct port?
-3. Is the route correct (e.g., `/webhooks` vs `/webhook`)?
+3. Is the endpoint path correct (e.g., `/webhooks` vs `/webhook`)?
 4. Is the handler returning a 2xx status? Non-2xx triggers retries.
 
 **Signature verification failing in your handler?**
@@ -142,4 +142,4 @@ curl -X POST https://api.hookdeck.com/$API_VERSION/bulk/events/retry \
 - [Issue triggers](https://hookdeck.com/docs/issue-triggers)
 - [Metrics](https://hookdeck.com/docs/metrics)
 - [Bookmarks](https://hookdeck.com/docs/bookmarks)
-- CLI: [request](https://hookdeck.com/docs/cli/request.md) · [event](https://hookdeck.com/docs/cli/event.md) · [attempt](https://hookdeck.com/docs/cli/attempt.md) · [source](https://hookdeck.com/docs/cli/source.md) · [destination](https://hookdeck.com/docs/cli/destination.md) · [transformation](https://hookdeck.com/docs/cli/transformation.md)
+- CLI: [request](https://hookdeck.com/docs/cli/request) · [event](https://hookdeck.com/docs/cli/event) · [attempt](https://hookdeck.com/docs/cli/attempt) · [source](https://hookdeck.com/docs/cli/source) · [destination](https://hookdeck.com/docs/cli/destination) · [transformation](https://hookdeck.com/docs/cli/transformation)

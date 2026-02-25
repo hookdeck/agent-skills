@@ -15,7 +15,7 @@ description: "Routes to the correct Hookdeck product skill. Covers Event Gateway
 
 ## Event Gateway
 
-Inbound event infrastructure. One skill covers all use cases:
+Inbound [event infrastructure](https://hookdeck.com/docs/). One skill covers all use cases:
 staged integration workflow, connections, rules, authentication,
 local dev, monitoring, and API.
 

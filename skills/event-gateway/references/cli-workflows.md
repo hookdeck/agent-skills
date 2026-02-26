@@ -223,7 +223,14 @@ hookdeck gateway attempt list --event-id evt_xxx
 hookdeck gateway attempt get att_xxx
 ```
 
-For full flag and option details, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md) or the per-command pages: [/docs/cli/source.md](https://hookdeck.com/docs/cli/source.md), [/docs/cli/destination.md](https://hookdeck.com/docs/cli/destination.md), [/docs/cli/transformation.md](https://hookdeck.com/docs/cli/transformation.md), [/docs/cli/request.md](https://hookdeck.com/docs/cli/request.md), [/docs/cli/event.md](https://hookdeck.com/docs/cli/event.md), [/docs/cli/attempt.md](https://hookdeck.com/docs/cli/attempt.md).
+**Metrics** (event/request/attempt/queue/pending/transformations over time): use `hookdeck gateway metrics` with subcommands `events`, `requests`, `attempts`, `queue-depth`, `pending`, `events-by-issue`, `transformations`. Required: `--start`, `--end`, `--measures`. See [monitoring-debugging.md](monitoring-debugging.md#cli-metrics) or [Metrics docs](https://hookdeck.com/docs/metrics) for examples. For the full CLI metrics reference, fetch [/docs/cli/metrics.md](https://hookdeck.com/docs/cli/metrics.md).
+
+```sh
+hookdeck gateway metrics events --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count,failed_count,error_rate
+hookdeck gateway metrics queue-depth --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures max_depth,max_age
+```
+
+For full flag and option details, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md) or the per-command pages: [/docs/cli/source.md](https://hookdeck.com/docs/cli/source.md), [/docs/cli/destination.md](https://hookdeck.com/docs/cli/destination.md), [/docs/cli/transformation.md](https://hookdeck.com/docs/cli/transformation.md), [/docs/cli/request.md](https://hookdeck.com/docs/cli/request.md), [/docs/cli/event.md](https://hookdeck.com/docs/cli/event.md), [/docs/cli/attempt.md](https://hookdeck.com/docs/cli/attempt.md), [/docs/cli/metrics.md](https://hookdeck.com/docs/cli/metrics.md).
 
 ## Project Management
 
@@ -242,4 +249,4 @@ For the full project reference, fetch [/docs/cli/project.md](https://hookdeck.co
 - [Listen command](https://hookdeck.com/docs/cli/listen)
 - [Connection commands](https://hookdeck.com/docs/cli/connection)
 - [Project commands](https://hookdeck.com/docs/cli/project)
-- [Source](https://hookdeck.com/docs/cli/source) · [Destination](https://hookdeck.com/docs/cli/destination) · [Transformation](https://hookdeck.com/docs/cli/transformation) · [Request](https://hookdeck.com/docs/cli/request) · [Event](https://hookdeck.com/docs/cli/event) · [Attempt](https://hookdeck.com/docs/cli/attempt)
+- [Source](https://hookdeck.com/docs/cli/source) · [Destination](https://hookdeck.com/docs/cli/destination) · [Transformation](https://hookdeck.com/docs/cli/transformation) · [Request](https://hookdeck.com/docs/cli/request) · [Event](https://hookdeck.com/docs/cli/event) · [Attempt](https://hookdeck.com/docs/cli/attempt) · [Metrics](https://hookdeck.com/docs/cli/metrics)

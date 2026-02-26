@@ -46,9 +46,9 @@ When the user asks to verify the Hookdeck signature or build a webhook handler t
 - **Prefer the example codebases in this skill** — they are runnable, proven, and tested. Point the user at the right one for their framework: [examples/express/](examples/express/), [examples/nextjs/](examples/nextjs/), [examples/fastapi/](examples/fastapi/).
 - Do not use third-party webhook libraries; use only the verification code from this skill.
 
-## Workflow Stages
+## Workflow Stages (getting started)
 
-Follow these in order for a new Hookdeck integration:
+This is the recommended path for a new integration: create sources, destinations, and connections (or have the CLI create them via `listen`), then build your handler and iterate. Follow these stages in order:
 
 1. **[01-setup](references/01-setup.md)** -- Create account, install CLI, create connection
 2. **[02-scaffold](references/02-scaffold.md)** -- Build handler from provider skill examples + Hookdeck verification
@@ -73,7 +73,7 @@ hookdeck login
 hookdeck listen 3000 --path /webhooks
 ```
 
-The CLI creates a Source URL, a Destination pointing at `localhost:3000`, and a Connection linking them. Configure your webhook provider to send to the Source URL. Use `--path` to match your handler path (e.g. `--path /webhooks` when your handler is at `POST /webhooks`).
+The CLI creates a Source URL, a Destination pointing at `localhost:3000`, and a Connection linking them. Configure your webhook provider to send to the Source URL. Use `--path` to match your handler path (e.g. `--path /webhooks` when your handler is at `POST /webhooks`). For a full step-by-step with account and handler (create connection, scaffold, listen, iterate), follow the **Workflow Stages** above.
 
 **Production:** Two options. **(1) Same project:** Keep the same project and connections; update the [Destination](https://hookdeck.com/docs/destinations) to your production HTTPS endpoint (e.g. `https://api.example.com/webhooks`) via the [Dashboard](https://dashboard.hookdeck.com) or [API](https://hookdeck.com/docs/api). **(2) New project:** Create a [new project](https://hookdeck.com/docs/projects) in Hookdeck and duplicate your setup (Sources, Connections) with Destinations pointing to your production HTTPS URLs. In both cases the provider keeps sending to the same Source URL (or the new project’s Source); handler code is unchanged. Before going live, consider: **rate limiting / max delivery rate** ([Destinations](https://hookdeck.com/docs/destinations)), **configuring retries** ([Retries](https://hookdeck.com/docs/retries)), and **issue notifications** ([Issue triggers](https://hookdeck.com/docs/issue-triggers), [Issues & Notifications](https://hookdeck.com/docs/issues)). Hookdeck docs are the source of truth; see [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint) and the linked Destinations, Retries, and Issue triggers docs for the full production checklist.
 
@@ -98,11 +98,18 @@ Use as needed (not sequential):
 
 ### Development & Operations
 
+Direct yourself to the right resource based on the task. **Use the CLI first to explore** and for simple tasks; then choose the API or Terraform when things are more complex. The CLI is a good first touch for tasks and for some analysis; you can use the API for querying too. **Tasks and simple scripts** (single commands or short multi-command workflows from the shell) **→ use the CLI.** **Complex scripts, applications, and automation → use the API.** When in doubt, start with the CLI to explore. For **resource management** (sources, destinations, connections, transformations): use the **API** when resources are created **dynamically** (e.g. from an application at runtime); use **Terraform** or CLI/scripts for **effectively static** definition management (IaC) — [Terraform provider](https://github.com/hookdeck/terraform-provider-hookdeck). For details on performing querying, metrics, or inspection (either path), see the main documentation.
+
 | Area | Resource | When to use |
 |------|----------|-------------|
-| CLI | [references/cli-workflows.md](references/cli-workflows.md) | CLI installation, connection management, project switching |
-| API | [references/api-patterns.md](references/api-patterns.md) | REST API automation, bulk operations, publish |
-| Monitoring | [references/monitoring-debugging.md](references/monitoring-debugging.md) | Failed deliveries, event lifecycle, troubleshooting |
+| **Resources** (sources, destinations, connections, transformations) | [references/01-setup.md](references/01-setup.md), [references/cli-workflows.md](references/cli-workflows.md) | First connection or adding/changing sources, destinations, connections, transformations: 01-setup for initial setup; cli-workflows for CLI create/upsert; [Sources](https://hookdeck.com/docs/sources), [Destinations](https://hookdeck.com/docs/destinations), [Connections](https://hookdeck.com/docs/connections), [Transformations](https://hookdeck.com/docs/transformations) for full reference |
+| Monitoring | [references/monitoring-debugging.md](references/monitoring-debugging.md#monitoring) | Event lifecycle, where to observe (TUI, Dashboard) |
+| Debugging | [references/monitoring-debugging.md](references/monitoring-debugging.md#debugging) | Troubleshooting, issues, replay |
+| Querying (CLI) | [references/monitoring-debugging.md](references/monitoring-debugging.md#cli-querying) | List, inspect, retry request/event/attempt; detailed search; main docs for details |
+| Metrics (CLI) | [references/monitoring-debugging.md](references/monitoring-debugging.md#cli-metrics) | Event volume, failure rates, backlog; aggregated view; main docs for details |
+| CLI | [references/cli-workflows.md](references/cli-workflows.md) | Install, listen, connection/resource management, project switching |
+| API | [references/api-patterns.md](references/api-patterns.md) | Querying; building apps; **dynamic** resource creation (e.g. app creating sources/connections at runtime); complex scripts; main docs for details |
+| Terraform | [terraform-provider-hookdeck](https://github.com/hookdeck/terraform-provider-hookdeck) | **Static** resource management (sources, destinations, connections, transformations) as IaC; [Registry docs](https://registry.terraform.io/providers/hookdeck/hookdeck/latest/docs) |
 | Iterate | [references/04-iterate.md](references/04-iterate.md) | Debug failures, replay events, CLI inspect/retry workflow |
 
 ### Verification Code

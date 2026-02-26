@@ -60,7 +60,7 @@ hookdeck gateway connection create \
   --source-type WEBHOOK \
   --destination-name "cli-slack-local" \
   --destination-type CLI \
-  --destination-path /slack
+  --destination-cli-path /slack
 
 hookdeck gateway connection create \
   --name "github-local" \
@@ -68,7 +68,7 @@ hookdeck gateway connection create \
   --source-type WEBHOOK \
   --destination-name "cli-github-local" \
   --destination-type CLI \
-  --destination-path /github
+  --destination-cli-path /github
 ```
 
 ### Listen in One Session

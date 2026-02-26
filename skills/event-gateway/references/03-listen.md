@@ -43,6 +43,50 @@ Listen to multiple sources simultaneously by specifying source names:
 hookdeck listen 3000 stripe shopify --path /webhooks
 ```
 
+## Multi-Provider Routing (Per-Source Paths)
+
+When receiving webhooks from multiple providers and each needs a different local path, create one Connection per Source with its own CLI Destination path.
+
+### Configure Connections
+
+In the [Hookdeck Dashboard](https://dashboard.hookdeck.com), create one Connection per Source (for example `slack` and `github`) and set distinct CLI Destination paths (`/slack`, `/github`).
+
+Or create them with the CLI:
+
+```sh
+hookdeck gateway connection create \
+  --name "slack-local" \
+  --source-name "slack" \
+  --source-type WEBHOOK \
+  --destination-name "cli-slack-local" \
+  --destination-type CLI \
+  --destination-path /slack
+
+hookdeck gateway connection create \
+  --name "github-local" \
+  --source-name "github" \
+  --source-type WEBHOOK \
+  --destination-name "cli-github-local" \
+  --destination-type CLI \
+  --destination-path /github
+```
+
+### Listen in One Session
+
+Listen to specific sources in one session:
+
+```sh
+hookdeck listen 3000 slack,github
+```
+
+Or listen to all sources:
+
+```sh
+hookdeck listen 3000 '*'
+```
+
+Each Source routes to its configured local destination path (`localhost:3000/slack`, `localhost:3000/github`).
+
 ## CLI TUI (Terminal UI)
 
 When `hookdeck listen` is running, the CLI shows an embedded terminal interface:

@@ -6,6 +6,7 @@
 - [Data Model](#data-model)
 - [Event Statuses](#event-statuses)
 - [Debugging Surfaces](#debugging-surfaces)
+- [CLI metrics](#cli-metrics)
 - [Troubleshooting Flowchart](#troubleshooting-flowchart)
 - [Issues and Notifications](#issues-and-notifications)
 - [Replay](#replay)
@@ -77,7 +78,63 @@ hookdeck gateway attempt get att_xxx
 
 See [Request commands](https://hookdeck.com/docs/cli/request.md), [Event commands](https://hookdeck.com/docs/cli/event.md), and [Attempt commands](https://hookdeck.com/docs/cli/attempt.md) for full options.
 
-**Metrics:** CLI metrics commands (e.g. request/event/attempt counts over time) may be added in a future release. Until then, use the [Dashboard](https://dashboard.hookdeck.com) or [Metrics API](https://hookdeck.com/docs/metrics).
+### CLI metrics {#cli-metrics}
+
+Metrics over time are available in the [Dashboard](https://dashboard.hookdeck.com) ([Metrics page](https://dashboard.hookdeck.com/metrics) and Source/Connection/Destination pages) and via `hookdeck gateway metrics` and its subcommands. All CLI commands require a date range (`--start`, `--end`, ISO 8601) and at least one `--measures` value; optional filters include `--granularity`, `--dimensions`, `--source-id`, `--destination-id`, `--connection-id`, and `--status`. See [Metrics](https://hookdeck.com/docs/metrics) and the [CLI metrics reference](https://hookdeck.com/docs/cli/metrics) for full reference.
+
+| Subcommand | Purpose |
+|------------|---------|
+| `metrics events` | Event volume, success/failure counts, error rate over time |
+| `metrics requests` | Request acceptance vs rejection counts |
+| `metrics attempts` | Delivery latency and success/failure |
+| `metrics queue-depth` | Queue backlog per destination (e.g. max_depth, max_age) |
+| `metrics pending` | Pending events timeseries |
+| `metrics events-by-issue` | Events grouped by issue (debugging); requires issue ID as argument |
+| `metrics transformations` | Transformation run counts and error rate |
+
+**Example commands (use cases):**
+
+Event volume and failure rate over time:
+
+```sh
+hookdeck gateway metrics events --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --granularity 1d --measures count,failed_count,error_rate
+```
+
+Request acceptance vs rejection:
+
+```sh
+hookdeck gateway metrics requests --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count,accepted_count,rejected_count
+```
+
+Delivery latency (attempts):
+
+```sh
+hookdeck gateway metrics attempts --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures response_latency_avg,response_latency_p95
+```
+
+Queue backlog per destination:
+
+```sh
+hookdeck gateway metrics queue-depth --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures max_depth,max_age --destination-id dest_xxx
+```
+
+Pending events over time:
+
+```sh
+hookdeck gateway metrics pending --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --granularity 1h --measures count
+```
+
+Events grouped by issue (debugging):
+
+```sh
+hookdeck gateway metrics events-by-issue iss_xxx --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count
+```
+
+Transformation errors:
+
+```sh
+hookdeck gateway metrics transformations --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count,failed_count,error_rate
+```
 
 ### REST API
 

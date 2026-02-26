@@ -71,6 +71,30 @@ scenarios:
           - Idiomatic to framework
           - No syntax errors or obvious bugs
 
+  - name: investigate-delivery-health
+    displayName: Investigate delivery health (metrics usage)
+    description: >
+      Documentation-only scenario: assume traffic exists; ask the agent how to
+      get a "performance picture" from the CLI. Verifies the agent discovers and
+      uses hookdeck gateway metrics without the prompt mentioning metrics.
+    stages:
+      - iterate
+    prompt: >
+      Assume the user has been receiving webhooks via Hookdeck for the past week.
+      They want to understand how delivery has been performing: e.g. how many
+      events succeeded vs failed, whether there's a backlog, and if latency has
+      been acceptable. In the README or in your reply, list the exact CLI
+      commands (or steps) you would use to get that picture from the terminal,
+      without opening the Dashboard. If you use the installed event-gateway
+      skill, say which file you referenced.
+    evaluation:
+      - stage: Stage - Investigate delivery
+        points: 3
+        checks:
+          - References monitoring-debugging or metrics material
+          - Uses metrics CLI (hookdeck gateway metrics or equivalent)
+          - At least one concrete metrics command with time range and measures
+
   - name: receive-provider-webhooks
     displayName: Receive Provider Webhooks (with composition)
     description: >

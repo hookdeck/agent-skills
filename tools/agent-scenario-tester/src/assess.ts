@@ -155,6 +155,16 @@ function passesCheck(
     }
     return false;
   }
+  if (stage === 'Stage - Investigate delivery') {
+    if (index === 0) return /monitoring-debugging|metrics/i.test(doc);
+    if (index === 1) return /hookdeck gateway metrics|gateway metrics/i.test(doc);
+    if (index === 2) {
+      const hasTimeRange = /--start|--end|\bstart\b.*\bend\b/i.test(doc);
+      const hasMeasures = /--measures|metrics\s+(events|requests|attempts|queue-depth|pending|events-by-issue|transformations)/i.test(doc);
+      return hasTimeRange && hasMeasures;
+    }
+    return false;
+  }
   return false;
 }
 

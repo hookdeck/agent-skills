@@ -4,12 +4,12 @@
 
 - [Installation](#installation)
 - [Authentication](#authentication)
+- [Project Management](#project-management)
 - [Listening for Events](#listening-for-events)
 - [Connection Management](#connection-management)
 - [Gateway resource management](#gateway-resource-management)
-- [Project Management](#project-management)
 
-Common workflows using the Hookdeck CLI. For the full CLI reference, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md).
+For **tasks and simple scripts** (querying, metrics, monitoring, debugging), the CLI is a good first touch point; use it to explore when unsure. For complex scripts, applications, or automation, use the API. When in doubt, start with the CLI to explore. This file covers: installation, listening, connection and resource management, project switching, and querying (list commands and metrics). For the full CLI reference, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md).
 
 ## Installation
 
@@ -43,6 +43,34 @@ hookdeck login     # Browser-based login
 hookdeck logout    # Clear credentials
 hookdeck whoami    # Show current user and project
 ```
+
+## Project Management {#project-management}
+
+In Hookdeck, an **organization** is the top-level account; a **project** holds your sources, connections, and destinations. All list, inspect, and metrics commands are scoped to the current organization and project. **Verify before any queries or metrics:** run whoami and **show the user the output**. Unless the user has very clearly identified the organization and project (e.g. "use prod org, default project") and whoami shows an **exact match**, ask them to confirm before running queries or metrics. See [Projects](https://hookdeck.com/docs/projects) for details.
+
+**Check current context:**
+
+```sh
+hookdeck whoami
+```
+
+Output shows the current user, organization, and project. **Always show this output to the user.** Unless they have clearly specified org/project and it matches, ask them to confirm it is the correct organization and project before running any queries or metrics. If the user says it's wrong (or you see a different organization or project than they asked for), switch before querying.
+
+**List available organizations and projects:**
+
+```sh
+hookdeck project list
+```
+
+**Switch to a specific organization and project:**
+
+```sh
+hookdeck project use <org-name> <project-name>
+```
+
+Example: `hookdeck project use prod "Default Project"`. Then run `hookdeck whoami` again to confirm.
+
+For the full project reference, fetch [/docs/cli/project.md](https://hookdeck.com/docs/cli/project.md).
 
 ## Listening for Events
 
@@ -223,7 +251,7 @@ hookdeck gateway attempt list --event-id evt_xxx
 hookdeck gateway attempt get att_xxx
 ```
 
-**Metrics** (event/request/attempt/queue/pending/transformations over time): use `hookdeck gateway metrics` with subcommands `events`, `requests`, `attempts`, `queue-depth`, `pending`, `events-by-issue`, `transformations`. Required: `--start`, `--end`, `--measures`. See [monitoring-debugging.md](monitoring-debugging.md#cli-metrics) or [Metrics docs](https://hookdeck.com/docs/metrics) for examples. For the full CLI metrics reference, fetch [/docs/cli/metrics.md](https://hookdeck.com/docs/cli/metrics.md).
+**Metrics** (event/request/attempt/queue/pending/transformations over time): for questions like *which connections had the most events?*, *what's our failure rate?*, or *where is backlog building?*, use `hookdeck gateway metrics` with subcommands `events`, `requests`, `attempts`, `queue-depth`, `pending`, `events-by-issue`, `transformations`. Required: `--start`, `--end`, `--measures`. See [monitoring-debugging.md](monitoring-debugging.md#cli-metrics) or [Metrics docs](https://hookdeck.com/docs/metrics) for examples. For the full CLI metrics reference, fetch [/docs/cli/metrics.md](https://hookdeck.com/docs/cli/metrics.md).
 
 ```sh
 hookdeck gateway metrics events --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count,failed_count,error_rate
@@ -232,21 +260,8 @@ hookdeck gateway metrics queue-depth --start 2026-02-01T00:00:00Z --end 2026-02-
 
 For full flag and option details, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md) or the per-command pages: [/docs/cli/source.md](https://hookdeck.com/docs/cli/source.md), [/docs/cli/destination.md](https://hookdeck.com/docs/cli/destination.md), [/docs/cli/transformation.md](https://hookdeck.com/docs/cli/transformation.md), [/docs/cli/request.md](https://hookdeck.com/docs/cli/request.md), [/docs/cli/event.md](https://hookdeck.com/docs/cli/event.md), [/docs/cli/attempt.md](https://hookdeck.com/docs/cli/attempt.md), [/docs/cli/metrics.md](https://hookdeck.com/docs/cli/metrics.md).
 
-## Project Management
-
-Switch between projects:
-
-```sh
-hookdeck project list
-hookdeck project use my-org my-project
-```
-
-For the full project reference, fetch [/docs/cli/project.md](https://hookdeck.com/docs/cli/project.md).
-
 ## Documentation
 
-- [CLI reference](https://hookdeck.com/docs/cli)
-- [Listen command](https://hookdeck.com/docs/cli/listen)
-- [Connection commands](https://hookdeck.com/docs/cli/connection)
-- [Project commands](https://hookdeck.com/docs/cli/project)
-- [Source](https://hookdeck.com/docs/cli/source) · [Destination](https://hookdeck.com/docs/cli/destination) · [Transformation](https://hookdeck.com/docs/cli/transformation) · [Request](https://hookdeck.com/docs/cli/request) · [Event](https://hookdeck.com/docs/cli/event) · [Attempt](https://hookdeck.com/docs/cli/attempt) · [Metrics](https://hookdeck.com/docs/cli/metrics)
+- [CLI reference](https://hookdeck.com/docs/cli) (overview; per-command content is served as Markdown)
+- [Listen](https://hookdeck.com/docs/cli/listen.md) · [Connection](https://hookdeck.com/docs/cli/connection.md) · [Project](https://hookdeck.com/docs/cli/project.md)
+- [Source](https://hookdeck.com/docs/cli/source.md) · [Destination](https://hookdeck.com/docs/cli/destination.md) · [Transformation](https://hookdeck.com/docs/cli/transformation.md) · [Request](https://hookdeck.com/docs/cli/request.md) · [Event](https://hookdeck.com/docs/cli/event.md) · [Attempt](https://hookdeck.com/docs/cli/attempt.md) · [Metrics](https://hookdeck.com/docs/cli/metrics.md)

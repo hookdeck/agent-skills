@@ -155,7 +155,7 @@ hookdeck gateway connection create \
   --rules '[{"type":"retry","strategy":"exponential","interval":60000,"count":5}]'
 ```
 
-**Manual replay:** Use the CLI TUI, web console, or Dashboard to replay individual events. Use the API for bulk replay -- see [api-patterns.md](api-patterns.md).
+**Manual replay:** Use the CLI TUI, web console, or Dashboard to replay individual events. Use the API for bulk replay — see [Bulk operations](https://hookdeck.com/docs/api/bulk.md) and [Inspect API](https://hookdeck.com/docs/api/inspect.md).
 
 For full reference: fetch [/docs/retries.md](https://hookdeck.com/docs/retries.md)
 

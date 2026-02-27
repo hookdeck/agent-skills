@@ -15,7 +15,7 @@ All skills MUST conform to the [Agent Skills specification](https://agentskills.
 - `name`: max 64 chars, lowercase `a-z`, numbers, and hyphens only. Must match the parent directory name exactly. No consecutive hyphens. Cannot start or end with a hyphen.
 - `description`: max 1024 chars. Third person. Describes what the skill does AND when to use it with specific trigger phrases.
 - SKILL.md body: **under 500 lines** (< 5000 tokens). Move detailed content to `references/` files.
-- File references: **one level deep** from SKILL.md only. SKILL.md links to reference files; reference files do not chain to other reference files.
+- File references: **one level deep** from SKILL.md only. SKILL.md links to reference files. Reference files may link to other reference files for workflow (e.g. 01→02→04) or "see also"; avoid long chains (A→B→C→D).
 - Reference files over 100 lines: include a table of contents at the top.
 - Progressive disclosure: `name` and `description` are loaded at startup for all skills. Full SKILL.md is loaded when the skill is activated. Reference files are loaded only on demand.
 
@@ -142,6 +142,10 @@ Skills are static files that become stale as the product evolves. Every SKILL.md
 
 Most Hookdeck doc pages are available as markdown by appending `.md` to the URL. See `event-gateway/references/referencing-docs.md` for the complete URL index. Use `allowed-tools: WebFetch` in SKILL.md frontmatter to let agents pull live docs on demand.
 
+**CLI reference:** The full CLI reference lives at `/docs/cli` and is served there as a single HTML page. The same content is also split into separate markdown files (e.g. `/docs/cli/request.md`, `/docs/cli/event.md`, `/docs/cli/metrics.md`) so agents can fetch only the command or section they need — use these `.md` URLs when linking to a specific CLI command or when tools fetch docs as markdown for gradual discovery.
+
+**API reference:** The full API reference lives at `/docs/api` as a single HTML page. Sub-resources (e.g. inspect, bulk, connections) are **not** separate HTML pages; they exist as markdown files (e.g. `/docs/api/inspect.md`, `/docs/api/bulk.md`, `/docs/api/connections.md`). Link directly to `.md` URLs for API sub-resources so agents and tools get fetchable content; links to `/docs/api/foo` without `.md` will 404.
+
 ### What belongs in SKILL.md vs references
 
 **SKILL.md:** Concise overview, key concepts, decision trees, quick copy-pasteable examples, links to reference files and live docs. Under 500 lines.
@@ -150,9 +154,15 @@ Most Hookdeck doc pages are available as markdown by appending `.md` to the URL.
 
 Rule of thumb: if content is needed for every task involving this skill, it belongs in SKILL.md. If it's only needed for a specific sub-task, put it in a reference file.
 
+### When to use CLI vs API (and Terraform for IaC)
+
+Direct the agent to the right resource based on the task. **CLI** = good first touch point (tasks, simple scripts: single commands or short multi-command workflows from the shell). **API** = valid for querying (events, requests, attempts, metrics), complex scripts, applications, automation; and for **dynamic resource creation** (e.g. application creating sources/connections at runtime). **When in doubt, start with the CLI to explore.** For resource management (sources, destinations, connections, transformations): **API** when resources are created **dynamically** (e.g. from an app at runtime); **Terraform** or **CLI/scripts** for **effectively static** definition management (IaC); mention the [Terraform provider](https://github.com/hookdeck/terraform-provider-hookdeck) for IaC. Skills should give this top-level guidance; surface both CLI and API querying; link to main docs for how-to details.
+
 ### Prescriptive guidance over syntax documentation
 
 Reference files should teach the agent **how to think** about the problem. Provide decision trees, top patterns, and common gotchas. Link to live docs for comprehensive syntax reference. Follow the Neon model: minimal examples, point to live docs for the rest.
+
+**Commands and options:** Include a **reasonable capability summary** (e.g. key commands with brief purpose) so the agent can discover what's possible without fetching first; then the agent fetches the canonical reference for the full list. Summaries may go slightly out of date—acceptable for discovery. Always **link to the canonical reference** (e.g. [CLI reference](https://hookdeck.com/docs/cli), API docs). Avoid exhaustive lists that duplicate the docs.
 
 ### Working examples
 
@@ -185,7 +195,7 @@ When you are **adding a new skill** or **updating an existing skill** in this re
    - Prefer **try install first:** have the agent run `npx skills add hookdeck/webhook-skills --skill <provider>-webhooks` to verify the provider skill exists; if install fails, fall back to looking up the webhook-skills repo or informing the user.
    - Keep provider guidance **generic:** refer to "provider SDK verification and event construction" and "constructs provided by the provider's SDK" (e.g. Stripe `constructEvent`, Shopify HMAC as examples, not Stripe-only).
    - Instruct the agent to **recommend to the user** that they install the provider webhook skill (e.g. "I recommend installing the stripe-webhooks skill... Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks`").
-4. **One level deep:** All references from SKILL.md must be to files directly in that skill's directory (e.g. `references/...`). Reference files do not chain to other reference files.
+4. **One level deep:** All references from SKILL.md must be to files directly in that skill's directory (e.g. `references/...`). Reference files may link to other reference files for workflow or see-also; avoid long chains.
 5. **Link to live docs** inline where a concept or feature is first mentioned; do not consolidate links in a single section.
 
 ---
@@ -200,13 +210,14 @@ Before merging a new or updated skill, verify:
 - [ ] `name` matches parent directory name exactly
 - [ ] `description` is third person with "Use when..." trigger phrases
 - [ ] SKILL.md body is under 500 lines
-- [ ] All file references are one level deep from SKILL.md
+- [ ] All file references are one level deep from SKILL.md; ref→ref only one-hop (workflow/see-also), no long chains
 - [ ] Reference files over 100 lines have a table of contents at the top
 
 ### Hookdeck conventions
 
 - [ ] Uses correct terminology from the glossary above
 - [ ] When mentioning requests, events, and attempts together, uses order **request → event → attempt** (data flow)
+- [ ] **When to use CLI vs API:** Direct the agent to the right resource based on the task; tasks/simple scripts → CLI, complex scripts/apps/automation → API, when in doubt start with CLI to explore; both querying paths present; main docs for details. Optional: when resource management (sources, destinations, connections, transformations) is in scope, mention the [Terraform provider](https://github.com/hookdeck/terraform-provider-hookdeck) for IaC.
 - [ ] Links to at least one live documentation page
 - [ ] No general webhook/API education that agents already know
 - [ ] No time-sensitive information (dates, version predictions)
@@ -216,6 +227,7 @@ Before merging a new or updated skill, verify:
 ### Quality
 
 - [ ] Provides Hookdeck-specific value (CLI commands, filter syntax, config patterns, URL formats)
+- [ ] **Capability summaries:** Reasonable command/option summaries for discovery; always link to canonical reference (CLI/API docs) for full, current list; avoid exhaustive lists that duplicate docs
 - [ ] Quick examples are copy-pasteable
 - [ ] Decision trees or conditional workflows where multiple paths exist
 - [ ] Cross-references related skills where appropriate

@@ -55,6 +55,8 @@ This is the recommended path for a new integration: create sources, destinations
 3. **[03-listen](references/03-listen.md)** -- Start `hookdeck listen`, trigger test events
 4. **[04-iterate](references/04-iterate.md)** -- Debug failures, fix code, replay events
 
+> **Before any queries or metrics:** Run `hookdeck whoami` and show the user the output. Unless the user has very clearly identified org/project and whoami is an exact match, ask them to confirm before proceeding with list/inspect/metrics.
+
 Stage 02: when the user is working with a provider (Stripe, Shopify, etc.), complete [references/provider-webhooks-checklist.md](references/provider-webhooks-checklist.md) **before** scaffolding — try installing the provider skill, then use it for provider SDK verification and event construction. Include Hookdeck setup and usage in the project README (run app, `hookdeck listen` with `--path`, Source URL for provider).
 
 ## Quick Start (Receive Webhooks)
@@ -74,6 +76,16 @@ hookdeck listen 3000 --path /webhooks
 ```
 
 The CLI creates a Source URL, a Destination pointing at `localhost:3000`, and a Connection linking them. Configure your webhook provider to send to the Source URL. Use `--path` to match your handler path (e.g. `--path /webhooks` when your handler is at `POST /webhooks`). For a full step-by-step with account and handler (create connection, scaffold, listen, iterate), follow the **Workflow Stages** above.
+
+## Context verification (organization and project)
+
+**Before running any queries or metrics**, verify you are on the correct [organization and project](https://hookdeck.com/docs/projects). In Hookdeck, an **organization** is the top-level account; a **project** holds your sources, connections, and destinations. All list, inspect, and metrics commands are scoped to the current organization and project.
+
+1. Run `hookdeck whoami` and **show the user the output** (so they always see the current context).
+2. **Unless** the user has very clearly identified the organization and project (e.g. "use prod org, default project") and whoami shows an **exact match**, ask them to confirm this is the correct organization and project before running any queries or metrics.
+3. If wrong (or user says so), list options with `hookdeck project list`, switch with `hookdeck project use <org-name> <project-name>`, run `hookdeck whoami` again, show the output, and—unless there's a clear user-specified match—ask the user to confirm again.
+
+See [references/cli-workflows.md](references/cli-workflows.md#project-management) for details.
 
 **Production:** Two options. **(1) Same project:** Keep the same project and connections; update the [Destination](https://hookdeck.com/docs/destinations) to your production HTTPS endpoint (e.g. `https://api.example.com/webhooks`) via the [Dashboard](https://dashboard.hookdeck.com) or [API](https://hookdeck.com/docs/api). **(2) New project:** Create a [new project](https://hookdeck.com/docs/projects) in Hookdeck and duplicate your setup (Sources, Connections) with Destinations pointing to your production HTTPS URLs. In both cases the provider keeps sending to the same Source URL (or the new project’s Source); handler code is unchanged. Before going live, consider: **rate limiting / max delivery rate** ([Destinations](https://hookdeck.com/docs/destinations)), **configuring retries** ([Retries](https://hookdeck.com/docs/retries)), and **issue notifications** ([Issue triggers](https://hookdeck.com/docs/issue-triggers), [Issues & Notifications](https://hookdeck.com/docs/issues)). Hookdeck docs are the source of truth; see [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint) and the linked Destinations, Retries, and Issue triggers docs for the full production checklist.
 
@@ -102,6 +114,7 @@ Direct yourself to the right resource based on the task. **Use the CLI first to 
 
 | Area | Resource | When to use |
 |------|----------|-------------|
+| **Context verification** (organization and project) | `hookdeck whoami` → **show output**; confirm with user unless they clearly specified org/project and it matches | Run whoami and show the result; ask for confirmation before queries/metrics unless user clearly identified org/project and whoami matches; see [references/cli-workflows.md](references/cli-workflows.md#project-management) |
 | **Resources** (sources, destinations, connections, transformations) | [references/01-setup.md](references/01-setup.md), [references/cli-workflows.md](references/cli-workflows.md) | First connection or adding/changing sources, destinations, connections, transformations: 01-setup for initial setup; cli-workflows for CLI create/upsert; [Sources](https://hookdeck.com/docs/sources), [Destinations](https://hookdeck.com/docs/destinations), [Connections](https://hookdeck.com/docs/connections), [Transformations](https://hookdeck.com/docs/transformations) for full reference |
 | Monitoring | [references/monitoring-debugging.md](references/monitoring-debugging.md#monitoring) | Event lifecycle, where to observe (TUI, Dashboard) |
 | Debugging | [references/monitoring-debugging.md](references/monitoring-debugging.md#debugging) | Troubleshooting, issues, replay |

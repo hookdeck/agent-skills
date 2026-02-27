@@ -2,6 +2,7 @@
 
 ## Contents
 
+- [Before querying or running metrics](#before-querying-or-running-metrics)
 - [Monitoring](#monitoring)
   - [Event Lifecycle](#event-lifecycle)
   - [Data Model](#data-model)
@@ -16,6 +17,17 @@
 - [Documentation](#documentation)
 
 How to monitor webhook deliveries, debug failures, and replay events. For monitoring and debugging, the CLI is often the right first touch for tasks and simple scripts (TUI, list/get, metrics, retry); use it to explore when unsure. The API is valid for querying and for complex scripts or automation. When in doubt, start with the CLI to explore. See SKILL.md for when-to-use guidance and main documentation for details. Querying (events, requests, attempts, metrics) can also be done via the API — see the [API inspect docs](https://hookdeck.com/docs/api/inspect).
+
+## Before querying or running metrics {#before-querying-or-running-metrics}
+
+All list, inspect, and metrics commands are scoped to the **current [organization and project](https://hookdeck.com/docs/projects)** (organization = top-level account; project = where your sources, connections, and destinations live).
+
+- [ ] Run `hookdeck whoami` and **show the user the output**
+- [ ] **Unless** the user has very clearly identified org/project and whoami is an exact match, ask them to confirm before running queries or metrics
+- [ ] If not correct, use `hookdeck project list` to see options, then `hookdeck project use <org-name> <project-name>`
+- [ ] Run `hookdeck whoami` again, show the output, and (unless clear match) ask the user to confirm again before running queries or metrics
+
+**Common mistake:** Running a metrics query without verifying org/project — data can come from the wrong organization (e.g. "Automated Testing" instead of "prod"). **Correct approach:** Run `hookdeck whoami` and show the output. If the user hasn't clearly specified org/project or it doesn't match, ask them to confirm; if not correct, switch and confirm again. Only then run the query.
 
 ## Monitoring {#monitoring}
 

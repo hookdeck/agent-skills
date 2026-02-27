@@ -137,8 +137,8 @@ curl "https://api.hookdeck.com/$API_VERSION/events?limit=25&next=cursor_xxx" \
 
 ## Documentation
 
-- [API overview](https://hookdeck.com/docs/api)
-- [Connections API](https://hookdeck.com/docs/api/connections)
-- [Inspect API (requests, events, attempts)](https://hookdeck.com/docs/api/inspect)
-- [Bulk operations](https://hookdeck.com/docs/api/bulk)
-- [Publish API](https://hookdeck.com/docs/api/publish)
+- [API overview](https://hookdeck.com/docs/api.md)
+- [Connections API](https://hookdeck.com/docs/api/connections.md)
+- [Inspect API (requests, events, attempts)](https://hookdeck.com/docs/api/inspect.md)
+- [Bulk operations](https://hookdeck.com/docs/api/bulk.md)
+- [Publish API](https://hookdeck.com/docs/api/publish.md)

@@ -144,6 +144,8 @@ Most Hookdeck doc pages are available as markdown by appending `.md` to the URL.
 
 **CLI reference:** The full CLI reference lives at `/docs/cli` and is served there as a single HTML page. The same content is also split into separate markdown files (e.g. `/docs/cli/request.md`, `/docs/cli/event.md`, `/docs/cli/metrics.md`) so agents can fetch only the command or section they need — use these `.md` URLs when linking to a specific CLI command or when tools fetch docs as markdown for gradual discovery.
 
+**API reference:** The full API reference lives at `/docs/api` as a single HTML page. Sub-resources (e.g. inspect, bulk, connections) are **not** separate HTML pages; they exist as markdown files (e.g. `/docs/api/inspect.md`, `/docs/api/bulk.md`, `/docs/api/connections.md`). Link directly to `.md` URLs for API sub-resources so agents and tools get fetchable content; links to `/docs/api/foo` without `.md` will 404.
+
 ### What belongs in SKILL.md vs references
 
 **SKILL.md:** Concise overview, key concepts, decision trees, quick copy-pasteable examples, links to reference files and live docs. Under 500 lines.

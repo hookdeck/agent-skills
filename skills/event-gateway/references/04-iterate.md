@@ -103,4 +103,4 @@ curl -X POST https://api.hookdeck.com/$API_VERSION/events/{event_id}/retry \
   -H "Authorization: Bearer $HOOKDECK_API_KEY"
 ```
 
-For full API patterns, fetch the [API docs](https://hookdeck.com/docs/api.md). For doc URLs and API version, see [referencing-docs.md](referencing-docs.md).
+See [API Patterns](api-patterns.md) for an overview of common uses of the Hookdeck Event Gateway API. See the [API docs](https://hookdeck.com/docs/api.md) for full API details. To see how to reference documentation and a general overview of key available docs, see [referencing-docs.md](referencing-docs.md).

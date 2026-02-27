@@ -69,6 +69,7 @@ Hookdeck docs are the source of truth; point users and agents to these paths for
 | Request commands | `/docs/cli/request.md` |
 | Event commands | `/docs/cli/event.md` |
 | Attempt commands | `/docs/cli/attempt.md` |
+| Metrics commands | `/docs/cli/metrics.md` |
 
 ## API Reference
 

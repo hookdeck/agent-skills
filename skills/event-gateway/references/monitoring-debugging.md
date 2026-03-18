@@ -186,22 +186,22 @@ Delivery latency (attempts):
 hookdeck gateway metrics attempts --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures response_latency_avg,response_latency_p95
 ```
 
-Queue backlog per destination:
+Queue backlog (use `events` with queue measures and optional `--destination-id`):
 
 ```sh
-hookdeck gateway metrics queue-depth --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures max_depth,max_age --destination-id dest_xxx
+hookdeck gateway metrics events --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures max_depth,max_age --destination-id des_xxx
 ```
 
-Pending events over time:
+Pending events over time (use `events` with `pending` measure):
 
 ```sh
-hookdeck gateway metrics pending --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --granularity 1h --measures count
+hookdeck gateway metrics events --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --granularity 1h --measures pending,count
 ```
 
-Events grouped by issue (debugging):
+Events grouped by issue (use `events` with `--dimensions issue_id` and `--issue-id`):
 
 ```sh
-hookdeck gateway metrics events-by-issue iss_xxx --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count
+hookdeck gateway metrics events --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count --dimensions issue_id --issue-id iss_xxx
 ```
 
 Transformation errors:

@@ -180,11 +180,14 @@ Event Gateway resources (sources, destinations, connections, transformations, an
 ```sh
 hookdeck gateway connection list
 hookdeck gateway connection get web_xxx
-hookdeck gateway connection create ...
-hookdeck gateway connection upsert my-conn ...
-hookdeck gateway connection update web_xxx ...
+hookdeck gateway connection create --source-name my-source --source-type WEBHOOK --destination-name my-dest --destination-type HTTP --destination-url https://example.com
+hookdeck gateway connection upsert my-conn --source-name my-source --source-type WEBHOOK --destination-name my-dest --destination-type HTTP --destination-url https://example.com
+hookdeck gateway connection update web_xxx --description "Updated"
 hookdeck gateway connection delete web_xxx
-hookdeck gateway connection enable|disable|pause|unpause web_xxx
+hookdeck gateway connection enable web_xxx
+hookdeck gateway connection disable web_xxx
+hookdeck gateway connection pause web_xxx
+hookdeck gateway connection unpause web_xxx
 ```
 
 **Source** / **sources**:
@@ -192,10 +195,12 @@ hookdeck gateway connection enable|disable|pause|unpause web_xxx
 ```sh
 hookdeck gateway source list
 hookdeck gateway source get src_xxx
-hookdeck gateway source create --name x --type WEBHOOK ...
-hookdeck gateway source upsert my-source ...
-hookdeck gateway source update src_xxx ...
-hookdeck gateway source delete|enable|disable src_xxx
+hookdeck gateway source create --name x --type WEBHOOK
+hookdeck gateway source upsert my-source --type WEBHOOK
+hookdeck gateway source update src_xxx --name new-name
+hookdeck gateway source delete src_xxx
+hookdeck gateway source enable src_xxx
+hookdeck gateway source disable src_xxx
 hookdeck gateway source count
 ```
 
@@ -204,10 +209,12 @@ hookdeck gateway source count
 ```sh
 hookdeck gateway destination list
 hookdeck gateway destination get dst_xxx
-hookdeck gateway destination create --name x --type HTTP --url https://...
-hookdeck gateway destination upsert my-dest ...
-hookdeck gateway destination update dst_xxx ...
-hookdeck gateway destination delete|enable|disable dst_xxx
+hookdeck gateway destination create --name x --type HTTP --url https://example.com
+hookdeck gateway destination upsert my-dest --type HTTP --url https://example.com
+hookdeck gateway destination update dst_xxx --name new-name
+hookdeck gateway destination delete dst_xxx
+hookdeck gateway destination enable dst_xxx
+hookdeck gateway destination disable dst_xxx
 hookdeck gateway destination count
 ```
 
@@ -241,7 +248,8 @@ hookdeck gateway event list --status FAILED --limit 20
 hookdeck gateway event get evt_xxx
 hookdeck gateway event retry evt_xxx
 hookdeck gateway event raw-body evt_xxx
-hookdeck gateway event cancel|mute evt_xxx
+hookdeck gateway event mute evt_xxx
+hookdeck gateway event cancel evt_xxx
 ```
 
 **Attempt** / **attempts** (delivery tries for an event):
@@ -251,11 +259,11 @@ hookdeck gateway attempt list --event-id evt_xxx
 hookdeck gateway attempt get att_xxx
 ```
 
-**Metrics** (event/request/attempt/queue/pending/transformations over time): for questions like *which connections had the most events?*, *what's our failure rate?*, or *where is backlog building?*, use `hookdeck gateway metrics` with subcommands `events`, `requests`, `attempts`, `queue-depth`, `pending`, `events-by-issue`, `transformations`. Required: `--start`, `--end`, `--measures`. See [monitoring-debugging.md](monitoring-debugging.md#cli-metrics) or [Metrics docs](https://hookdeck.com/docs/metrics) for examples. For the full CLI metrics reference, fetch [/docs/cli/metrics.md](https://hookdeck.com/docs/cli/metrics.md).
+**Metrics** (events, requests, attempts, transformations over time): for questions like *which connections had the most events?*, *what's our failure rate?*, or *where is backlog building?*, use `hookdeck gateway metrics` with subcommands `events`, `requests`, `attempts`, `transformations`. Required: `--start`, `--end`, `--measures`. See [monitoring-debugging.md](monitoring-debugging.md#cli-metrics) or [Metrics docs](https://hookdeck.com/docs/metrics) for examples. For the full CLI metrics reference, fetch [/docs/cli/metrics.md](https://hookdeck.com/docs/cli/metrics.md).
 
 ```sh
 hookdeck gateway metrics events --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count,failed_count,error_rate
-hookdeck gateway metrics queue-depth --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures max_depth,max_age
+hookdeck gateway metrics attempts --start 2026-02-01T00:00:00Z --end 2026-02-25T00:00:00Z --measures count,response_latency_avg
 ```
 
 For full flag and option details, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md) or the per-command pages: [/docs/cli/source.md](https://hookdeck.com/docs/cli/source.md), [/docs/cli/destination.md](https://hookdeck.com/docs/cli/destination.md), [/docs/cli/transformation.md](https://hookdeck.com/docs/cli/transformation.md), [/docs/cli/request.md](https://hookdeck.com/docs/cli/request.md), [/docs/cli/event.md](https://hookdeck.com/docs/cli/event.md), [/docs/cli/attempt.md](https://hookdeck.com/docs/cli/attempt.md), [/docs/cli/metrics.md](https://hookdeck.com/docs/cli/metrics.md).

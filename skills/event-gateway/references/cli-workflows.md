@@ -100,21 +100,21 @@ hookdeck listen 3000
 When your webhook handler is at a path like `/webhooks`, use `--path` so the Source URL maps to it:
 
 ```sh
-hookdeck listen 3000 --path /webhooks
+hookdeck listen 3000 <source_name> --path /webhooks
 ```
 
 For provider-specific paths (e.g. `/webhooks/stripe`):
 
 ```sh
-hookdeck listen 3000 --path /webhooks/stripe
+hookdeck listen 3000 <source_name> --path /webhooks/stripe
 ```
 
 ### Multiple Sources
 
-Listen to specific sources:
+Listen to specific sources (comma-separated in the `[source]` argument; see `hookdeck listen --help`):
 
 ```sh
-hookdeck listen 3000 stripe shopify
+hookdeck listen 3000 stripe,shopify
 ```
 
 For the full listen reference, fetch [/docs/cli/listen.md](https://hookdeck.com/docs/cli/listen.md).
@@ -148,7 +148,7 @@ hookdeck gateway connection upsert stripe-verified \
   --destination-url https://api.example.com/webhooks
 ```
 
-With rules (filter, retry, transform) and optional rate limiting (verify exact flags with `hookdeck gateway connection create --help`):
+With rules (filter, retry, transform) and optional rate limiting (verify exact flags with `hookdeck gateway connection upsert --help`):
 
 ```sh
 hookdeck gateway connection upsert filtered \

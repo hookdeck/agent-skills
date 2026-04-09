@@ -13,7 +13,7 @@ Get from zero to a working Hookdeck connection. Default path: **receive webhooks
 
 **Idempotency:** Where the CLI offers **`hookdeck gateway … upsert`**, **prefer upsert over create** for scripts and agent-generated steps so re-runs stay safe. Use **`create`** only when you need fail-if-exists semantics or there is no upsert.
 
-**Flags:** Skill examples are illustrative. Run **`hookdeck gateway connection create --help`** (and other subcommands’ `--help`) for the full list—including **rate limits** (`--destination-rate-limit`, `--destination-rate-limit-period`), rules, and source/destination options. **Everything configurable in the Dashboard is settable via the CLI**; do not assume a knob is Dashboard-only without checking `--help`.
+**Flags:** Skill examples are illustrative. Run **`hookdeck gateway connection upsert --help`** (and other subcommands’ `--help`) for the full list—including **rate limits** (`--destination-rate-limit`, `--destination-rate-limit-period`), rules, and source/destination options. **Everything configurable in the Dashboard is settable via the CLI**; do not assume a knob is Dashboard-only without checking `--help`.
 
 ## Install the CLI
 
@@ -61,10 +61,12 @@ Or create a [Hookdeck account](https://dashboard.hookdeck.com) first, then log i
 The simplest approach — **`hookdeck listen`** creates (or attaches to) a **CLI** destination and tunnels to your app. If your webhook handler is at `/webhooks`, use `--path` so the Source URL maps to it:
 
 ```sh
-hookdeck listen 3000 --path /webhooks
+hookdeck listen 3000 <source_name> --path /webhooks
 ```
 
-(Use `hookdeck listen 3000` without `--path` only if your app serves webhooks at the root path.)
+Replace `<source_name>` with the Hookdeck **Source** name for this flow (e.g. `stripe`); it must match the source on the connection you are forwarding to locally.
+
+(Use `hookdeck listen 3000 <source_name>` without `--path` only if your app serves webhooks at the root path.)
 
 **Do not** manually create **`--destination-type HTTP`** with **`http://localhost:…`** expecting Hookdeck’s cloud to deliver there. For why, and the pre-created CLI pattern, see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations).
 
@@ -79,7 +81,7 @@ hookdeck gateway connection upsert stripe-local \
   --destination-cli-path /webhooks/stripe
 ```
 
-Then run `hookdeck listen 3000` (see [03-listen.md](03-listen.md)).
+Then run `hookdeck listen 3000 <source_name>` (use the same **source** name as in the connection; see [03-listen.md](03-listen.md)).
 
 The CLI outputs your **Source URL** (e.g., `https://hkdk.events/xxx`). Configure your webhook provider to send to this URL.
 
@@ -104,7 +106,7 @@ hookdeck gateway connection upsert stripe-webhooks \
 
 **Localhost only:** Use `hookdeck listen <port>` (the CLI will prompt for a source name) or `hookdeck listen <port> <source>` to name the source up front — no further setup needed. For multiple providers with different local paths, use one Connection per Source with **CLI** destinations, then listen in a single session (see [03-listen.md](03-listen.md)).
 
-**Production:** **(1) Same project:** Keep the same project and connections; update the destination to your production **HTTPS** URL via **CLI**, [Dashboard](https://dashboard.hookdeck.com), or [API](https://hookdeck.com/docs/api). **(2) New project:** [Create a new project](https://hookdeck.com/docs/projects) and duplicate setup with production **HTTPS** destinations. Before going live: set **rate limits** and other options with CLI flags from **`hookdeck gateway connection create --help`** (or update via Dashboard/API), plus [retries](https://hookdeck.com/docs/retries) and [issue triggers](https://hookdeck.com/docs/issue-triggers). See [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint).
+**Production:** **(1) Same project:** Keep the same project and connections; update the destination to your production **HTTPS** URL via **CLI**, [Dashboard](https://dashboard.hookdeck.com), or [API](https://hookdeck.com/docs/api). **(2) New project:** [Create a new project](https://hookdeck.com/docs/projects) and duplicate setup with production **HTTPS** destinations. Before going live: set **rate limits** and other options with CLI flags from **`hookdeck gateway connection upsert --help`** (or update via Dashboard/API), plus [retries](https://hookdeck.com/docs/retries) and [issue triggers](https://hookdeck.com/docs/issue-triggers). See [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint).
 
 See [connection-architecture.md](connection-architecture.md) for detailed patterns (fan-out, fan-in, use-case-specific architectures).
 

@@ -14,7 +14,7 @@
 
 [Rules](https://hookdeck.com/docs/connections) are processing logic attached to a Connection. Each Connection can have multiple Rules. Five types: filter, transform, retry, delay, deduplicate.
 
-**CLI:** Prefer **`hookdeck gateway connection upsert`** over `create` when scripting so runs are idempotent. **`hookdeck gateway connection create --help`** lists rule-related flags (`--rules`, `--rule-filter-body`, `--rule-retry-*`, `--destination-rate-limit`, etc.) and all inline source/destination options—examples below are **not exhaustive**. **Do not** use **`--destination-type HTTP`** with **`http://localhost:…`** in these patterns; use **`https://…`** for HTTP destinations or a **CLI** destination for local `listen` (see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations)).
+**CLI:** Prefer **`hookdeck gateway connection upsert`** over `create` when scripting so runs are idempotent. **`hookdeck gateway connection upsert --help`** lists rule-related flags (`--rules`, `--rule-filter-body`, `--rule-retry-*`, `--destination-rate-limit`, etc.) and all inline source/destination options—examples below are **not exhaustive**. **Do not** use **`--destination-type HTTP`** with **`http://localhost:…`** in these patterns; use **`https://…`** for HTTP destinations or a **CLI** destination for local `listen` (see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations)).
 
 ## Filters
 

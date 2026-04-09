@@ -14,8 +14,10 @@ npm start
 ## Local development with Hookdeck CLI
 
 ```bash
-hookdeck listen 3000 --path /webhooks
+hookdeck listen 3000 <source_name> --path /webhooks
 ```
+
+Replace `<source_name>` with your Hookdeck Source name (e.g. `stripe`).
 
 ## Adapted from
 

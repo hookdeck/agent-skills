@@ -57,7 +57,7 @@ This is the recommended path for a new integration: create sources, destinations
 
 > **Before any queries or metrics:** Run `hookdeck whoami` and show the user the output. Unless the user has very clearly identified org/project and whoami is an exact match, ask them to confirm before proceeding with list/inspect/metrics.
 
-Stage 02: when the user is working with a provider (Stripe, Shopify, etc.), complete [references/provider-webhooks-checklist.md](references/provider-webhooks-checklist.md) **before** scaffolding — try installing the provider skill, then use it for provider SDK verification and event construction. Include Hookdeck setup and usage in the project README (run app, `hookdeck listen` with `--path`, Source URL for provider).
+Stage 02: when the user is working with a provider (Stripe, Shopify, etc.), complete [references/provider-webhooks-checklist.md](references/provider-webhooks-checklist.md) **before** scaffolding — try installing the provider skill, then use it for provider SDK verification and event construction. Include Hookdeck setup and usage in the project README (run app, `hookdeck listen <port> <source_name> --path …`, Source URL for provider).
 
 ## Quick Start (Receive Webhooks)
 
@@ -65,17 +65,17 @@ No account required -- `hookdeck listen` works immediately:
 
 ```sh
 brew install hookdeck/hookdeck/hookdeck   # or: npm i -g hookdeck-cli
-hookdeck listen 3000 --path /webhooks
+hookdeck listen 3000 <source_name> --path /webhooks
 ```
 
 With a Hookdeck account (Event Gateway project with full features):
 
 ```sh
 hookdeck login
-hookdeck listen 3000 --path /webhooks
+hookdeck listen 3000 <source_name> --path /webhooks
 ```
 
-`hookdeck listen` creates a Source URL and uses a **CLI destination** so traffic is tunneled to your local server (not HTTP delivery from Hookdeck’s cloud to `localhost`). Configure your webhook provider to send to the Source URL. Use `--path` to match your handler path (e.g. `--path /webhooks` when your handler is at `POST /webhooks`). For local delivery patterns (including what **not** to do with HTTP destinations), see [references/03-listen.md](references/03-listen.md). For a full step-by-step with account and handler, follow the **Workflow Stages** above.
+`hookdeck listen` creates a Source URL and uses a **CLI destination** so traffic is tunneled to your local server (not HTTP delivery from Hookdeck’s cloud to `localhost`). Replace `<source_name>` in the examples with your Hookdeck Source name. Configure your webhook provider to send to the Source URL. Use `--path` to match your handler path (e.g. `--path /webhooks` when your handler is at `POST /webhooks`). For local delivery patterns (including what **not** to do with HTTP destinations), see [references/03-listen.md](references/03-listen.md). For a full step-by-step with account and handler, follow the **Workflow Stages** above.
 
 ## Context verification (organization and project)
 
@@ -87,7 +87,7 @@ hookdeck listen 3000 --path /webhooks
 
 See [references/cli-workflows.md](references/cli-workflows.md#project-management) for details.
 
-**Production:** Two options. **(1) Same project:** Keep the same project and connections; update the [Destination](https://hookdeck.com/docs/destinations) to your production **HTTPS** endpoint (e.g. `https://api.example.com/webhooks`) via the **CLI** (`hookdeck gateway destination …`, `hookdeck gateway connection …`), [Dashboard](https://dashboard.hookdeck.com), or [API](https://hookdeck.com/docs/api). **(2) New project:** Create a [new project](https://hookdeck.com/docs/projects) in Hookdeck and duplicate your setup (Sources, Connections) with Destinations pointing to production **HTTPS** URLs. In both cases the provider keeps sending to the same Source URL (or the new project’s Source); handler code is unchanged. Before going live, configure **rate limiting / max delivery rate** on the CLI with flags such as `--destination-rate-limit` and `--destination-rate-limit-period` on `hookdeck gateway connection create` (or equivalent)—run **`hookdeck gateway connection create --help`** for the current list—or via [Destinations](https://hookdeck.com/docs/destinations) in the UI/API. Also configure [Retries](https://hookdeck.com/docs/retries) and [issue notifications](https://hookdeck.com/docs/issue-triggers). See [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint) for the full checklist.
+**Production:** Two options. **(1) Same project:** Keep the same project and connections; update the [Destination](https://hookdeck.com/docs/destinations) to your production **HTTPS** endpoint (e.g. `https://api.example.com/webhooks`) via the **CLI** (`hookdeck gateway destination …`, `hookdeck gateway connection …`), [Dashboard](https://dashboard.hookdeck.com), or [API](https://hookdeck.com/docs/api). **(2) New project:** Create a [new project](https://hookdeck.com/docs/projects) in Hookdeck and duplicate your setup (Sources, Connections) with Destinations pointing to production **HTTPS** URLs. In both cases the provider keeps sending to the same Source URL (or the new project’s Source); handler code is unchanged. Before going live, configure **rate limiting / max delivery rate** on the CLI with flags such as `--destination-rate-limit` and `--destination-rate-limit-period` on `hookdeck gateway connection upsert` (or equivalent)—run **`hookdeck gateway connection upsert --help`** for the current list—or via [Destinations](https://hookdeck.com/docs/destinations) in the UI/API. Also configure [Retries](https://hookdeck.com/docs/retries) and [issue notifications](https://hookdeck.com/docs/issue-triggers). See [Receive webhooks quickstart — Deliver to production](https://hookdeck.com/docs/use-cases/receive-webhooks/quickstart#deliver-to-your-production-webhook-endpoint) for the full checklist.
 
 ## Reference Material
 
@@ -110,7 +110,7 @@ Use as needed (not sequential):
 
 ### Development & Operations
 
-Use the sections below to choose CLI vs API vs Dashboard; then use the table for the right reference file. **In user-facing explanations, avoid vague labels like “simple” or “complex”—use the concrete signals below.**
+Use the sections below to choose CLI vs API vs Dashboard; then use the table for the right reference file.
 
 #### How agents choose: CLI, API, or Dashboard
 
@@ -137,7 +137,7 @@ Use the sections below to choose CLI vs API vs Dashboard; then use the table for
 
 - **Everything you can do in the Dashboard is possible with the CLI** — prefer CLI snippets when reproducing setup.
 - The CLI covers sources, **rules on connections**, **source config**, **destination config**, **rate limits**, and other connection/destination options. **Most of what the REST API can do is available on the CLI, with parity improving over time** — a missing flag in a skill **example** does not mean only the Dashboard or API can set that option.
-- **Do not** steer users to the Dashboard or API because a knob “looks advanced.” **Run the relevant subcommand’s `--help`** first (e.g. `hookdeck gateway connection create --help`). Omitting rate limits in an example was one symptom of skipping `--help`.
+- **Do not** steer users to the Dashboard or API because a knob “looks advanced.” **Run the relevant subcommand’s `--help`** first (e.g. `hookdeck gateway connection upsert --help`). Omitting rate limits in an example was one symptom of skipping `--help`.
 
 **Auth fit (credentials only — not feature depth)**
 

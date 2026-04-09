@@ -124,7 +124,7 @@ Follow these stages in order for a new Hookdeck integration. The reference files
 
 Stage 02 is the **composition point** where provider-specific knowledge from [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills) meets Hookdeck integration code from this repo. When a provider is named (Stripe, Shopify, etc.):
 
-- **Before scaffolding:** Follow `event-gateway/references/provider-webhooks-checklist.md`. Try installing the provider skill first (`npx skills add hookdeck/webhook-skills --skill <provider>-webhooks`) to verify it exists; if install fails, the provider may not be in webhook-skills. Recommend to the user that they install the provider webhook skill.
+- **Before scaffolding:** Follow `event-gateway/references/provider-webhooks-checklist.md`. Try installing the provider skill first (`npx skills add hookdeck/webhook-skills --skill <provider>-webhooks -y -g`) to verify it exists without interactive prompts; if install fails, the provider may not be in webhook-skills. Recommend to the user that they install the provider webhook skill. See the checklist for what `-y` and `-g` do.
 - Use **provider SDK constructs** (e.g. Stripe `constructEvent`, Shopify HMAC)—not only `JSON.parse`. Keep guidance generic: refer to "provider SDK verification and event construction" and use Stripe/Shopify as examples.
 - Layer Hookdeck signature verification on top using `verification-code.md` and `examples/`.
 
@@ -192,9 +192,9 @@ When you are **adding a new skill** or **updating an existing skill** in this re
 2. **Use the Skill authoring checklist** at the end of this file before considering the work complete.
 3. **When updating the event-gateway skill** (especially provider webhooks, Stage 02, or composition with webhook-skills):
    - Follow and reference `event-gateway/references/provider-webhooks-checklist.md`. The checklist is mandatory before scaffolding when a provider is named.
-   - Prefer **try install first:** have the agent run `npx skills add hookdeck/webhook-skills --skill <provider>-webhooks` to verify the provider skill exists; if install fails, fall back to looking up the webhook-skills repo or informing the user.
+   - Prefer **try install first:** have the agent run `npx skills add hookdeck/webhook-skills --skill <provider>-webhooks -y -g` to verify the provider skill exists non-interactively; if install fails, fall back to looking up the webhook-skills repo or informing the user. After install, the agent must **read** the provider skill (not only mark the step done).
    - Keep provider guidance **generic:** refer to "provider SDK verification and event construction" and "constructs provided by the provider's SDK" (e.g. Stripe `constructEvent`, Shopify HMAC as examples, not Stripe-only).
-   - Instruct the agent to **recommend to the user** that they install the provider webhook skill (e.g. "I recommend installing the stripe-webhooks skill... Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks`").
+   - Instruct the agent to **recommend to the user** that they install the provider webhook skill (e.g. "I recommend installing the stripe-webhooks skill... Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g`" — user may omit `-y -g` for interactive install).
 4. **One level deep:** All references from SKILL.md must be to files directly in that skill's directory (e.g. `references/...`). Reference files may link to other reference files for workflow or see-also; avoid long chains.
 5. **Link to live docs** inline where a concept or feature is first mentioned; do not consolidate links in a single section.
 

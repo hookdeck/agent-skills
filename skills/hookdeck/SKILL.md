@@ -35,4 +35,4 @@ Outbound event delivery to HTTP, SQS, RabbitMQ, Pub/Sub, and more.
 
 For provider-specific webhook knowledge (Stripe, Shopify, GitHub, etc.),
 see [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills).
-The event-gateway skill references these during the scaffold stage.
+The [event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md) skill references these during the scaffold stage. **Non-interactive install:** use `-y -g` on `npx skills add hookdeck/webhook-skills --skill <provider>-webhooks` so the [Skills CLI](https://github.com/vercel-labs/skills) does not prompt (details: [provider-webhooks-checklist.md](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/references/provider-webhooks-checklist.md)).

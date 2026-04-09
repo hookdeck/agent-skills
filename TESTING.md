@@ -138,7 +138,7 @@ npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
 **Scenarios:** Defined in `scenarios.yaml`. Initial set:
 
 - **receive-webhooks** — Setup Hookdeck, build handler with signature verification, run `hookdeck listen`, document inspect/retry workflow. Tests stages 01–04 (iterate is documentation-only: agent documents how to list request → event → attempt and retry; no live traffic required).
-- **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Only the event-gateway skill is pre-installed; the agent is expected to discover and use the provider skill from webhook-skills (e.g. stripe-webhooks) and use the provider SDK in the handler. Tests composition and the provider-webhooks checklist.
+- **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Only the event-gateway skill is pre-installed; the agent is expected to discover and use the provider skill from webhook-skills (e.g. `npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g`) and use the provider SDK in the handler. Tests composition and the provider-webhooks checklist.
 - **investigate-delivery-health** — Documentation-only: assume the user has had webhooks for a week and wants to understand delivery performance (success vs failure, backlog, latency). The prompt does **not** mention "metrics" or "hookdeck gateway metrics"; the assessor checks whether the agent used metrics CLI commands. Use to verify that agents discover and use metrics from the skill when the task implies it.
 
 ### Scenario run checklist

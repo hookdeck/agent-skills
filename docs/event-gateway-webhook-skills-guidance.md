@@ -39,7 +39,7 @@ Turn "use webhook-skills for providers" into a **low-freedom workflow**: a check
 In **SKILL.md** and **02-scaffold.md**, add an explicit **first step** for provider tasks:
 
 - **If the user mentions a specific provider (Stripe, Shopify, Chargebee, GitHub, Paddle, Twilio, etc.):**
-  1. **Before** writing handler code: run `npx skills add hookdeck/webhook-skills --list` and install the matching skill, e.g. `npx skills add hookdeck/webhook-skills --skill stripe-webhooks`, **or** fetch the [webhook-skills README](https://github.com/hookdeck/webhook-skills) and the provider’s `references/verification.md` (e.g. from `skills/stripe-webhooks/references/verification.md`).
+  1. **Before** writing handler code: run `npx skills add hookdeck/webhook-skills --list` (listing needs no `-y`/`-g`) and install the matching skill, e.g. `npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g` (non-interactive install), **or** fetch the [webhook-skills README](https://github.com/hookdeck/webhook-skills) and the provider’s `references/verification.md` (e.g. from `skills/stripe-webhooks/references/verification.md`).
   2. Then open that skill’s verification reference and the framework example (e.g. `examples/express/`) and use them for provider signature verification and event construction.
   3. Only then scaffold the handler (Hookdeck verify first, then provider verify + construct event).
 
@@ -47,7 +47,7 @@ Phrase it as a **checklist** in 02-scaffold (and optionally in SKILL.md):
 
 ```markdown
 When a provider is named (Stripe, Shopify, …), complete before scaffolding:
-- [ ] Ran `npx skills add hookdeck/webhook-skills --list` and installed the matching skill (e.g. `--skill stripe-webhooks`), or fetched webhook-skills repo and provider’s verification doc
+- [ ] Ran `npx skills add hookdeck/webhook-skills --list` and installed the matching skill (e.g. `--skill stripe-webhooks -y -g`), or fetched webhook-skills repo and provider’s verification doc
 - [ ] Read that skill’s references/verification.md and the framework example
 - [ ] Handler will: verify Hookdeck signature first, then use provider skill’s method (e.g. Stripe constructEvent); will not only JSON.parse
 ```
@@ -72,7 +72,7 @@ Optionally, move the generic “parse payload” snippet into a subsection like 
 
 Add one short instruction in SKILL.md (and optionally 02-scaffold) under the provider webhooks section:
 
-- *"Suggest to the user: 'For [Stripe] webhooks, I recommend installing the stripe-webhooks skill from webhook-skills for correct signature verification and event construction. Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks`.' Then use that skill’s references and examples when building the handler."*
+- *"Suggest to the user: 'For [Stripe] webhooks, I recommend installing the stripe-webhooks skill from webhook-skills for correct signature verification and event construction. Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g` (omit `-y -g` for interactive install).' Then use that skill’s references and examples when building the handler."*
 
 So the agent both **installs or looks up** the provider skill and **tells the user** to install it, reinforcing the behavior and making the dependency visible.
 
@@ -81,7 +81,7 @@ So the agent both **installs or looks up** the provider skill and **tells the us
 Add **references/provider-webhooks-checklist.md** (or similar) and link to it from SKILL.md and 02-scaffold. Keep it one level deep. Contents:
 
 - When the user mentions Stripe/Shopify/Chargebee/GitHub/Paddle/Twilio/etc.:
-  1. Run `npx skills add hookdeck/webhook-skills --skill <provider>-webhooks` (or fetch repo + provider’s verification doc).
+  1. Run `npx skills add hookdeck/webhook-skills --skill <provider>-webhooks -y -g` (or fetch repo + provider’s verification doc).
   2. Open that skill’s `references/verification.md` and the framework example.
   3. In the handler: verify Hookdeck first, then provider verification + event construction (e.g. Stripe `constructEvent`). Do not only `JSON.parse`.
 
@@ -97,7 +97,7 @@ In the Event Gateway skill, add a short subsection or bullet list that describes
 - **Contents**: One folder per provider under `skills/` (e.g. `stripe-webhooks`, `shopify-webhooks`, `chargebee-webhooks`). Each has:
   - `references/verification.md` — provider signature verification and event construction (e.g. Stripe SDK `constructEvent`)
   - `examples/express/`, `examples/nextjs/`, `examples/fastapi/` — runnable examples
-- **Install**: `npx skills add hookdeck/webhook-skills --list` then `npx skills add hookdeck/webhook-skills --skill <name>-webhooks`
+- **Install**: `npx skills add hookdeck/webhook-skills --list` (no `-y`/`-g` needed) then `npx skills add hookdeck/webhook-skills --skill <name>-webhooks -y -g` for non-interactive install (see [provider-webhooks-checklist.md](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/references/provider-webhooks-checklist.md))
 
 You can put this in the new provider-webhooks-checklist.md or in SKILL.md under “Provider webhooks: use two skills together.”
 

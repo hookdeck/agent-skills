@@ -2,6 +2,16 @@
 
 Start receiving webhooks locally with `hookdeck listen`.
 
+## Local delivery: `listen` vs HTTP destinations {#local-delivery-listen-vs-http-destinations}
+
+| Pattern | What to do |
+|--------|------------|
+| **Auto** | `hookdeck listen <port> --path /webhooks/...` — creates or uses a **CLI** destination and tunnels to your local server. |
+| **Pre-created** | `hookdeck gateway connection upsert …` with `--destination-type CLI` and `--destination-cli-path` matching your handler path, then `hookdeck listen` (see [Multi-Provider Routing](#multi-provider-routing-per-source-paths) below). |
+| **Do not** | **`--destination-type HTTP` with `http://localhost:…`** (or any URL Hookdeck’s cloud cannot reach) **as if** Hookdeck will POST there from the cloud—and **do not** pair that broken pattern with `hookdeck listen` as a “fix.” **`listen` is for CLI destinations**, not HTTP-to-localhost delivery. |
+
+**Never use an HTTP destination type pointing at localhost for Gateway cloud delivery.** For real HTTP destinations, use a **publicly reachable** URL (deployed host, tunnel, etc.).
+
 ## No Account Required
 
 `hookdeck listen` works without any Hookdeck account. No signup, no login -- just tunneling, inspection, and replay:
@@ -51,19 +61,17 @@ When receiving webhooks from multiple providers and each needs a different local
 
 In the [Hookdeck Dashboard](https://dashboard.hookdeck.com), create one Connection per Source (for example `slack` and `github`) and set distinct CLI Destination paths (`/slack`, `/github`).
 
-Or create them with the CLI:
+Or create them with the CLI (prefer **`upsert`** so re-runs stay idempotent):
 
 ```sh
-hookdeck gateway connection create \
-  --name "slack-local" \
+hookdeck gateway connection upsert slack-local \
   --source-name "slack" \
   --source-type WEBHOOK \
   --destination-name "cli-slack-local" \
   --destination-type CLI \
   --destination-cli-path /slack
 
-hookdeck gateway connection create \
-  --name "github-local" \
+hookdeck gateway connection upsert github-local \
   --source-name "github" \
   --source-type WEBHOOK \
   --destination-name "cli-github-local" \

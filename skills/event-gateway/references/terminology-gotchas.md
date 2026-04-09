@@ -66,3 +66,7 @@ The [Publish API](https://hookdeck.com/docs/publish) endpoint is `https://hkdk.e
 ### Timing-safe comparison for signatures
 
 Always use `crypto.timingSafeEqual` (Node.js) or `hmac.compare_digest` (Python) for signature comparison to prevent timing attacks.
+
+### HTTP destination to `localhost` (local dev)
+
+Hookdeck’s **cloud** cannot POST to `http://localhost:…` on your machine. For local development use **`hookdeck listen`** and/or a **`CLI`** destination (`--destination-type CLI`, `--destination-cli-path`). **Do not** create **`--destination-type HTTP`** with **`http://localhost:…`** and expect cloud delivery—and **do not** treat `listen` as a workaround for that broken combo. See [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations).

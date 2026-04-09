@@ -47,24 +47,26 @@ GitHub Source  ──> Connection C ──> Webhook Handler
 
 One Source per provider, one Connection to your API. Optionally add filters and transforms per Connection.
 
+For **production**, the HTTP destination must be a **publicly reachable HTTPS** URL. Prefer **`upsert`** for idempotent scripts:
+
 ```sh
-hookdeck gateway connection create \
-  --name "stripe-to-api" \
+hookdeck gateway connection upsert stripe-to-api \
   --source-name "stripe" \
   --source-type STRIPE \
   --source-webhook-secret "whsec_..." \
   --destination-name "my-api" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks/stripe
+  --destination-url https://api.example.com/webhooks/stripe
 ```
+
+For **local dev** with `hookdeck listen`, use a **CLI** destination (see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations)), not HTTP to `localhost`.
 
 **Third-party routing**:
 
 Source receives events from service A, Connection transforms the payload and routes to service B.
 
 ```sh
-hookdeck gateway connection create \
-  --name "crm-to-email" \
+hookdeck gateway connection upsert crm-to-email \
   --source-name "crm-events" \
   --source-type WEBHOOK \
   --destination-name "email-service" \
@@ -81,14 +83,13 @@ hookdeck gateway connection create \
 High-volume Source receives events from your own SDKs or devices. Multiple Connections fan out to different processing services.
 
 ```sh
-# Source for all device events
-hookdeck gateway connection create \
-  --name "devices-to-processor" \
+# Source for all device events — HTTP destination must be reachable from Hookdeck’s cloud
+hookdeck gateway connection upsert devices-to-processor \
   --source-name "device-events" \
   --source-type WEBHOOK \
   --destination-name "event-processor" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/process \
+  --destination-url https://processor.example.com/process \
   --rules '[{"type":"filter","body":{"type":{"$in":["telemetry","heartbeat"]}}}]'
 ```
 

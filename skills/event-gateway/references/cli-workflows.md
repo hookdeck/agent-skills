@@ -9,7 +9,7 @@
 - [Connection Management](#connection-management)
 - [Gateway resource management](#gateway-resource-management)
 
-For **tasks and simple scripts** (querying, metrics, monitoring, debugging), the CLI is a good first touch point; use it to explore when unsure. For complex scripts, applications, or automation, use the API. When in doubt, start with the CLI to explore. This file covers: installation, listening, connection and resource management, project switching, and querying (list commands and metrics). For the full CLI reference, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md).
+**When to use CLI vs API vs Dashboard:** see **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** (canonical guidance for agents). This file covers installation, listening, connection and resource management, project switching, and querying. For the full CLI reference, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md). Prefer **`hookdeck gateway … upsert`** over `create` when both exist so workflows are idempotent; run **`--help`** on each subcommand for the full flag list (rate limits, rules, source/destination options).
 
 ## Installation
 
@@ -100,21 +100,21 @@ hookdeck listen 3000
 When your webhook handler is at a path like `/webhooks`, use `--path` so the Source URL maps to it:
 
 ```sh
-hookdeck listen 3000 --path /webhooks
+hookdeck listen 3000 <source_name> --path /webhooks
 ```
 
 For provider-specific paths (e.g. `/webhooks/stripe`):
 
 ```sh
-hookdeck listen 3000 --path /webhooks/stripe
+hookdeck listen 3000 <source_name> --path /webhooks/stripe
 ```
 
 ### Multiple Sources
 
-Listen to specific sources:
+Listen to specific sources (comma-separated in the `[source]` argument; see `hookdeck listen --help`):
 
 ```sh
-hookdeck listen 3000 stripe shopify
+hookdeck listen 3000 stripe,shopify
 ```
 
 For the full listen reference, fetch [/docs/cli/listen.md](https://hookdeck.com/docs/cli/listen.md).
@@ -123,41 +123,42 @@ For the full listen reference, fetch [/docs/cli/listen.md](https://hookdeck.com/
 
 Use `hookdeck gateway connection` (canonical). The root alias `hookdeck connection` is deprecated but still works.
 
-Create a connection with explicit parameters:
+**Local dev with `hookdeck listen`:** use a **CLI** destination (or let `listen` create one)—**not** `--destination-type HTTP` with `http://localhost:…` (Hookdeck’s cloud cannot deliver to loopback). See [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations).
+
+**Production / public HTTP destinations:** URLs must be **publicly reachable HTTPS** (or equivalent). Example uses **`upsert`** so the command is idempotent:
 
 ```sh
-hookdeck gateway connection create \
-  --name "stripe-to-api" \
+hookdeck gateway connection upsert stripe-to-api \
   --source-name "stripe" \
   --source-type WEBHOOK \
   --destination-name "my-api" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks
+  --destination-url https://api.example.com/webhooks
 ```
 
 With Source Authentication:
 
 ```sh
-hookdeck gateway connection create \
-  --name "stripe-verified" \
+hookdeck gateway connection upsert stripe-verified \
   --source-name "stripe" \
   --source-type STRIPE \
   --source-webhook-secret "whsec_..." \
   --destination-name "my-api" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks
+  --destination-url https://api.example.com/webhooks
 ```
 
-With rules (filter, retry, transform):
+With rules (filter, retry, transform) and optional rate limiting (verify exact flags with `hookdeck gateway connection upsert --help`):
 
 ```sh
-hookdeck gateway connection create \
-  --name "filtered" \
+hookdeck gateway connection upsert filtered \
   --source-name "stripe" \
   --source-type WEBHOOK \
   --destination-name "payments" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks \
+  --destination-url https://api.example.com/webhooks \
+  --destination-rate-limit 100 \
+  --destination-rate-limit-period minute \
   --rules '[{"type":"filter","body":{"type":{"$eq":"payment_intent.succeeded"}}}]'
 ```
 
@@ -180,8 +181,8 @@ Event Gateway resources (sources, destinations, connections, transformations, an
 ```sh
 hookdeck gateway connection list
 hookdeck gateway connection get web_xxx
-hookdeck gateway connection create --source-name my-source --source-type WEBHOOK --destination-name my-dest --destination-type HTTP --destination-url https://example.com
 hookdeck gateway connection upsert my-conn --source-name my-source --source-type WEBHOOK --destination-name my-dest --destination-type HTTP --destination-url https://example.com
+hookdeck gateway connection create --source-name my-source --source-type WEBHOOK --destination-name my-dest --destination-type HTTP --destination-url https://example.com
 hookdeck gateway connection update web_xxx --description "Updated"
 hookdeck gateway connection delete web_xxx
 hookdeck gateway connection enable web_xxx

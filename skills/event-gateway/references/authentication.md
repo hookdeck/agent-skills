@@ -27,16 +27,19 @@ How the Hookdeck Event Gateway authenticates requests -- both inbound (from webh
 
 Source Types are platform presets that auto-configure signature verification for a provider:
 
+Production-style (**HTTPS** destination):
+
 ```sh
-hookdeck gateway connection create \
-  --name "stripe-verified" \
+hookdeck gateway connection upsert stripe-verified \
   --source-name "stripe" \
   --source-type STRIPE \
   --source-webhook-secret "whsec_..." \
   --destination-name "my-api" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks
+  --destination-url https://api.example.com/webhooks
 ```
+
+Local dev with **`hookdeck listen`**: use **`--destination-type CLI`** and **`--destination-cli-path`** (see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations)); do not use HTTP to `localhost`.
 
 When Source Authentication is enabled and verification succeeds, Hookdeck adds `x-hookdeck-verified: true` to the forwarded request. Your handler can check this header to confirm the provider's signature was verified.
 
@@ -45,14 +48,13 @@ For the full list of Source Types, fetch [/docs/sources.md](https://hookdeck.com
 ### API Key Authentication
 
 ```sh
-hookdeck gateway connection create \
-  --name "custom-auth" \
+hookdeck gateway connection upsert custom-auth \
   --source-name "my-source" \
   --source-type WEBHOOK \
   --source-config '{"auth_type":"API_KEY","auth":{"header_key":"x-api-key","api_key":"my-secret-key"}}' \
   --destination-name "my-api" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks
+  --destination-url https://api.example.com/webhooks
 ```
 
 ### What Happens When Authentication Fails

@@ -14,6 +14,8 @@
 
 [Rules](https://hookdeck.com/docs/connections) are processing logic attached to a Connection. Each Connection can have multiple Rules. Five types: filter, transform, retry, delay, deduplicate.
 
+**CLI:** Prefer **`hookdeck gateway connection upsert`** over `create` when scripting so runs are idempotent. **`hookdeck gateway connection upsert --help`** lists rule-related flags (`--rules`, `--rule-filter-body`, `--rule-retry-*`, `--destination-rate-limit`, etc.) and all inline source/destination options—examples below are **not exhaustive**. **Do not** use **`--destination-type HTTP`** with **`http://localhost:…`** in these patterns; use **`https://…`** for HTTP destinations or a **CLI** destination for local `listen` (see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations)).
+
 ## Filters
 
 Accept or reject [Events](https://hookdeck.com/docs/events) based on request properties (body, headers, query, path). Events that don't match the filter are rejected and not delivered.
@@ -23,13 +25,12 @@ Accept or reject [Events](https://hookdeck.com/docs/events) based on request pro
 Filter by event type:
 
 ```sh
-hookdeck gateway connection create \
-  --name "stripe-payments" \
+hookdeck gateway connection upsert stripe-payments \
   --source-name "stripe" \
   --source-type WEBHOOK \
   --destination-name "payments" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks \
+  --destination-url https://api.example.com/webhooks \
   --rules '[{"type":"filter","body":{"type":{"$eq":"payment_intent.succeeded"}}}]'
 ```
 
@@ -114,7 +115,7 @@ Inline code:
 --rule-transform-code 'addHandler("transform", (request, context) => { ... return request; })'
 ```
 
-Named transform (created via Dashboard or API):
+Named transform (created via CLI, Dashboard, or API):
 
 ```sh
 --rule-transform-name my-transform
@@ -145,13 +146,12 @@ Automatically retry failed deliveries (non-2xx responses) with configurable back
 **CLI example:**
 
 ```sh
-hookdeck gateway connection create \
-  --name "with-retries" \
+hookdeck gateway connection upsert with-retries \
   --source-name "my-source" \
   --source-type WEBHOOK \
   --destination-name "my-api" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks \
+  --destination-url https://api.example.com/webhooks \
   --rules '[{"type":"retry","strategy":"exponential","interval":60000,"count":5}]'
 ```
 
@@ -188,13 +188,12 @@ Field-based deduplication:
 **CLI example:**
 
 ```sh
-hookdeck gateway connection create \
-  --name "deduped" \
+hookdeck gateway connection upsert deduped \
   --source-name "my-source" \
   --source-type WEBHOOK \
   --destination-name "my-api" \
   --destination-type HTTP \
-  --destination-url http://localhost:3000/webhooks \
+  --destination-url https://api.example.com/webhooks \
   --rules '[{"type":"deduplicate","window":3600000,"include_fields":["body.id"]}]'
 ```
 

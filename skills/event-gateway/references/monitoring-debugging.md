@@ -16,7 +16,7 @@
 - [CLI: metrics](#cli-metrics)
 - [Documentation](#documentation)
 
-How to monitor webhook deliveries, debug failures, and replay events. For monitoring and debugging, the CLI is often the right first touch for tasks and simple scripts (TUI, list/get, metrics, retry); use it to explore when unsure. The API is valid for querying and for complex scripts or automation. When in doubt, start with the CLI to explore. See SKILL.md for when-to-use guidance and main documentation for details. Querying (events, requests, attempts, metrics) can also be done via the API — see the [API inspect docs](https://hookdeck.com/docs/api/inspect.md).
+How to monitor webhook deliveries, debug failures, and replay events. For monitoring and debugging, the **CLI** is usually the right first touch (TUI, list/get, metrics, retry). The **API** is valid for querying and for automation driven from application or test code. See **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** for full CLI vs API vs Dashboard guidance. Querying (events, requests, attempts, metrics) can also be done via the API — see the [API inspect docs](https://hookdeck.com/docs/api/inspect.md).
 
 ## Before querying or running metrics {#before-querying-or-running-metrics}
 

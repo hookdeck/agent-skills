@@ -3,7 +3,7 @@
  * We do not install provider skills (e.g. stripe-webhooks) from webhook-skills.
  * The event-gateway skill guides the agent that those skills exist and how to
  * use them (layered composition); the agent may choose to install the provider
- * skill (e.g. npx skills add hookdeck/webhook-skills --skill stripe-webhooks)
+ * skill (e.g. npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g)
  * and then use it.
  */
 

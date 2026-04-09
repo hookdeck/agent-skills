@@ -8,7 +8,7 @@ If the user mentioned a specific provider (Stripe, Shopify, Chargebee, GitHub, P
 
 Follow [provider-webhooks-checklist.md](provider-webhooks-checklist.md). In short:
 
-- [ ] **Try installing the provider skill:** Run `npx skills add hookdeck/webhook-skills --skill {provider}-webhooks` (e.g. `stripe-webhooks`). If it succeeds, the skill exists and you have it locally. If it fails, the provider may not be in webhook-skills — look up the [repo](https://github.com/hookdeck/webhook-skills) or inform the user.
+- [ ] **Try installing the provider skill:** Run `npx skills add hookdeck/webhook-skills --skill {provider}-webhooks -y -g` (e.g. `stripe-webhooks`). Use `-y -g` for a non-interactive install. If it succeeds, the skill exists — then **read** its `references/verification.md` and examples. If it fails, the provider may not be in webhook-skills — look up the [repo](https://github.com/hookdeck/webhook-skills) or inform the user.
 - [ ] **Read the provider skill:** Open that skill's `references/verification.md` and the framework example. Use the **provider SDK constructs** (e.g. Stripe `constructEvent`, Shopify HMAC)—do not only parse the JSON body.
 - [ ] **Recommend to the user:** Suggest installing the provider webhook skill for correct verification and event construction.
 - [ ] **Then scaffold:** Verify Hookdeck signature first, then use the provider skill's method for provider verification and event construction.
@@ -29,15 +29,17 @@ When the user is working with a provider (Stripe, Shopify, Chargebee, GitHub, Pa
 
 ### What to do
 
-1. **Try installing the provider skill first:** Run `npx skills add hookdeck/webhook-skills --skill {provider}-webhooks` (e.g. `stripe-webhooks`, `shopify-webhooks`). If install succeeds, you have the skill. If it fails, the provider may not be in webhook-skills — run `npx skills add hookdeck/webhook-skills --list` to see available skills, or open the [webhook-skills repo](https://github.com/hookdeck/webhook-skills) and look under `skills/` for a matching folder.
+1. **Try installing the provider skill first:** Run `npx skills add hookdeck/webhook-skills --skill {provider}-webhooks -y -g` (e.g. `stripe-webhooks`, `shopify-webhooks`). If install succeeds, **read** the skill before coding. If it fails, the provider may not be in webhook-skills — run `npx skills add hookdeck/webhook-skills --list` to see available skills, or open the [webhook-skills repo](https://github.com/hookdeck/webhook-skills) and look under `skills/` for a matching folder.
 2. **Use the provider skill in your handler:** Open that skill's `references/verification.md` and the framework example (e.g. `examples/express/`). Follow the provider's recommended method (provider SDK constructs: e.g. Stripe `constructEvent`, Shopify's `authenticate.webhook`, Chargebee Basic Auth). Do not only parse the JSON body.
-3. **Recommend to the user:** Tell the user you recommend installing the provider webhook skill, e.g. "For Stripe webhooks, I recommend installing the stripe-webhooks skill from webhook-skills for correct signature verification and event construction. Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks`."
+3. **Recommend to the user:** Tell the user you recommend installing the provider webhook skill, e.g. "For Stripe webhooks, I recommend installing the stripe-webhooks skill from webhook-skills for correct signature verification and event construction. Run: `npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g` (omit `-y -g` for interactive install)."
 
 ```sh
-npx skills add hookdeck/webhook-skills --list   # see all available
-npx skills add hookdeck/webhook-skills --skill stripe-webhooks    # example: Stripe
-npx skills add hookdeck/webhook-skills --skill shopify-webhooks   # example: Shopify
-npx skills add hookdeck/webhook-skills --skill chargebee-webhooks # example: Chargebee
+# --list exits before install prompts; no -y/-g needed.
+npx skills add hookdeck/webhook-skills --list
+# Use -y -g on --skill so install does not prompt (agents, scripts, CI). Omit for interactive install.
+npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g
+npx skills add hookdeck/webhook-skills --skill shopify-webhooks -y -g
+npx skills add hookdeck/webhook-skills --skill chargebee-webhooks -y -g
 ```
 
 Each provider skill includes verification code, event types, and framework examples. After verifying the Hookdeck signature (this skill), use the **provider skill** to verify the event came from the provider and to construct the event using the provider's SDK.

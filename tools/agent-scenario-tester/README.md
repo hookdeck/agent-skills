@@ -22,42 +22,32 @@ The tester runs three scenarios that test increasingly interesting agent behavio
 
 Each run produces a `report.md` scored against a rubric of 17–19 points covering: skill discovery, setup, scaffold, listen, iterate, code quality, and composition.
 
-## Prerequisites
-
-- Node.js 18+
-- Claude Code CLI (`claude`) installed and authenticated
-- Hookdeck account with a valid API key
-
-## Setup
-
-```bash
-cd tools/agent-scenario-tester
-npm install
-```
-
-Set your environment:
-
-```bash
-export HOOKDECK_API_KEY=your_api_key
-```
-
 ## Usage
 
-Run a specific scenario:
+### From repo root (recommended)
 
 ```bash
-npm run test -- --scenario receive-webhooks
+./scripts/test-agent-scenario.sh run receive-webhooks express
+./scripts/test-agent-scenario.sh assess receive-provider-webhooks-express-stripe-20260212145955.
 ```
 
-Run all scenarios:
+### From this directory
+
+Path to the entrypoint is **relative to cwd**. Use `src/index.ts` (not `tools/agent-scenario-tester/src/index.ts`):
 
 ```bash
-npm run test
+# list / run (from repo root is easier)
+npx tsx src/index.ts list
+npx tsx src/index.ts assess receive-provider-webhooks-express-stripe-20260212145955.
+# or
+npm run assess -- receive-provider-webhooks-express-stripe-20260212145955.
 ```
+
+`assess` infers scenario/framework/provider from the result directory name and updates `test-results/<dir>/report.md`.
 
 ## Output
 
-Each scenario run produces:
+Each scenario run produces a result directory under `test-results/` containing:
 
 - `report.md` — Detailed rubric scoring with pass/fail for each criterion
 - `transcript.json` — Full agent transcript showing every tool call, doc access, and decision

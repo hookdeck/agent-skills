@@ -1,6 +1,6 @@
 # Testing Hookdeck Agent Skills
 
-This document covers automated testing for code examples in the **`event-gateway`** skill. The example tests follow the same patterns as [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills/blob/main/TESTING.md).
+This document covers automated testing for code examples in the `event-gateway` skill. The example tests follow the same patterns as [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills/blob/main/TESTING.md).
 
 Hookdeck tests its agent skills at three levels: **code example tests** (unit/integration tests for the example applications shipped with each skill), **static quality checks** (linting and scoring skill files), and **agent scenario testing** (giving real agents tasks and scoring whether they succeed).
 

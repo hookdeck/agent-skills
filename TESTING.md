@@ -1,6 +1,6 @@
 # Testing Hookdeck Agent Skills
 
-This document covers automated testing for code examples in the `event-gateway` skill. Follows the same patterns as [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills/blob/main/TESTING.md).
+This document covers automated testing for code examples in the **`event-gateway`** and **`outpost`** skills. Follows the same patterns as [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills/blob/main/TESTING.md).
 
 ## Code Example Tests
 
@@ -48,7 +48,15 @@ Use the test runner script to discover and run all examples:
 
 # Specific skill
 ./scripts/test-examples.sh event-gateway
+./scripts/test-examples.sh outpost
 ```
+
+The **outpost** skill includes:
+
+- [examples/nextjs-saas/](skills/outpost/examples/nextjs-saas/) — `npm test` (Vitest).
+- [examples/fastapi-saas/](skills/outpost/examples/fastapi-saas/) — in `backend/`: `pytest test_outpost_wire.py` with minimal deps (no full app install; no live Outpost).
+
+Both are full apps; installs can take longer than the small event-gateway demos.
 
 ### CI Pipeline
 

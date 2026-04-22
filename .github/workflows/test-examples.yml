@@ -70,10 +70,29 @@ jobs:
         working-directory: skills/event-gateway/examples/fastapi
         run: pytest test_webhook.py -v
 
+  test-outpost-saas:
+    name: Outpost SaaS examples (nextjs-saas + fastapi-saas)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run test-examples.sh outpost
+        run: ./scripts/test-examples.sh outpost
+
   summary:
     name: Test Summary
     runs-on: ubuntu-latest
-    needs: [test-express, test-nextjs, test-fastapi]
+    needs: [test-express, test-nextjs, test-fastapi, test-outpost-saas]
     if: always()
     steps:
       - name: Check test results
@@ -83,7 +102,8 @@ jobs:
 
           if [ "${{ needs.test-express.result }}" == "failure" ] || \
              [ "${{ needs.test-nextjs.result }}" == "failure" ] || \
-             [ "${{ needs.test-fastapi.result }}" == "failure" ]; then
+             [ "${{ needs.test-fastapi.result }}" == "failure" ] || \
+             [ "${{ needs.test-outpost-saas.result }}" == "failure" ]; then
             echo "**Result:** Some tests failed" >> $GITHUB_STEP_SUMMARY
             exit 1
           fi

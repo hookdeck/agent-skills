@@ -39,6 +39,24 @@ For managed, sign up at [hookdeck.com](https://hookdeck.com). For self-hosted, s
 
 **Delivery Attempts** -- Records of each attempt to deliver an event to a destination, including request/response data.
 
+## Reference example applications
+
+Runnable **multi-tenant SaaS** samples that embed Hookdeck Outpost (admin API, per-tenant destinations, publish). They are **pattern references**, not minimal snippets: each tree is a full product baseline (Next.js or FastAPI + React) so you can see realistic auth, DB, and dashboard code.
+
+**How agents should use them:** Follow [PostHog-style progressive disclosure](https://posthog.com/handbook/engineering/ai/writing-skills) — use this skill’s overview first, then open **only** the files that match the task.
+
+| Example | Stack | Location |
+|--------|--------|----------|
+| SaaS (Next.js) | App Router + `@hookdeck/outpost-sdk` + dashboard UI | [examples/nextjs-saas/](examples/nextjs-saas/) — [README](examples/nextjs-saas/README.md) |
+| SaaS (FastAPI + React) | FastAPI BFF (`httpx` → Outpost) + full-stack template UI | [examples/fastapi-saas/](examples/fastapi-saas/) — [README](examples/fastapi-saas/README.md) |
+
+**Integration maps (read before browsing the apps):**
+
+- Next.js: [references/nextjs-saas-integration-map.md](references/nextjs-saas-integration-map.md)
+- FastAPI: [references/fastapi-saas-integration-map.md](references/fastapi-saas-integration-map.md)
+
+**Tests:** `npm test` in `nextjs-saas` (Vitest); `pytest test_outpost_wire.py` in `fastapi-saas/backend` via `./scripts/test-examples.sh outpost` (standalone file — avoids the template’s Postgres `tests/conftest.py`). The Next.js example uses **npm** (no `pnpm-lock.yaml` in this repo).
+
 ## Self-Hosted Quick Start (Docker)
 
 Requires [Docker](https://docs.docker.com/engine/install/). Uses RabbitMQ for message queuing.

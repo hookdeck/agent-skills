@@ -20,6 +20,7 @@ build/
 *.egg-info/
 .next/
 out/
+.turbo/
 
 # IDE and editor files
 .idea/
@@ -45,6 +46,9 @@ htmlcov/
 # Package lock files (not tracked for example projects)
 package-lock.json
 yarn.lock
+pnpm-lock.yaml
+uv.lock
+bun.lock
 
 # Agent scenario tester
 test-results/

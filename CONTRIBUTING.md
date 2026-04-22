@@ -31,6 +31,12 @@ cd agent-skills
 cd skills/event-gateway/examples/express && npm install && npm test
 cd skills/event-gateway/examples/nextjs && npm install && npm test
 cd skills/event-gateway/examples/fastapi && pip install -r requirements.txt && pytest test_webhook.py -v
+
+# Outpost SaaS reference (Next.js + Outpost SDK; large tree — npm install may take a minute)
+cd skills/outpost/examples/nextjs-saas && npm install && npm test
+
+# Outpost FastAPI SaaS (backend only — pip install in backend/)
+cd skills/outpost/examples/fastapi-saas/backend && python3 -m venv venv && source venv/bin/activate && pip install pytest httpx 'fastapi>=0.114' && pytest test_outpost_wire.py -q
 ```
 
 **Agent scenario tests** (end-to-end: install skills, run Claude, score report): see [TESTING.md](TESTING.md#agent-scenario-testing-two-layers). From repo root: `./scripts/test-agent-scenario.sh run receive-webhooks express` or `./scripts/test-agent-scenario.sh list`.

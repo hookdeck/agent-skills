@@ -41,19 +41,30 @@ For managed, sign up at [hookdeck.com](https://hookdeck.com). For self-hosted, s
 
 ## Reference example applications
 
-Runnable **multi-tenant SaaS** samples that embed Hookdeck Outpost (admin API, per-tenant destinations, publish). They are **pattern references**, not minimal snippets: each tree is a full product baseline (Next.js or FastAPI + React) so you can see realistic auth, DB, and dashboard code.
+**Integration maps (read these before opening the example trees):**
 
-**How agents should use them:** Follow [PostHog-style progressive disclosure](https://posthog.com/handbook/engineering/ai/writing-skills) — use this skill’s overview first, then open **only** the files that match the task.
+- Next.js: [references/nextjs-saas-integration-map.md](references/nextjs-saas-integration-map.md)
+- FastAPI: [references/fastapi-saas-integration-map.md](references/fastapi-saas-integration-map.md)
+
+**Treat examples as references, not copy-paste scaffolds.** Do **not** mirror whole trees into a user’s repo (routing layout, Docker, generic CRUD, auth) unless they asked for that. Prefer the **user’s** codebase for structure, dependencies, and conventions. Use the examples and maps only for **Outpost-shaped behavior** (server-only admin key, tenant mapping, BFF/proxy routes, publish from domain code), then implement the equivalent in their stack.
+
+Runnable **multi-tenant SaaS** samples embed Hookdeck Outpost (admin API, per-tenant destinations, publish). They are **pattern references**, not minimal snippets: each tree is a full product baseline (Next.js or FastAPI + React) so you can see realistic auth, DB, and dashboard code.
+
+**Example stack snapshot** (Outpost **1.0**; official SDKs **1.x** for new work — confirm exact pins in the manifests if they drift):
+
+| Piece | Where pinned | Notes |
+|--------|----------------|------|
+| `@hookdeck/outpost-sdk` | [examples/nextjs-saas/package.json](examples/nextjs-saas/package.json) | **^1.x** in this repo |
+| Next.js / React | same `package.json` | Next is a **canary** line (`15.6.x-canary.*`), not stable-channel docs |
+| `outpost_sdk` (Python) | [examples/fastapi-saas/backend/pyproject.toml](examples/fastapi-saas/backend/pyproject.toml) | **>=1,<2**; distinct package from the npm SDK |
+| FastAPI / `httpx` | same `pyproject.toml` | BFF uses `httpx` to Outpost’s REST API |
+
+**How agents should use them:** Follow [PostHog-style progressive disclosure](https://posthog.com/handbook/engineering/ai/writing-skills) — use this skill’s overview first, then open **only** the files that match the task (the integration maps list scopes to skip).
 
 | Example | Stack | Location |
 |--------|--------|----------|
 | SaaS (Next.js) | App Router + `@hookdeck/outpost-sdk` + dashboard UI | [examples/nextjs-saas/](examples/nextjs-saas/) — [README](examples/nextjs-saas/README.md) |
 | SaaS (FastAPI + React) | FastAPI BFF (`httpx` → Outpost) + full-stack template UI | [examples/fastapi-saas/](examples/fastapi-saas/) — [README](examples/fastapi-saas/README.md) |
-
-**Integration maps (read before browsing the apps):**
-
-- Next.js: [references/nextjs-saas-integration-map.md](references/nextjs-saas-integration-map.md)
-- FastAPI: [references/fastapi-saas-integration-map.md](references/fastapi-saas-integration-map.md)
 
 **Tests:** `npm test` in `nextjs-saas` (Vitest); `pytest test_outpost_wire.py` in `fastapi-saas/backend` via `./scripts/test-examples.sh outpost` (standalone file — avoids the template’s Postgres `tests/conftest.py`). The Next.js example uses **npm** (no `pnpm-lock.yaml` in this repo).
 
@@ -83,6 +94,10 @@ The Outpost API is a REST-based JSON API. The base URL and authentication differ
 |---|---|---|
 | **Self-hosted** | `http://localhost:3333/api/v1` (or your configured host) | `Authorization: Bearer $API_KEY` (the `API_KEY` env var you configured) |
 | **Managed** | Provided in your Hookdeck project | `Authorization: Bearer $HOOKDECK_API_KEY` (from [Dashboard > Settings > Secrets](https://dashboard.hookdeck.com/settings/project/secrets)) |
+
+**Self-hosted** deployments track **Outpost 1.0** and the published OpenAPI on GitHub; use **1.x** client SDKs for new code against that API.
+
+**Managed** Hookdeck-hosted Outpost uses the **base URL and API version** shown for your project in the Hookdeck dashboard and docs. If request/response shapes differ from what you expect for 1.0, verify against the **live** managed docs or dashboard for that project rather than assuming parity with self-hosted only.
 
 The OpenAPI spec for the self-hosted API is at: https://github.com/hookdeck/outpost/blob/main/docs/apis/openapi.yaml
 

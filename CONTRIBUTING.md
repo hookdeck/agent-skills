@@ -39,6 +39,8 @@ cd skills/outpost/examples/nextjs-saas && npm install && npm test
 cd skills/outpost/examples/fastapi-saas/backend && python3 -m venv venv && source venv/bin/activate && pip install pytest httpx 'fastapi>=0.114' && pytest test_outpost_wire.py -q
 ```
 
+When you bump dependencies in **Outpost** SaaS examples (`skills/outpost/examples/nextjs-saas` or `skills/outpost/examples/fastapi-saas`), update the **Example stack snapshot** table in `skills/outpost/SKILL.md` to match the new pins, and run `./scripts/test-examples.sh outpost` before opening a PR.
+
 **Agent scenario tests** (end-to-end: install skills, run Claude, score report): see [TESTING.md](TESTING.md#agent-scenario-testing-two-layers). From repo root: `./scripts/test-agent-scenario.sh run receive-webhooks express` or `./scripts/test-agent-scenario.sh list`.
 
 ## Repository Structure

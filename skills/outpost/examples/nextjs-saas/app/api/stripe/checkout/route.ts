@@ -3,10 +3,15 @@ import { db } from '@/lib/db/drizzle';
 import { users, teams, teamMembers } from '@/lib/db/schema';
 import { setSession } from '@/lib/auth/session';
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/payments/stripe';
+import { getStripe, isStripeMockMode } from '@/lib/payments/stripe';
 import Stripe from 'stripe';
 
 export async function GET(request: NextRequest) {
+  if (isStripeMockMode() || !process.env.STRIPE_SECRET_KEY?.trim()) {
+    return NextResponse.redirect(new URL('/pricing', request.url));
+  }
+
+  const stripe = getStripe();
   const searchParams = request.nextUrl.searchParams;
   const sessionId = searchParams.get('session_id');
 

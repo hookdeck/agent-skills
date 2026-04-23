@@ -69,17 +69,20 @@ cp .env.example .env
 | `POSTGRES_URL` | Postgres connection string |
 | `AUTH_SECRET` | Random secret for JWT signing — `openssl rand -base64 32` |
 | `BASE_URL` | App origin e.g. `http://localhost:3000` |
-| `STRIPE_SECRET_KEY` | Stripe secret key (test mode) |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret |
+| `STRIPE_MOCK` | Set to `1` to disable all Stripe API usage: `/pricing` shows placeholder plans; checkout redirects to the dashboard; webhook returns 503. Use this for **Outpost-only** local runs and for `next build` without a Stripe account. |
+| `STRIPE_SECRET_KEY` | Stripe secret key (test mode). Optional when `STRIPE_MOCK=1`. |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret. Optional when `STRIPE_MOCK=1`. |
 | `OUTPOST_API_KEY` | **Server-side only** — Hookdeck Outpost API key (Settings → Secrets in your Outpost project) |
 
 > **Security:** `OUTPOST_API_KEY` is loaded exclusively in server code (`lib/outpost/client.ts` is guarded with `import 'server-only'`). It is never bundled into the client.
+
+**Development without Stripe:** If `STRIPE_MOCK` is not set but `STRIPE_SECRET_KEY` is empty, `/pricing` still uses **placeholder** catalog data (no network calls). Checkout and the customer portal remain disabled until you configure a real key. For **production builds** (`next build`), either configure valid Stripe keys or set **`STRIPE_MOCK=1`** so prerender does not call the Stripe API (invalid or example keys will fail authentication).
 
 ### 3 — Migrate and seed the database
 
 ```bash
 pnpm db:migrate
-pnpm db:seed        # creates test@test.com / admin123 + Stripe products
+pnpm db:seed        # creates test@test.com / admin123 + Stripe products (requires real STRIPE_SECRET_KEY; skip if using STRIPE_MOCK=1 only)
 ```
 
 ### 4 — Start the dev server

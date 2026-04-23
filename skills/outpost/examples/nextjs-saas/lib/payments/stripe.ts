@@ -8,9 +8,97 @@ import {
 } from '@/lib/db/queries';
 import { publishEvent } from '@/lib/outpost';
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-04-30.basil'
-});
+/** Explicit opt-out of Stripe API (pricing uses placeholders; checkout/webhooks disabled). */
+export function isStripeMockMode(): boolean {
+  return process.env.STRIPE_MOCK === '1';
+}
+
+/**
+ * Use placeholder catalog when Stripe is explicitly mocked, or in development
+ * when no secret key is set (so `next dev` works without a Stripe account).
+ * Production builds still require a real key or STRIPE_MOCK=1 for `/pricing`.
+ */
+export function useStripeCatalogMock(): boolean {
+  if (isStripeMockMode()) return true;
+  if (process.env.STRIPE_SECRET_KEY?.trim()) return false;
+  return process.env.NODE_ENV !== 'production';
+}
+
+let stripeClient: Stripe | null = null;
+
+export function getStripe(): Stripe {
+  if (isStripeMockMode()) {
+    throw new Error(
+      'Stripe API is disabled (STRIPE_MOCK=1). Unset STRIPE_MOCK and set STRIPE_SECRET_KEY for checkout and webhooks.'
+    );
+  }
+  const key = process.env.STRIPE_SECRET_KEY?.trim();
+  if (!key) {
+    throw new Error(
+      'STRIPE_SECRET_KEY is required for checkout and webhooks. For local UI without Stripe, set STRIPE_MOCK=1 or rely on dev catalog mock (see README).'
+    );
+  }
+  if (!stripeClient) {
+    stripeClient = new Stripe(key, {
+      apiVersion: '2025-08-27.basil'
+    });
+  }
+  return stripeClient;
+}
+
+type StripeProductSummary = {
+  id: string;
+  name: string;
+  description: string | null;
+  defaultPriceId: string | undefined;
+};
+
+type StripePriceSummary = {
+  id: string;
+  productId: string;
+  unitAmount: number | null;
+  currency: string;
+  interval: string | undefined;
+  trialPeriodDays: number | null | undefined;
+};
+
+function mockStripeProducts(): StripeProductSummary[] {
+  return [
+    {
+      id: 'prod_mock_base',
+      name: 'Base',
+      description: 'Mock product (STRIPE_MOCK or dev without key)',
+      defaultPriceId: 'price_mock_base'
+    },
+    {
+      id: 'prod_mock_plus',
+      name: 'Plus',
+      description: 'Mock product (STRIPE_MOCK or dev without key)',
+      defaultPriceId: 'price_mock_plus'
+    }
+  ];
+}
+
+function mockStripePrices(): StripePriceSummary[] {
+  return [
+    {
+      id: 'price_mock_base',
+      productId: 'prod_mock_base',
+      unitAmount: 800,
+      currency: 'usd',
+      interval: 'month' as const,
+      trialPeriodDays: 7
+    },
+    {
+      id: 'price_mock_plus',
+      productId: 'prod_mock_plus',
+      unitAmount: 1200,
+      currency: 'usd',
+      interval: 'month' as const,
+      trialPeriodDays: 7
+    }
+  ];
+}
 
 export async function createCheckoutSession({
   team,
@@ -19,7 +107,12 @@ export async function createCheckoutSession({
   team: Team | null;
   priceId: string;
 }) {
+  if (isStripeMockMode() || !process.env.STRIPE_SECRET_KEY?.trim()) {
+    redirect('/dashboard?notice=stripe-disabled');
+  }
+
   const user = await getUser();
+  const stripe = getStripe();
 
   if (!team || !user) {
     redirect(`/sign-up?redirect=checkout&priceId=${priceId}`);
@@ -48,6 +141,12 @@ export async function createCheckoutSession({
 }
 
 export async function createCustomerPortalSession(team: Team) {
+  if (isStripeMockMode() || !process.env.STRIPE_SECRET_KEY?.trim()) {
+    redirect('/dashboard?notice=stripe-disabled');
+  }
+
+  const stripe = getStripe();
+
   if (!team.stripeCustomerId || !team.stripeProductId) {
     redirect('/pricing');
   }
@@ -159,7 +258,12 @@ export async function handleSubscriptionChange(
   });
 }
 
-export async function getStripePrices() {
+export async function getStripePrices(): Promise<StripePriceSummary[]> {
+  if (useStripeCatalogMock()) {
+    return mockStripePrices();
+  }
+
+  const stripe = getStripe();
   const prices = await stripe.prices.list({
     expand: ['data.product'],
     active: true,
@@ -177,7 +281,12 @@ export async function getStripePrices() {
   }));
 }
 
-export async function getStripeProducts() {
+export async function getStripeProducts(): Promise<StripeProductSummary[]> {
+  if (useStripeCatalogMock()) {
+    return mockStripeProducts();
+  }
+
+  const stripe = getStripe();
   const products = await stripe.products.list({
     active: true,
     expand: ['data.default_price']

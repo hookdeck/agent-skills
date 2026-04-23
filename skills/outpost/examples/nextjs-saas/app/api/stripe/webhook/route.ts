@@ -1,10 +1,21 @@
 import Stripe from 'stripe';
-import { handleSubscriptionChange, stripe } from '@/lib/payments/stripe';
+import {
+  getStripe,
+  handleSubscriptionChange,
+  isStripeMockMode
+} from '@/lib/payments/stripe';
 import { NextRequest, NextResponse } from 'next/server';
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
 export async function POST(request: NextRequest) {
+  if (isStripeMockMode() || !process.env.STRIPE_SECRET_KEY?.trim()) {
+    return NextResponse.json(
+      { error: 'Stripe webhooks are disabled (STRIPE_MOCK=1 or no STRIPE_SECRET_KEY).' },
+      { status: 503 }
+    );
+  }
+
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+  const stripe = getStripe();
   const payload = await request.text();
   const signature = request.headers.get('stripe-signature') as string;
 

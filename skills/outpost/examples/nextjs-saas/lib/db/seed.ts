@@ -5,7 +5,7 @@ import { users, teams, teamMembers } from './schema';
 
 /** Seed runs under `tsx`; avoid importing `lib/payments/stripe.ts` (pulls Outpost + `server-only`). */
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-04-30.basil',
+  apiVersion: '2025-08-27.basil',
 });
 
 async function createStripeProducts() {

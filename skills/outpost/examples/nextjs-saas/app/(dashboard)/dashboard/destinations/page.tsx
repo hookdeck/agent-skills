@@ -186,6 +186,36 @@ function DestinationList({
 // ──────────────────────────────────────────────────────────────────────────────
 type WizardStep = 'type' | 'topics' | 'config';
 
+const HOOKDECK_CONNECT_URL = 'https://dashboard.hookdeck.com/connect';
+
+function HookdeckDestinationConnectHelp() {
+  return (
+    <div className="rounded-lg border border-blue-200 bg-blue-50/90 p-4 mb-4 text-sm text-gray-800">
+      <p className="font-medium text-gray-900 mb-2">Hookdeck Event Gateway</p>
+      <ol className="list-decimal list-inside space-y-2 text-gray-700 mb-3">
+        <li>
+          Use the button below to open{' '}
+          <span className="font-mono text-xs bg-white/80 px-1 rounded">
+            dashboard.hookdeck.com/connect
+          </span>{' '}
+          in a new tab and complete the flow for your Hookdeck project.
+        </li>
+        <li>Copy the <strong>connection token</strong> shown when you finish.</li>
+        <li>Paste it into the secret credential field below, then create the destination.</li>
+      </ol>
+      <a
+        href={HOOKDECK_CONNECT_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+      >
+        Open Hookdeck Connect
+        <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
+      </a>
+    </div>
+  );
+}
+
 function CreateDestinationWizard({ onDone }: { onDone: () => void }) {
   const { data: destTypes, isLoading: typesLoading } = useSWR<DestinationType[]>(
     '/api/outpost/destination-types',
@@ -375,6 +405,8 @@ function CreateDestinationWizard({ onDone }: { onDone: () => void }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        {selectedType?.type === 'hookdeck' ? <HookdeckDestinationConnectHelp /> : null}
+
         {selectedType?.remoteSetupUrl ? (
           <div className="mb-4">
             <p className="text-sm text-muted-foreground mb-2">

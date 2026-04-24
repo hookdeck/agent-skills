@@ -132,7 +132,7 @@ Baseline: run `npm run skill:review` periodically and record scores; use them to
 
 ### Layer 2: Agent Scenarios (Evals)
 
-This is where testing becomes evaluation. The scenario tester installs skills, runs Claude Code with a scenario prompt, and writes a scored report. It answers: can an agent actually follow the staged workflow to accomplish a real task?
+This is where testing becomes evaluation. The scenario tester installs **one** skill per scenario (see `skillUnderTest` in `scenarios.yaml`; default is `event-gateway`), runs Claude Code with a scenario prompt, and writes a scored report. It answers: can an agent actually follow the workflow to accomplish a real task?
 
 **Prerequisites:** [Claude Code CLI](https://claude.ai/download) installed and logged in (`ANTHROPIC_API_KEY` or `claude login`). The tool runs a preflight that sends a short prompt to the CLI; if you see "Claude CLI did not respond within 15s", the CLI may be blocked (e.g. in a restricted sandbox). Run with a full environment or ensure the CLI can reach the API.
 
@@ -141,27 +141,34 @@ This is where testing becomes evaluation. The scenario tester installs skills, r
 ```bash
 # From repo root (recommended)
 ./scripts/test-agent-scenario.sh run receive-webhooks express
+./scripts/test-agent-scenario.sh run receive-webhooks express --judge   # optional LLM rubric (same ANTHROPIC_API_KEY)
+./scripts/test-agent-scenario.sh run outpost-managed-quickstart express
 ./scripts/test-agent-scenario.sh run receive-provider-webhooks nextjs --provider stripe
 ./scripts/test-agent-scenario.sh list
-./scripts/test-agent-scenario.sh assess <resultDir>   # re-run assessor on existing result, update report.md
+./scripts/test-agent-scenario.sh assess <resultDir>   # re-run heuristic assessor, update report.md
+./scripts/test-agent-scenario.sh assess <resultDir> --judge   # also run LLM judge
 
 # Or via npx from repo root
 npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
 ```
 
-**Options:** `--dry-run`, `--verbose`, `--timeout <seconds>` (default 300).
+**Options:** `--dry-run`, `--verbose`, `--timeout <seconds>` (default 300), `--judge` (optional LLM-as-judge after heuristics).
 
-**Scenarios:** Defined in `scenarios.yaml`. Three scenarios test increasingly interesting agent behaviors:
+**LLM judge:** Pass `--judge` or set `RUN_LLM_JUDGE=1`. Requires `ANTHROPIC_API_KEY`. Optional `JUDGE_MODEL` / `EVAL_SCORE_MODEL` override the default scoring model. Rubric comes from per-scenario `successCriteriaMarkdown` in YAML when set; otherwise it is derived from heuristic `evaluation.checks`. Writes `llm-score.json` and appends **## LLM judge** to `report.md` (pattern aligned with [Outpost docs eval](https://github.com/hookdeck/outpost/blob/main/docs/agent-evaluation/src/llm-judge.ts)). The judge reads `run.log`, generated text files in the result directory (handler, `package.json`, etc.), then `README.md` — it does not execute the agent’s shell or HTTP.
+
+**Scenarios:** Defined in `scenarios.yaml`. Examples:
 
 - **receive-webhooks** — Setup Hookdeck, build handler with signature verification, run `hookdeck listen`, document inspect/retry workflow. Tests stages 01–04 (iterate is documentation-only: agent documents how to list request → event → attempt and retry; no live traffic required).
-- **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Only the event-gateway skill is pre-installed; the agent is expected to discover and use the provider skill from webhook-skills (e.g. `npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g`) and use the provider SDK in the handler. Tests composition and the provider-webhooks checklist.
+- **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Only `event-gateway` is copied in for this scenario (`skillUnderTest`); the agent is expected to discover and use the provider skill from webhook-skills (e.g. `npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g`) and use the provider SDK in the handler. Tests composition and the provider-webhooks checklist.
 - **investigate-delivery-health** — Documentation-only: assume the user has had webhooks for a week and wants to understand delivery performance (success vs failure, backlog, latency). The prompt does **not** mention "metrics" or "hookdeck gateway metrics"; the assessor checks whether the agent used metrics CLI commands. Use to verify that agents discover and use metrics from the skill when the task implies it.
+- **outpost-managed-quickstart** — `skillUnderTest: outpost`. Managed Outpost smallest path (tenant, webhook destination, publish, verify). Prompt assumes `OUTPOST_API_KEY` is set.
 
 | Scenario | Tests | Key question |
 |----------|-------|-------------|
 | `receive-webhooks` | Core skill usage | Can the agent follow the skill to set up webhook receiving? |
 | `receive-provider-webhooks` | Composition | Does the agent discover and install a Stripe-specific skill on its own? |
 | `investigate-delivery-health` | Discovery | Does the agent find diagnostic tools (CLI metrics, MCP) when they aren't mentioned in the prompt? |
+| `outpost-managed-quickstart` | Outpost skill | Does the agent use Outpost docs and API/curl for tenant, destination, and publish? |
 
 ### Scenario run checklist
 
@@ -174,8 +181,9 @@ Run these and evaluate results; iterate on skills or prompts as needed.
 | 3 | receive-webhooks | FastAPI | `./scripts/test-agent-scenario.sh run receive-webhooks fastapi` | Done |
 | 4 | receive-provider-webhooks | Express | `./scripts/test-agent-scenario.sh run receive-provider-webhooks express --provider stripe` | Done |
 | 5 | investigate-delivery-health | Express | `./scripts/test-agent-scenario.sh run investigate-delivery-health express` | — |
+| 6 | outpost-managed-quickstart | Express | `./scripts/test-agent-scenario.sh run outpost-managed-quickstart express` | — |
 
-**Output:** `test-results/<scenario>-<framework>-<provider?>-<timestamp>/` containing `report.md` (checklist + automated score), `run.log` (full Claude output), and generated project files. To re-run only the assessor (e.g. after fixing the tool): `./scripts/test-agent-scenario.sh assess <resultDir>`.
+**Output:** `test-results/<scenario>-<framework>-<provider?>-<timestamp>/` containing `report.md` (heuristic checklist + score), optional `llm-score.json` and **LLM judge** section when `--judge` / `RUN_LLM_JUDGE=1`, `run.log` (full Claude output), and generated project files. To re-run only the assessor: `./scripts/test-agent-scenario.sh assess <resultDir>` (add `--judge` to include the LLM pass).
 
 ### Iterative Improvement Workflow
 

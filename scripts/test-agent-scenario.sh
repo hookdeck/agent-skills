@@ -1,8 +1,8 @@
 #!/bin/bash
 # Run agent scenario tests. Forwards to the TypeScript tool.
 # Usage:
-#   run:   ./scripts/test-agent-scenario.sh run <scenario> <framework> [--provider stripe] [options]
-#   assess: ./scripts/test-agent-scenario.sh assess <resultDir>
+#   run:   ./scripts/test-agent-scenario.sh run <scenario> <framework> [--provider stripe] [--judge] [options]
+#   assess: ./scripts/test-agent-scenario.sh assess <resultDir> [--judge]
 # Examples:
 #   ./scripts/test-agent-scenario.sh run receive-webhooks express
 #   ./scripts/test-agent-scenario.sh assess receive-provider-webhooks-express-stripe-20260212145955.

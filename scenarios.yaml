@@ -3,8 +3,12 @@
 #
 # Usage:
 #   npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
+#   npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express --judge   # optional LLM rubric (needs ANTHROPIC_API_KEY)
 #   npx tsx tools/agent-scenario-tester/src/index.ts run receive-provider-webhooks nextjs --provider stripe
 #   npx tsx tools/agent-scenario-tester/src/index.ts list
+#
+# skillUnderTest: hookdeck | event-gateway | outpost (default event-gateway when omitted).
+# Optional LLM judge: pass --judge or set RUN_LLM_JUDGE=1; optional JUDGE_MODEL overrides default scoring model.
 
 frameworks:
   - express
@@ -42,7 +46,7 @@ scenarios:
       - stage: Stage 01 - Setup
         points: 3
         checks:
-          - CLI installation referenced
+          - 'Hookdeck CLI install in README: human-facing https://hookdeck.com/docs/cli URL (not .md) OR shell install command (brew/npm/yarn/scoop for hookdeck)'
           - hookdeck listen or hookdeck login used
           - Connection creation attempted
       - stage: Stage 02 - Scaffold
@@ -137,7 +141,7 @@ scenarios:
       - stage: Stage 01 - Setup
         points: 3
         checks:
-          - CLI installation referenced
+          - 'Hookdeck CLI install in README: human-facing https://hookdeck.com/docs/cli URL (not .md) OR shell install command (brew/npm/yarn/scoop for hookdeck)'
           - hookdeck listen or hookdeck login used
           - Connection creation attempted
       - stage: Stage 02 - Scaffold
@@ -162,3 +166,47 @@ scenarios:
         checks:
           - Idiomatic to framework
           - No syntax errors or obvious bugs
+
+  - name: outpost-managed-quickstart
+    displayName: Outpost managed quickstart (tenant, destination, publish)
+    description: >
+      Smallest managed Hookdeck Outpost path using the outpost skill only:
+      tenant, webhook destination, publish, verification story.
+    skillUnderTest: outpost
+    stages:
+      - iterate
+    prompt: >
+      I want to send outbound webhooks to my customers using Hookdeck Outpost (managed).
+      OUTPOST_API_KEY is already set in the environment — do not ask me for the secret value.
+      Give me the smallest path: create or upsert a tenant, add a webhook destination, publish a test event,
+      and how to verify delivery. Prefer curl or the REST API and link to Hookdeck Outpost docs where helpful.
+      For a throwaway webhook URL in examples, use Hookdeck Console (https://console.hookdeck.com) — do not use
+      https://hookdeck.com/webhook/create (not a real page) or generic third-party echo sites unless the user asks.
+      If you use the installed outpost skill, say which file you referenced (e.g. SKILL.md, outpost-scope.md, outpost-verify.md).
+      Write the main steps in README.md in this project.
+    successCriteriaMarkdown: |
+      ## Success criteria
+
+      - The answer centers on **Hookdeck Outpost** (tenants, destinations, publish) for **managed** usage, not on receiving webhooks via Event Gateway / `hookdeck listen` as the primary path.
+      - The assistant explains **tenant** creation or upsert and **webhook destination** setup with a URL.
+      - The assistant explains how to **publish** (or ingest) an event and which **topic** to use.
+      - The assistant gives a credible way to **verify** delivery or inspect attempts (docs, dashboard, or HTTP expectations)—without claiming they executed live API calls unless the transcript shows explicit results.
+      - Official **Hookdeck Outpost documentation** or quickstart URLs are cited where appropriate.
+    evaluation:
+      - stage: Stage - Outpost discovery
+        points: 2
+        checks:
+          - References outpost SKILL.md or outpost skill references (e.g. outpost-scope, outpost-verify, quickstart)
+          - Uses Hookdeck Outpost / docs/outpost as primary product, not only inbound listen workflow
+      - stage: Stage - Outpost API path
+        points: 4
+        checks:
+          - Mentions tenant (create or upsert)
+          - Mentions destination or webhook URL for tenant
+          - Mentions publish event or equivalent API path
+          - Mentions curl or REST / API usage
+      - stage: Stage - Outpost verify
+        points: 2
+        checks:
+          - Describes how to verify delivery or check attempts / logs
+          - References hookdeck.com/docs/outpost or /docs/outpost

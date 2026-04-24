@@ -8,6 +8,8 @@
  *   leaves README default, we still pass Stage 01/03. To reduce that: when the
  *   project has a README that mentions Hookdeck, we require those checks to pass
  *   from the README (so the agent must have documented in-repo).
+ * - Stage 01 first check: README must document Hookdeck CLI install with either a
+ *   human-facing hookdeck.com/docs/cli URL (not .md) or an explicit install shell command.
  * - Skill discovery passes if log or readme mentions verification-code.md or
  *   hookdeck listen — can be loose if the agent cites the skill in the reply.
  * - Stage 02 is code-based (handler content) so generally reliable.
@@ -83,6 +85,16 @@ function getDocForSetupListen(combinedDoc: string, readme: string): string {
   return combinedDoc;
 }
 
+/** Human-facing CLI install docs (README), not agent-facing .md fetch URLs. */
+function hookdeckCliInstallDocumented(doc: string): boolean {
+  const hasInstallCmd =
+    /brew\s+install\s+[^\n\r]*hookdeck|npm\s+(i|install)\s+(-g\s+|--global\s+|install\s+-g\s+|install\s+hookdeck-cli\s+-g\s+)hookdeck-cli|yarn\s+global\s+add\s+hookdeck-cli|scoop\s+install\s+hookdeck/i.test(
+      doc
+    );
+  const hasHumanInstallLink = /hookdeck\.com\/docs\/cli(?!\.md)(?:[#?/:\w-]*)?/i.test(doc);
+  return hasInstallCmd || hasHumanInstallLink;
+}
+
 function passesCheck(
   check: string,
   stage: string,
@@ -90,11 +102,44 @@ function passesCheck(
   combinedDoc: string,
   readme: string,
   handler: string,
-  provider?: string
+  provider: string | undefined,
+  scenario: ScenarioConfig
 ): boolean {
   const doc = combinedDoc;
   const setupListenDoc = getDocForSetupListen(combinedDoc, readme);
   const code = handler;
+
+  if (scenario.name === 'outpost-managed-quickstart') {
+    if (stage === 'Stage - Outpost discovery') {
+      if (index === 0) {
+        return /outpost|SKILL\.md|outpost-scope|outpost-verify|quickstart|docs\/outpost|hookdeck\.com\/docs\/outpost/i.test(
+          doc
+        );
+      }
+      if (index === 1) {
+        const hasOutpost = /hookdeck\.com\/docs\/outpost|docs\/outpost|Hookdeck Outpost|Outpost API/i.test(doc);
+        const onlyInbound =
+          /hookdeck listen/i.test(doc) &&
+          !/tenant|destination|publish|docs\/outpost|hookdeck\.com\/docs\/outpost/i.test(doc);
+        return hasOutpost && !onlyInbound;
+      }
+      return false;
+    }
+    if (stage === 'Stage - Outpost API path') {
+      if (index === 0) return /tenant|tenants|upsert/i.test(doc);
+      if (index === 1) return /destination|webhook|url|subscribe/i.test(doc);
+      if (index === 2) return /publish|ingest|\/events|POST.*event/i.test(doc);
+      if (index === 3) return /curl|REST|openapi|api\/v1|application\/json|x-api-key/i.test(doc);
+      return false;
+    }
+    if (stage === 'Stage - Outpost verify') {
+      if (index === 0) {
+        return /verif|attempt|deliver|log|activity|200|2xx|retry|Dashboard/i.test(doc);
+      }
+      if (index === 1) return /hookdeck\.com\/docs\/outpost|docs\/outpost/i.test(doc);
+      return false;
+    }
+  }
 
   if (stage === 'Skill discovery') {
     if (index === 0) return /verification-code\.md|02-scaffold\.md|SKILL\.md|event-gateway skill/i.test(doc);
@@ -102,7 +147,7 @@ function passesCheck(
     return false;
   }
   if (stage === 'Stage 01 - Setup') {
-    if (index === 0) return /install.*hookdeck|brew.*hookdeck|npm.*hookdeck|hookdeck.*install|CLI/i.test(setupListenDoc);
+    if (index === 0) return hookdeckCliInstallDocumented(setupListenDoc);
     if (index === 1) return /hookdeck listen|hookdeck login/i.test(setupListenDoc);
     if (index === 2) return /Source URL|connection|Connection/i.test(setupListenDoc);
     return false;
@@ -187,7 +232,7 @@ export function assessResult(
   for (const section of scenario.evaluation) {
     const checks: CheckResult[] = section.checks.map((check, index) => ({
       check,
-      passed: passesCheck(check, section.stage, index, combinedDoc, readme, handler, provider),
+      passed: passesCheck(check, section.stage, index, combinedDoc, readme, handler, provider, scenario),
     }));
     const passedCount = checks.filter(c => c.passed).length;
     const score = section.checks.length > 0 ? Math.round((passedCount / section.checks.length) * section.points) : 0;

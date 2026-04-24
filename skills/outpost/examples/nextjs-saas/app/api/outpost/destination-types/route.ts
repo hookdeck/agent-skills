@@ -1,6 +1,7 @@
 import { getOutpostTenantId } from '@/lib/outpost/auth';
 import { normalizeDestinationTypesPayload } from '@/lib/outpost/destination-types-wire';
 
+/** Managed Hookdeck Outpost REST base — verify in docs if this drifts: https://hookdeck.com/docs/outpost/quickstarts/hookdeck-outpost-typescript */
 const DEFAULT_OUTPOST_BASE = 'https://api.outpost.hookdeck.com/2025-07-01';
 
 function outpostApiBaseUrl(): string {

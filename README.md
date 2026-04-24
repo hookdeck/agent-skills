@@ -1,6 +1,6 @@
 # Hookdeck Agent Skills
 
-Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, and build outbound webhook delivery with [Outpost](https://outpost.hookdeck.com).
+Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, and build outbound webhook delivery with [Hookdeck Outpost](https://hookdeck.com/docs/outpost).
 
 <!-- Cursor plugin pending marketplace acceptance
 ## Install (Cursor)
@@ -67,8 +67,9 @@ This turns the plugin from a knowledge layer into an interactive development env
 ## Documentation
 
 - [Event Gateway docs](https://hookdeck.com/docs/)
-- [Outpost docs](https://outpost.hookdeck.com/docs/)
-- [API reference](https://hookdeck.com/docs/api)
+- [Outpost docs](https://hookdeck.com/docs/outpost)
+- [Outpost API reference](https://hookdeck.com/docs/outpost/api)
+- [Hookdeck REST API](https://hookdeck.com/docs/api)
 
 ## Testing
 

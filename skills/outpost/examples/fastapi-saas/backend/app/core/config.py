@@ -94,7 +94,7 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER: EmailStr
     FIRST_SUPERUSER_PASSWORD: str
 
-    # Hookdeck Outpost
+    # Hookdeck Outpost (managed REST base — confirm in docs if this drifts)
     OUTPOST_API_KEY: str | None = None
     OUTPOST_API_BASE_URL: str = "https://api.outpost.hookdeck.com/2025-07-01"
 

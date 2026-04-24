@@ -4,7 +4,7 @@
 >
 > **For AI agents:** Do not read the whole repo. Start with the skill’s [**Outpost integration map**](https://github.com/hookdeck/agent-skills/blob/main/skills/outpost/references/nextjs-saas-integration-map.md) (file index: SDK client, `publishEvent`, BFF routes, domain call sites, and what to skip).
 
-A Next.js SaaS starter with authentication, Stripe subscriptions, team management, and **outbound webhooks** powered by [Hookdeck Outpost](https://outpost.hookdeck.com).
+A Next.js SaaS starter with authentication, Stripe subscriptions, team management, and **outbound webhooks** powered by [Hookdeck Outpost](https://hookdeck.com/docs/outpost).
 
 **Demo: [https://next-saas-start.vercel.app/](https://next-saas-start.vercel.app/)**
 
@@ -30,7 +30,7 @@ A Next.js SaaS starter with authentication, Stripe subscriptions, team managemen
 | Database | [Postgres](https://www.postgresql.org/) + [Drizzle ORM](https://orm.drizzle.team/) |
 | Payments | [Stripe](https://stripe.com/) |
 | UI | [shadcn/ui](https://ui.shadcn.com/) |
-| Webhooks | [Hookdeck Outpost](https://outpost.hookdeck.com) |
+| Webhooks | [Hookdeck Outpost](https://hookdeck.com/docs/outpost) |
 
 ---
 

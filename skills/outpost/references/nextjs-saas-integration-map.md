@@ -2,7 +2,7 @@
 
 Use this file **before** opening the full [examples/nextjs-saas/](../examples/nextjs-saas/) tree. The example is a **complete SaaS app** (auth, Stripe, Drizzle, dashboard UI). Agents should treat it as a **patterns reference**, not required reading end-to-end.
 
-**Do not paste these files into another repository.** Reproduce the same **behavior** (env vars, BFF routes under `app/api/outpost/*`, `lib/outpost` helpers, publish call sites) using the target app’s own layout and dependencies. For framework and SDK versions (including Next canary and `@hookdeck/outpost-sdk` **1.x**), see the stack snapshot in [SKILL.md](../SKILL.md#reference-example-applications) and the canonical pins in [examples/nextjs-saas/package.json](../examples/nextjs-saas/package.json).
+**Do not paste these files into another repository.** Reproduce the same **behavior** (env vars, BFF routes under `app/api/outpost/*`, `lib/outpost` helpers, publish call sites) using the target app’s own layout and dependencies. For framework and SDK versions (including Next canary and `@hookdeck/outpost-sdk` **1.x**), see [SKILL.md](../SKILL.md#full-stack-reference-examples-advanced) and the canonical pins in [examples/nextjs-saas/package.json](../examples/nextjs-saas/package.json).
 
 **Why a map:** Product skills work best when the entry skill stays small and points to **specific files** for each job-to-be-done (similar to [PostHog’s skill guidance](https://posthog.com/handbook/engineering/ai/writing-skills): overview in `SKILL.md`, details on demand).
 

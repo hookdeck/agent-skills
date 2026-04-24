@@ -29,7 +29,7 @@ Outbound event delivery to HTTP, SQS, RabbitMQ, Pub/Sub, and more.
 
 - Skill: [outpost](https://github.com/hookdeck/agent-skills/blob/main/skills/outpost/SKILL.md)
 - Install: `npx skills add hookdeck/agent-skills --skill outpost`
-- Docs: https://outpost.hookdeck.com/docs/
+- Docs: https://hookdeck.com/docs/outpost
 
 ## Provider Webhook Skills
 

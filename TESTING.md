@@ -1,6 +1,14 @@
 # Testing Hookdeck Agent Skills
 
-This document covers automated testing for code examples in the **`event-gateway`** and **`outpost`** skills. Follows the same patterns as [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills/blob/main/TESTING.md).
+This document covers automated testing for code examples in the **`event-gateway`** and **`outpost`** skills. The example tests follow the same patterns as [hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills/blob/main/TESTING.md).
+
+Hookdeck tests its agent skills at three levels: **code example tests** (unit/integration tests for the example applications shipped with each skill), **static quality checks** (linting and scoring skill files), and **agent scenario testing** (giving real agents tasks and scoring whether they succeed).
+
+The first level validates that the code examples work. The second validates that the skill files are well-formed. The third answers the harder question: **can agents actually use these skills to get things done?**
+
+That third level — agent scenario testing — is where testing becomes evaluation. Traditional developer experience had natural feedback loops: support tickets, onboarding funnels, user interviews. With agents, that signal disappears. The agent either succeeds or silently moves on. Evals are the feedback loop you get back.
+
+---
 
 ## Code Example Tests
 
@@ -122,9 +130,9 @@ We use two layers to evaluate skills: **skill quality** (static) and **agent sce
 
 Baseline: run `npm run skill:review` periodically and record scores; use them to guide skill improvements.
 
-### Layer 2: Agent Scenarios (Custom Tool)
+### Layer 2: Agent Scenarios (Evals)
 
-The scenario tester installs skills, runs Claude Code with a scenario prompt, and writes a scored report. Use it to check that an agent can actually follow the staged workflow.
+This is where testing becomes evaluation. The scenario tester installs skills, runs Claude Code with a scenario prompt, and writes a scored report. It answers: can an agent actually follow the staged workflow to accomplish a real task?
 
 **Prerequisites:** [Claude Code CLI](https://claude.ai/download) installed and logged in (`ANTHROPIC_API_KEY` or `claude login`). The tool runs a preflight that sends a short prompt to the CLI; if you see "Claude CLI did not respond within 15s", the CLI may be blocked (e.g. in a restricted sandbox). Run with a full environment or ensure the CLI can reach the API.
 
@@ -143,11 +151,17 @@ npx tsx tools/agent-scenario-tester/src/index.ts run receive-webhooks express
 
 **Options:** `--dry-run`, `--verbose`, `--timeout <seconds>` (default 300).
 
-**Scenarios:** Defined in `scenarios.yaml`. Initial set:
+**Scenarios:** Defined in `scenarios.yaml`. Three scenarios test increasingly interesting agent behaviors:
 
 - **receive-webhooks** — Setup Hookdeck, build handler with signature verification, run `hookdeck listen`, document inspect/retry workflow. Tests stages 01–04 (iterate is documentation-only: agent documents how to list request → event → attempt and retry; no live traffic required).
 - **receive-provider-webhooks** — Same plus a provider (e.g. Stripe). Use `--provider stripe`. Only the event-gateway skill is pre-installed; the agent is expected to discover and use the provider skill from webhook-skills (e.g. `npx skills add hookdeck/webhook-skills --skill stripe-webhooks -y -g`) and use the provider SDK in the handler. Tests composition and the provider-webhooks checklist.
 - **investigate-delivery-health** — Documentation-only: assume the user has had webhooks for a week and wants to understand delivery performance (success vs failure, backlog, latency). The prompt does **not** mention "metrics" or "hookdeck gateway metrics"; the assessor checks whether the agent used metrics CLI commands. Use to verify that agents discover and use metrics from the skill when the task implies it.
+
+| Scenario | Tests | Key question |
+|----------|-------|-------------|
+| `receive-webhooks` | Core skill usage | Can the agent follow the skill to set up webhook receiving? |
+| `receive-provider-webhooks` | Composition | Does the agent discover and install a Stripe-specific skill on its own? |
+| `investigate-delivery-health` | Discovery | Does the agent find diagnostic tools (CLI metrics, MCP) when they aren't mentioned in the prompt? |
 
 ### Scenario run checklist
 
@@ -171,6 +185,8 @@ Run these and evaluate results; iterate on skills or prompts as needed.
    - **Skills:** Update SKILL.md, reference files (01-setup, 02-scaffold, etc.), or examples so the agent discovers and follows the workflow better.
    - **Tool:** Refine prompts in `scenarios.yaml`, adjust the evaluation rubric, or add scenarios.
 4. **Re-run** to confirm improvements; repeat as needed.
+
+The A/B unit is **skill version × scenario set → score delta**. Change a skill, re-run the scenarios, compare scores.
 
 CI runs scenario tests on-demand (workflow_dispatch) and weekly (schedule). Use artifacts to monitor regressions and guide further skill improvements.
 

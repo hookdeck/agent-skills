@@ -2,6 +2,7 @@
 
 ## Contents
 
+- [Hookdeck CLI prerequisite](#hookdeck-cli-prerequisite)
 - [Installation](#installation)
 - [Authentication](#authentication)
 - [Project Management](#project-management)
@@ -9,7 +10,21 @@
 - [Connection Management](#connection-management)
 - [Gateway resource management](#gateway-resource-management)
 
-**When to use CLI vs API vs Dashboard:** see **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** (canonical guidance for agents). This file covers installation, listening, connection and resource management, project switching, and querying. For the full CLI reference, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md). Prefer **`hookdeck gateway … upsert`** over `create` when both exist so workflows are idempotent; run **`--help`** on each subcommand for the full flag list (rate limits, rules, source/destination options).
+**When to use CLI vs API vs Dashboard:** see **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** (canonical guidance for agents). This file covers installation, listening, connection and resource management, project switching, and querying. For the full CLI reference, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md).
+
+**Command model:** use `hookdeck gateway ...` as the default for Event Gateway operations. Root commands remain for shell/context tasks (`login`, `whoami`, `listen`, `project`), and root `hookdeck connection ...` is a deprecated compatibility alias.
+
+Prefer **`hookdeck gateway … upsert`** over `create` when both exist so workflows are idempotent; run **`--help`** on each subcommand for the full flag list (rate limits, rules, source/destination options).
+
+## Hookdeck CLI prerequisite {#hookdeck-cli-prerequisite}
+
+**Canonical rule for agents:** Before you **run** or **document** any `hookdeck …` command for the user (`listen`, `login`, `gateway …`, etc.), **ensure the Hookdeck CLI is installed** and **say so in user-facing text** (README, runbook, chat) the first time such a command appears—do not assume `hookdeck` is on PATH.
+
+**Copy-paste install examples:** `brew install hookdeck/hookdeck/hookdeck` or `npm i -g hookdeck-cli`. More options (devDependency, `npx hookdeck`, verify with `hookdeck version`) are in [Installation](#installation) below.
+
+**Official install (all platforms):** [hookdeck.com/docs/cli.md#installation](https://hookdeck.com/docs/cli.md#installation) — same content as the [CLI overview](https://hookdeck.com/docs/cli); the full CLI reference lives on that page / in [cli.md](https://hookdeck.com/docs/cli.md).
+
+**In-repo (commands + context):** [01-setup — Install the CLI](01-setup.md#install-the-cli).
 
 ## Installation
 

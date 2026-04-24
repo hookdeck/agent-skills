@@ -6,6 +6,9 @@ export type Framework = 'express' | 'nextjs' | 'fastapi';
 
 export type WorkflowStage = 'setup' | 'scaffold' | 'listen' | 'iterate';
 
+/** Exactly one skill copied into .claude/skills/ for the run. Omitted defaults to event-gateway. */
+export type SkillUnderTest = 'hookdeck' | 'event-gateway' | 'outpost';
+
 export interface EvaluationSection {
   stage: string;
   points: number;
@@ -18,6 +21,12 @@ export interface ScenarioConfig {
   description: string;
   stages: WorkflowStage[];
   prompt: string;
+  /** Which skill directory to install (default: event-gateway). */
+  skillUnderTest?: SkillUnderTest;
+  /**
+   * Optional markdown rubric for the LLM judge. If omitted, criteria are derived from evaluation.checks.
+   */
+  successCriteriaMarkdown?: string;
   providers?: string[];
   providerDefault?: string;
   providerConfig?: Record<string, { events: string[] }>;

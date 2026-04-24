@@ -34,7 +34,7 @@ All skills MUST conform to the [Agent Skills specification](https://agentskills.
 
 - **Hookdeck** = the company brand, carried by the repo name (`hookdeck/agent-skills`)
 - **Event Gateway** ("Hookdeck Event Gateway") = the inbound product. Receives, routes, processes, and delivers webhooks/events. [Docs](https://hookdeck.com/docs/).
-- **Outpost** ("Hookdeck Outpost") = the outbound product. Open-source infrastructure for sending webhooks and events to user-preferred destinations (HTTP, SQS, RabbitMQ, Pub/Sub, EventBridge, Kafka). [Docs](https://outpost.hookdeck.com/docs/). [GitHub](https://github.com/hookdeck/outpost).
+- **Outpost** ("Hookdeck Outpost") = the outbound product. Open-source infrastructure for sending webhooks and events to user-preferred destinations (HTTP, SQS, RabbitMQ, Pub/Sub, and more—see docs for the current matrix). [Docs](https://hookdeck.com/docs/outpost). [GitHub](https://github.com/hookdeck/outpost).
 
 Skills are prefixed by product name: `event-gateway` or `outpost`. The company brand is not repeated in skill names because it's carried by the repo.
 
@@ -93,6 +93,15 @@ hookdeck/agent-skills/
         fastapi/                       # Hookdeck signature verification handler
     outpost/                           # Outpost skill (separate product)
       SKILL.md
+      references/
+        outpost-quickstarts.md         # Canonical quickstart + llms.txt links
+        outpost-scope.md               # Scope ladder, topic reconciliation, BFF pointers
+        outpost-verify.md              # Trimmed “before you stop” checklist
+        nextjs-saas-integration-map.md
+        fastapi-saas-integration-map.md
+      examples/
+        nextjs-saas/
+        fastapi-saas/
   AGENTS.md                            # This file
   CLAUDE.md
   CONTRIBUTING.md
@@ -265,6 +274,7 @@ Rules provide concise, always-on guidance. Keep them minimal; link to skills for
 
 - **Cursor first:** Lead with Cursor plugin install (`/add-plugin hookdeck`). What the plugin does.
 - **Retain generic skills:** Keep `npx skills add hookdeck/agent-skills` and full Agent Skills usage for Claude, ChatGPT, and other agents. Do not remove the generic install path.
+- **Human-facing doc links in README.md:** Do not link to Hookdeck documentation URLs that end in `.md` (for example `https://hookdeck.com/docs/cli/mcp.md`). Those `.md` endpoints exist mainly for agents and tools fetching markdown. In the repo root README, use pages without `.md` (for example [MCP & Skills](https://hookdeck.com/docs/mcp), [CLI](https://hookdeck.com/docs/cli)) and describe where to find a subsection (e.g. MCP in the CLI doc’s Event Gateway operations table) when there is no dedicated HTML path.
 
 ### Plugin description and keywords
 

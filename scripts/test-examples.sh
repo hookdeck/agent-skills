@@ -60,6 +60,10 @@ usage() {
           frameworks+=("$fw")
         fi
       done
+      if [ "$skill_name" = "outpost" ]; then
+        [ -d "$dir/nextjs-saas" ] && frameworks+=("nextjs-saas")
+        [ -d "$dir/fastapi-saas" ] && frameworks+=("fastapi-saas")
+      fi
       echo "  $skill_name (${frameworks[*]})"
     fi
   done
@@ -262,6 +266,85 @@ run_python_tests() {
   deactivate
 }
 
+# Outpost fastapi-saas: full-stack template; backend is a hatchling package under backend/
+run_fastapi_saas_tests() {
+  local dir=$1
+  local name=$2
+  local backend="$dir/backend"
+
+  echo -n "  Testing $name... "
+
+  if [ ! -f "$backend/pyproject.toml" ]; then
+    echo -e "${YELLOW}SKIPPED${NC} (no backend/pyproject.toml)"
+    SKIPPED=$((SKIPPED + 1))
+    return
+  fi
+
+  if [ ! -f "$backend/test_outpost_wire.py" ]; then
+    echo -e "${YELLOW}SKIPPED${NC} (no backend/test_outpost_wire.py)"
+    SKIPPED=$((SKIPPED + 1))
+    return
+  fi
+
+  if ! pushd "$backend" >/dev/null; then
+    echo -e "${RED}FAILED${NC} (cannot cd to backend)"
+    FAILED=$((FAILED + 1))
+    FAILED_TESTS+=("$name: cd backend failed")
+    return
+  fi
+
+  if [ ! -d "venv" ]; then
+    local venv_output
+    venv_output=$(python3 -m venv venv 2>&1) || {
+      echo -e "${RED}FAILED${NC} (venv creation failed)"
+      echo "$venv_output"
+      FAILED=$((FAILED + 1))
+      FAILED_TESTS+=("$name: venv creation failed")
+      popd >/dev/null
+      return
+    }
+  fi
+
+  # shellcheck disable=SC1091
+  source venv/bin/activate
+  local pip_output
+  # Standalone wire tests only (no pip install -e . — avoids template DB session fixtures)
+  pip_output=$(pip install -q pytest httpx 'fastapi>=0.114' 2>&1) || {
+    echo -e "${RED}FAILED${NC} (pip install test deps failed)"
+    echo "$pip_output"
+    FAILED=$((FAILED + 1))
+    FAILED_TESTS+=("$name: pip install test deps failed")
+    deactivate
+    popd >/dev/null
+    return
+  }
+
+  local test_output
+  test_output=$(python -m pytest test_outpost_wire.py -q 2>&1)
+  local test_exit_code=$?
+
+  deactivate
+  popd >/dev/null
+
+  if [ $test_exit_code -eq 0 ]; then
+    local summary
+    summary=$(echo "$test_output" | grep -E "passed" | tail -1)
+    if [ -n "$summary" ]; then
+      echo -e "${GREEN}PASSED${NC} ($summary)"
+    else
+      echo -e "${GREEN}PASSED${NC}"
+    fi
+    PASSED=$((PASSED + 1))
+  else
+    echo -e "${RED}FAILED${NC}"
+    echo ""
+    echo "$test_output"
+    echo ""
+    FAILED=$((FAILED + 1))
+    FAILED_TESTS+=("$name")
+  fi
+}
+
 # Run tests for each skill
 for skill in "${SKILLS[@]}"; do
   skill_dir="$SKILLS_DIR/$skill"
@@ -270,7 +353,13 @@ for skill in "${SKILLS[@]}"; do
   echo "Testing $skill"
   echo "----------------------------------------"
 
-  for framework in "${FRAMEWORKS[@]}"; do
+  frameworks_to_test=("${FRAMEWORKS[@]}")
+  # Outpost: additional example layouts (not express/nextjs/fastapi)
+  if [ "$skill" = "outpost" ]; then
+    frameworks_to_test+=("nextjs-saas" "fastapi-saas")
+  fi
+
+  for framework in "${frameworks_to_test[@]}"; do
     example_dir="$skill_dir/examples/$framework"
     test_name="$skill/$framework"
 
@@ -283,9 +372,14 @@ for skill in "${SKILLS[@]}"; do
 
     if [ "$framework" = "fastapi" ]; then
       run_python_tests "$example_dir" "$test_name"
+    elif [ "$framework" = "fastapi-saas" ]; then
+      run_fastapi_saas_tests "$example_dir" "$test_name"
     else
       run_node_tests "$example_dir" "$test_name"
     fi
+
+    # Test helpers cd into example dirs; restore cwd so relative paths stay reliable
+    cd "$ROOT_DIR" || true
   done
 done
 

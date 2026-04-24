@@ -19,6 +19,8 @@ Inbound [event infrastructure](https://hookdeck.com/docs/). One skill covers all
 staged integration workflow, connections, rules, authentication,
 local dev, monitoring, and API.
 
+For Event Gateway operations and analysis, prefer `hookdeck gateway ...`; root `hookdeck connection ...` remains a deprecated compatibility alias.
+
 - Skill: [event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md)
 - Install: `npx skills add hookdeck/agent-skills --skill event-gateway`
 - Docs: https://hookdeck.com/docs/
@@ -29,7 +31,7 @@ Outbound event delivery to HTTP, SQS, RabbitMQ, Pub/Sub, and more.
 
 - Skill: [outpost](https://github.com/hookdeck/agent-skills/blob/main/skills/outpost/SKILL.md)
 - Install: `npx skills add hookdeck/agent-skills --skill outpost`
-- Docs: https://outpost.hookdeck.com/docs/
+- Docs: https://hookdeck.com/docs/outpost
 
 ## Provider Webhook Skills
 

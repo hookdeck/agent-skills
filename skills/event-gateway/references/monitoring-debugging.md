@@ -18,6 +18,8 @@
 
 How to monitor webhook deliveries, debug failures, and replay events. For monitoring and debugging, the **CLI** is usually the right first touch (TUI, list/get, metrics, retry). The **API** is valid for querying and for automation driven from application or test code. See **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** for full CLI vs API vs Dashboard guidance. Querying (events, requests, attempts, metrics) can also be done via the API — see the [API inspect docs](https://hookdeck.com/docs/api/inspect.md).
 
+**Prerequisite:** Before any `hookdeck …` commands in this file, [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite).
+
 ## Before querying or running metrics {#before-querying-or-running-metrics}
 
 All list, inspect, and metrics commands are scoped to the **current [organization and project](https://hookdeck.com/docs/projects)** (organization = top-level account; project = where your sources, connections, and destinations live).
@@ -158,12 +160,9 @@ When to use: event volume, failure rates, which connections had the most events,
 
 | Subcommand | Purpose |
 |------------|---------|
-| `metrics events` | Event volume, success/failure counts, error rate over time |
+| `metrics events` | Event volume/failure rates plus queue depth, pending, and issue-grouped views (via measures/dimensions) |
 | `metrics requests` | Request acceptance vs rejection counts |
 | `metrics attempts` | Delivery latency and success/failure |
-| `metrics queue-depth` | Queue backlog per destination (e.g. max_depth, max_age) |
-| `metrics pending` | Pending events timeseries |
-| `metrics events-by-issue` | Events grouped by issue (debugging); requires issue ID as argument |
 | `metrics transformations` | Transformation run counts and error rate |
 
 **Example commands (use cases):**

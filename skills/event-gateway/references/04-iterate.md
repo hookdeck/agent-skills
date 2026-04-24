@@ -34,6 +34,8 @@ When using an Event Gateway project, access the full [Hookdeck Dashboard](https:
 
 ### CLI inspection and retry
 
+**Prerequisite:** [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite) before the `hookdeck gateway …` examples below.
+
 Use `hookdeck gateway` commands to list, inspect, and retry requests, events, and attempts from the terminal (useful for scripting, CI, or when you prefer not to open the Dashboard). Order reflects data flow: request → events → attempts.
 
 ```sh

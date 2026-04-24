@@ -11,7 +11,21 @@ cp .env.example .env
 python main.py
 ```
 
-## Local development with Hookdeck CLI
+## Hookdeck CLI
+
+### Install
+
+Install the Hookdeck CLI on your machine before the steps below. Official guide (all platforms): **[Install the Hookdeck CLI](https://hookdeck.com/docs/cli#installation)** · [Hookdeck CLI overview](https://hookdeck.com/docs/cli).
+
+```bash
+brew install hookdeck/hookdeck/hookdeck
+# or
+npm install -g hookdeck-cli
+```
+
+Run `hookdeck version` to confirm the binary is on your PATH. For Windows, Linux, Docker, and other options, use the official installation page linked above.
+
+### Forward webhooks locally
 
 ```bash
 hookdeck listen 3000 <source_name> --path /webhooks

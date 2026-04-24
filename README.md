@@ -1,6 +1,6 @@
 # Hookdeck Agent Skills
 
-Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, and build outbound webhook delivery with [Outpost](https://outpost.hookdeck.com).
+Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, and build outbound webhook delivery with [Hookdeck Outpost](https://hookdeck.com/docs/outpost).
 
 <!-- Cursor plugin pending marketplace acceptance
 ## Install (Cursor)
@@ -52,23 +52,24 @@ The `event-gateway` skill includes a staged integration workflow:
 3. **Listen** -- Start `hookdeck listen`, trigger test events
 4. **Iterate** -- Debug failures, fix code, replay events
 
-## Roadmap
+## Hookdeck CLI MCP (reference)
 
-### Hookdeck MCP Server (coming soon)
+The [Hookdeck CLI](https://hookdeck.com/docs/cli) includes a **beta** MCP server (`hookdeck gateway mcp`) that exposes Event Gateway data as MCP tools over stdio. In practice it is **operational support**: query, inspect, and diagnose connections, requests, events, attempts, issues, and metrics from your agent or IDE—without replacing the full CLI or API for creating resources, retries, or local tunnel workflows.
 
-The Hookdeck CLI will host an MCP server (`hookdeck mcp`), giving your coding agent direct access to the full CLI toolchain. Beyond resource management, this enables a real-time development loop:
+For setup, client configuration, available tools, and what MCP can and cannot do, see the official docs:
 
-- **Live event tools:** List, inspect, and retry events and deliveries without leaving your editor
-- **Webhook tunnel in the agent loop:** The MCP runs `hookdeck listen` in-process. When webhook events arrive (or deliveries fail), the MCP pushes updates to the agent. Your agent writes the webhook handler, receives a live event, sees the result, and iterates on the code—all in a single session with no context switching.
-- **Both skill repos as MCP resources:** Agent-skills (Hookdeck product knowledge) and webhook-skills (provider-specific webhook knowledge for Stripe, Shopify, GitHub, etc.) served as `hookdeck://` and `webhooks://` resources.
+- [MCP & Skills](https://hookdeck.com/docs/mcp) — overview and when to pair MCP with agent skills
+- [Hookdeck CLI](https://hookdeck.com/docs/cli) — MCP is linked from the Event Gateway operations table (command usage, auth, client configuration)
 
-This turns the plugin from a knowledge layer into an interactive development environment for webhook integrations.
+The skills in this repository remain the primary way to guide an agent through **product workflows** (setup, handlers, `hookdeck listen`, Outpost, API usage). Use CLI MCP when you want **read-heavy inspection and analysis** against your live Hookdeck project.
 
 ## Documentation
 
 - [Event Gateway docs](https://hookdeck.com/docs/)
-- [Outpost docs](https://outpost.hookdeck.com/docs/)
-- [API reference](https://hookdeck.com/docs/api)
+- [MCP & Skills](https://hookdeck.com/docs/mcp); [Hookdeck CLI](https://hookdeck.com/docs/cli) (MCP under Event Gateway operations)
+- [Outpost docs](https://hookdeck.com/docs/outpost)
+- [Outpost API reference](https://hookdeck.com/docs/outpost/api)
+- [Hookdeck REST API](https://hookdeck.com/docs/api)
 
 ## Testing
 

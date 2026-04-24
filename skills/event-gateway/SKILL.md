@@ -13,6 +13,16 @@ The Event Gateway receives, routes, processes, and delivers webhooks and events.
 Always reference Hookdeck docs as the source of truth.
 See [references/referencing-docs.md](references/referencing-docs.md) for how to fetch docs as markdown.
 
+## CLI command model
+
+- Prefer `hookdeck gateway ...` for Event Gateway resource management, querying, and analysis.
+- Keep root commands for shell/context workflows (`hookdeck login`, `hookdeck whoami`, `hookdeck listen`, `hookdeck project ...`).
+- Root `hookdeck connection ...` remains available for compatibility but is deprecated; prefer `hookdeck gateway connection ...`.
+
+## Hookdeck CLI prerequisite
+
+Whenever you show **`hookdeck …`** commands in answers, READMEs, or runbooks, **tell the user the Hookdeck CLI must be installed first** the first time those commands appear—even for no-account flows that go straight to `hookdeck listen`. Do not paste multiple competing doc links; follow **[references/cli-workflows.md#hookdeck-cli-prerequisite](references/cli-workflows.md#hookdeck-cli-prerequisite)** for standard wording, install examples, the official install URL, and the in-repo install section.
+
 ## Use Cases
 
 | Use case | When to use | Quickstart |
@@ -55,16 +65,17 @@ This is the recommended path for a new integration: create sources, destinations
 3. **[03-listen](references/03-listen.md)** -- Start `hookdeck listen`, trigger test events
 4. **[04-iterate](references/04-iterate.md)** -- Debug failures, fix code, replay events
 
-> **Before any queries or metrics:** Run `hookdeck whoami` and show the user the output. Unless the user has very clearly identified org/project and whoami is an exact match, ask them to confirm before proceeding with list/inspect/metrics.
+> **Before any queries or metrics:** Satisfy the [Hookdeck CLI prerequisite](references/cli-workflows.md#hookdeck-cli-prerequisite), then run `hookdeck whoami` and show the user the output. Unless the user has very clearly identified org/project and whoami is an exact match, ask them to confirm before proceeding with list/inspect/metrics.
 
 Stage 02: when the user is working with a provider (Stripe, Shopify, etc.), complete [references/provider-webhooks-checklist.md](references/provider-webhooks-checklist.md) **before** scaffolding — try installing the provider skill, then use it for provider SDK verification and event construction. Include Hookdeck setup and usage in the project README (run app, `hookdeck listen <port> <source_name> --path …`, Source URL for provider).
 
 ## Quick Start (Receive Webhooks)
 
-No account required -- `hookdeck listen` works immediately:
+**Prerequisite:** [Hookdeck CLI installed](references/cli-workflows.md#hookdeck-cli-prerequisite).
+
+No account required for the quickest path — once the CLI is available, `hookdeck listen` works immediately:
 
 ```sh
-brew install hookdeck/hookdeck/hookdeck   # or: npm i -g hookdeck-cli
 hookdeck listen 3000 <source_name> --path /webhooks
 ```
 

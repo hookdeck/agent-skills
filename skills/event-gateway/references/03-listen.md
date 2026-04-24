@@ -2,6 +2,8 @@
 
 Start receiving webhooks locally with `hookdeck listen`.
 
+**Prerequisite:** [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite).
+
 ## Local delivery: `listen` vs HTTP destinations {#local-delivery-listen-vs-http-destinations}
 
 | Pattern | What to do |

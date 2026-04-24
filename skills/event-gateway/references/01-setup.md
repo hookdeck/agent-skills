@@ -33,9 +33,11 @@ Verify:
 hookdeck version
 ```
 
-See [CLI docs](https://hookdeck.com/docs/cli) for all installation methods.
+See the official [Installation](https://hookdeck.com/docs/cli.md#installation) section (all platforms) and [cli-workflows — prerequisite](cli-workflows.md#hookdeck-cli-prerequisite) for how agents should phrase this in user-facing docs.
 
 ## No-Account Mode (Quickest Start)
+
+**Prerequisite:** [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite) (commands also in [Install the CLI](#install-the-cli) above).
 
 No signup required. Run immediately:
 
@@ -47,6 +49,8 @@ The CLI creates a Source URL, tunnels to `localhost:3000`, and gives you a TUI f
 
 ## Event Gateway Project Mode
 
+**Prerequisite:** [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite).
+
 For full features (persistent connections, dashboard, bookmarks, project management):
 
 ```sh
@@ -57,6 +61,8 @@ hookdeck listen 3000
 Or create a [Hookdeck account](https://dashboard.hookdeck.com) first, then log in.
 
 ## Create a Connection
+
+**Prerequisite:** [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite).
 
 The simplest approach — **`hookdeck listen`** creates (or attaches to) a **CLI** destination and tunnels to your app. If your webhook handler is at `/webhooks`, use `--path` so the Source URL maps to it:
 

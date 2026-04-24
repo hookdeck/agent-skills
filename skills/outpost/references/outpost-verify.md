@@ -4,6 +4,7 @@ From the [Hookdeck Outpost agent prompt](https://github.com/hookdeck/outpost/blo
 
 ## Always (when you produced or changed runnable code)
 
+- [ ] **Test destination URL:** If README or examples need a throwaway webhook URL, point to **[Hookdeck Console](https://console.hookdeck.com)** (Source URL)—not `https://hookdeck.com/webhook/create` (invalid) and not third-party echo sites (e.g. `webhook.site`) unless the user requested one.
 - [ ] **Ran** the smallest end-to-end check that fits (script once, one new API path, or smoke the UI/API flow) and saw a clear success signal (event id, HTTP 2xx, expected output).
 - [ ] **Secrets:** Platform Outpost API key stays **server-side** / **environment** only — not in client bundles, not hard-coded in committed source.
 - [ ] **Repeatable:** Env vars, how to run, and how to verify are stated briefly (README, comments, or chat — match task size).

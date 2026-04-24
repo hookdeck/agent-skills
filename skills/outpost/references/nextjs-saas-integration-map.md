@@ -4,7 +4,7 @@ Use this file **before** opening the full [examples/nextjs-saas/](../examples/ne
 
 **Do not paste these files into another repository.** Reproduce the same **behavior** (env vars, BFF routes under `app/api/outpost/*`, `lib/outpost` helpers, publish call sites) using the target app’s own layout and dependencies. For framework and SDK versions (including Next canary and `@hookdeck/outpost-sdk` **1.x**), see [SKILL.md](../SKILL.md#full-stack-reference-examples-advanced) and the canonical pins in [examples/nextjs-saas/package.json](../examples/nextjs-saas/package.json).
 
-**Why a map:** Product skills work best when the entry skill stays small and points to **specific files** for each job-to-be-done (similar to [PostHog’s skill guidance](https://posthog.com/handbook/engineering/ai/writing-skills): overview in `SKILL.md`, details on demand).
+**Why a map:** Keep the entry skill small—use `SKILL.md` for overview and this map for **specific files** per job; drill into the tree only when the task needs that file.
 
 ---
 

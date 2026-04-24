@@ -32,6 +32,10 @@ When two paths seem possible, prefer **Quick path** unless they clearly want UI 
 
 Do **not** mix argument styles across languages.
 
+## Test webhook destination URLs
+
+For a **disposable webhook URL** in examples or READMEs, default to **[Hookdeck Console](https://console.hookdeck.com)** (create a Source; use the `https://hkdk.events/…` URL as the destination URL in curl). Do **not** use fictional Hookdeck paths like `https://hookdeck.com/webhook/create`. Avoid third-party echo sites (e.g. `webhook.site`) unless the user asked for one.
+
 ## Topic reconciliation (domain-first)
 
 Derive **`topic`** strings from **real state changes**. If the project’s configured topic list is missing a name the app should emit, **do not** bend the product model to fit the list—tell the operator to **add the topic in Hookdeck** and refresh their prompt/config. Only narrow publishes when they **explicitly** ask for a minimal wiring demo.

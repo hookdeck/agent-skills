@@ -162,7 +162,7 @@ Every team in this app maps 1-to-1 to an Outpost **tenant**. The tenant ID is `S
 
 Use the **Test Event** button on `/dashboard/destinations` to publish a `user.created` test event. Click any destination row to view its delivery attempts and retry failed ones.
 
-For ad-hoc verification during development, point a webhook destination at the Hookdeck Console source:
+For ad-hoc verification during development, point a webhook destination at a Source you create in **[Hookdeck Console](https://console.hookdeck.com)** (copy the Source URL, e.g.):
 
 ```
 https://hkdk.events/4unruqkql54jpb

@@ -1,6 +1,6 @@
 # FastAPI SaaS example — Outpost integration map
 
-Use this file **before** browsing the full [examples/fastapi-saas/](../examples/fastapi-saas/) tree. The template is a **full-stack** app (FastAPI + React + Docker). For Outpost work, focus on the **backend BFF** and **domain publish** sites below (same progressive-disclosure idea as [PostHog’s skill guidance](https://posthog.com/handbook/engineering/ai/writing-skills)).
+Use this file **before** browsing the full [examples/fastapi-saas/](../examples/fastapi-saas/) tree. The template is a **full-stack** app (FastAPI + React + Docker). For Outpost work, focus on the **backend BFF** and **domain publish** sites below—open deeper files only when they match the task.
 
 **Do not paste these files into another repository.** Reproduce the same **behavior** (env vars, `outpost.py` BFF patterns, domain publish via `httpx` to `POST …/publish`) in the user’s FastAPI layout and settings system. For FastAPI, `httpx`, and `outpost_sdk` **1.x** pins, see [SKILL.md](../SKILL.md#full-stack-reference-examples-advanced) and [examples/fastapi-saas/backend/pyproject.toml](../examples/fastapi-saas/backend/pyproject.toml).
 

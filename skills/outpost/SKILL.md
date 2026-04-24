@@ -32,6 +32,12 @@ Use the official managed-Outpost walkthroughs before opening full-stack examples
 
 Compact link list: [references/outpost-quickstarts.md](references/outpost-quickstarts.md).
 
+## Test webhook destination URLs (README and docs)
+
+When you need a **throwaway HTTPS URL** for a webhook destination (quickstarts, curl examples, “verify delivery”):
+
+- **Prefer [Hookdeck Console](https://console.hookdeck.com)** — create a Source, copy its URL (e.g. `https://hkdk.events/…`), and inspect or replay deliveries in one place. This is the Hookdeck-native default for agents and humans.
+
 ## Fast path for agents
 
 1. Start with [references/outpost-scope.md](references/outpost-scope.md) to pick Quick path vs New minimal app vs Existing app.
@@ -80,7 +86,7 @@ Dashboard-style guidance (no `{{PLACEHOLDERS}}` — those stay dashboard-only):
 
 Dependency and version pins live in the example manifests (`package.json`, `pyproject.toml`).
 
-**How agents should use them:** [PostHog-style progressive disclosure](https://posthog.com/handbook/engineering/ai/writing-skills) — overview and maps first; open only files that match the task.
+**How to use the examples:** Read the integration maps and README overviews first; open other files only when they match the user’s task.
 
 **Tests:** `npm test` in `nextjs-saas` (Vitest); `pytest test_outpost_wire.py` in `fastapi-saas/backend` via `./scripts/test-examples.sh outpost`. Next.js example uses **npm**.
 

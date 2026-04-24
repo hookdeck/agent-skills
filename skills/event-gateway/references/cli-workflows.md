@@ -9,7 +9,11 @@
 - [Connection Management](#connection-management)
 - [Gateway resource management](#gateway-resource-management)
 
-**When to use CLI vs API vs Dashboard:** see **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** (canonical guidance for agents). This file covers installation, listening, connection and resource management, project switching, and querying. For the full CLI reference, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md). Prefer **`hookdeck gateway … upsert`** over `create` when both exist so workflows are idempotent; run **`--help`** on each subcommand for the full flag list (rate limits, rules, source/destination options).
+**When to use CLI vs API vs Dashboard:** see **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** (canonical guidance for agents). This file covers installation, listening, connection and resource management, project switching, and querying. For the full CLI reference, fetch [/docs/cli.md](https://hookdeck.com/docs/cli.md).
+
+**Command model:** use `hookdeck gateway ...` as the default for Event Gateway operations. Root commands remain for shell/context tasks (`login`, `whoami`, `listen`, `project`), and root `hookdeck connection ...` is a deprecated compatibility alias.
+
+Prefer **`hookdeck gateway … upsert`** over `create` when both exist so workflows are idempotent; run **`--help`** on each subcommand for the full flag list (rate limits, rules, source/destination options).
 
 ## Installation
 

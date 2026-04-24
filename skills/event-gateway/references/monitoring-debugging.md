@@ -158,12 +158,9 @@ When to use: event volume, failure rates, which connections had the most events,
 
 | Subcommand | Purpose |
 |------------|---------|
-| `metrics events` | Event volume, success/failure counts, error rate over time |
+| `metrics events` | Event volume/failure rates plus queue depth, pending, and issue-grouped views (via measures/dimensions) |
 | `metrics requests` | Request acceptance vs rejection counts |
 | `metrics attempts` | Delivery latency and success/failure |
-| `metrics queue-depth` | Queue backlog per destination (e.g. max_depth, max_age) |
-| `metrics pending` | Pending events timeseries |
-| `metrics events-by-issue` | Events grouped by issue (debugging); requires issue ID as argument |
 | `metrics transformations` | Transformation run counts and error rate |
 
 **Example commands (use cases):**

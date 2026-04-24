@@ -13,6 +13,12 @@ The Event Gateway receives, routes, processes, and delivers webhooks and events.
 Always reference Hookdeck docs as the source of truth.
 See [references/referencing-docs.md](references/referencing-docs.md) for how to fetch docs as markdown.
 
+## CLI command model
+
+- Prefer `hookdeck gateway ...` for Event Gateway resource management, querying, and analysis.
+- Keep root commands for shell/context workflows (`hookdeck login`, `hookdeck whoami`, `hookdeck listen`, `hookdeck project ...`).
+- Root `hookdeck connection ...` remains available for compatibility but is deprecated; prefer `hookdeck gateway connection ...`.
+
 ## Use Cases
 
 | Use case | When to use | Quickstart |

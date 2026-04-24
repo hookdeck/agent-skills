@@ -274,6 +274,7 @@ Rules provide concise, always-on guidance. Keep them minimal; link to skills for
 
 - **Cursor first:** Lead with Cursor plugin install (`/add-plugin hookdeck`). What the plugin does.
 - **Retain generic skills:** Keep `npx skills add hookdeck/agent-skills` and full Agent Skills usage for Claude, ChatGPT, and other agents. Do not remove the generic install path.
+- **Human-facing doc links in README.md:** Do not link to Hookdeck documentation URLs that end in `.md` (for example `https://hookdeck.com/docs/cli/mcp.md`). Those `.md` endpoints exist mainly for agents and tools fetching markdown. In the repo root README, use pages without `.md` (for example [MCP & Skills](https://hookdeck.com/docs/mcp), [CLI](https://hookdeck.com/docs/cli)) and describe where to find a subsection (e.g. MCP in the CLI doc’s Event Gateway operations table) when there is no dedicated HTML path.
 
 ### Plugin description and keywords
 

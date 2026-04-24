@@ -65,19 +65,8 @@ function getReadmeContent(resultDir: string): string {
 function getHandlerContent(resultDir: string, framework: Framework): string {
   switch (framework) {
     case 'express': {
-      const candidates = [
-        ['index.js'],
-        ['src', 'index.js'],
-        ['server.js'],
-        ['app.js'],
-        ['src', 'server.js'],
-        ['src', 'app.js'],
-      ] as const;
-      for (const parts of candidates) {
-        const content = readFileSafe(resultDir, ...parts);
-        if (content) return content;
-      }
-      return '';
+      const root = readFileSafe(resultDir, 'index.js');
+      return root || readFileSafe(resultDir, 'src', 'index.js');
     }
     case 'nextjs':
       return readFileSafe(resultDir, 'app', 'webhooks', 'route.ts');

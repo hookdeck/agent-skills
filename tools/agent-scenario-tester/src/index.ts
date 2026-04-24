@@ -44,7 +44,7 @@ program
 program
   .command('assess <resultDir>')
   .description(
-    'Re-run the assessor on an existing result directory and update report.md (e.g. after fixing the assessor or when the handler is server.js / src/index.js)'
+    'Re-run the assessor on an existing result directory and update report.md (e.g. after fixing the assessor or when handler is in src/index.js)'
   )
   .action((resultDirArg: string) => {
     try {

@@ -119,4 +119,4 @@ Do not leave the default framework README without Hookdeck setup and usage instr
 
 ## Next Step
 
-Proceed to [03-listen.md](03-listen.md) to start receiving events locally. When you run `hookdeck listen`, pass the **source** name and use `--path` to match your handler (e.g. `hookdeck listen 3000 <source_name> --path /webhooks` for a handler at `POST /webhooks`).
+Proceed to [03-listen.md](03-listen.md) to start receiving events locally. **Prerequisite:** [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite) before documenting or running `hookdeck listen`. When you run `hookdeck listen`, pass the **source** name and use `--path` to match your handler (e.g. `hookdeck listen 3000 <source_name> --path /webhooks` for a handler at `POST /webhooks`).

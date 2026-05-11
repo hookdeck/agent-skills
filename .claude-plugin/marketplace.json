@@ -7,7 +7,7 @@
   "description": "Hookdeck plugin marketplace: skills for Hookdeck Event Gateway and Hookdeck Outpost.",
   "plugins": [
     {
-      "name": "hookdeck-skills",
+      "name": "hookdeck",
       "source": "./",
       "description": "Skills for working with Hookdeck Event Gateway (receive, queue, route, and deliver webhooks) and Hookdeck Outpost (send webhooks and events to user-preferred destinations). Includes a router skill that delegates to event-gateway or outpost based on the task."
     }

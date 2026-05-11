@@ -1,0 +1,10 @@
+{
+  "name": "hookdeck",
+  "version": "0.1.0",
+  "description": "Skills for working with Hookdeck Event Gateway (receive, queue, route, and deliver webhooks) and Hookdeck Outpost (send webhooks and events to user-preferred destinations). Includes a router skill that delegates to event-gateway or outpost based on the task.",
+  "author": {
+    "name": "Hookdeck",
+    "email": "phil@hookdeck.com"
+  },
+  "homepage": "https://github.com/hookdeck/agent-skills"
+}

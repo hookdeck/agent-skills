@@ -20,7 +20,7 @@ Prefer **`hookdeck gateway … upsert`** over `create` when both exist so workfl
 
 **Canonical rule for agents:** Before you **run** or **document** any `hookdeck …` command for the user (`listen`, `login`, `gateway …`, etc.), **ensure the Hookdeck CLI is installed** and **say so in user-facing text** (README, runbook, chat) the first time such a command appears—do not assume `hookdeck` is on PATH.
 
-**Copy-paste install examples:** `brew install hookdeck/hookdeck/hookdeck` or `npm i -g hookdeck-cli`. More options (devDependency, `npx hookdeck`, verify with `hookdeck version`) are in [Installation](#installation) below.
+**Copy-paste install examples:** `brew install hookdeck` or `npm i -g hookdeck-cli`. More options (devDependency, `npx hookdeck`, verify with `hookdeck version`) are in [Installation](#installation) below.
 
 **Official install (all platforms):** [hookdeck.com/docs/cli.md#installation](https://hookdeck.com/docs/cli.md#installation) — same content as the [CLI overview](https://hookdeck.com/docs/cli); the full CLI reference lives on that page / in [cli.md](https://hookdeck.com/docs/cli.md).
 
@@ -29,7 +29,7 @@ Prefer **`hookdeck gateway … upsert`** over `create` when both exist so workfl
 ## Installation
 
 ```sh
-brew install hookdeck/hookdeck/hookdeck
+brew install hookdeck
 ```
 
 Or via npm:

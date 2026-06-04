@@ -18,7 +18,7 @@ npm run dev
 Install the Hookdeck CLI on your machine before the steps below. Official guide (all platforms): **[Install the Hookdeck CLI](https://hookdeck.com/docs/cli#installation)** · [Hookdeck CLI overview](https://hookdeck.com/docs/cli).
 
 ```bash
-brew install hookdeck/hookdeck/hookdeck
+brew install hookdeck
 # or
 npm install -g hookdeck-cli
 ```

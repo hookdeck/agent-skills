@@ -18,7 +18,7 @@ Get from zero to a working Hookdeck connection. Default path: **receive webhooks
 ## Install the CLI
 
 ```sh
-brew install hookdeck/hookdeck/hookdeck
+brew install hookdeck
 ```
 
 Or via npm:

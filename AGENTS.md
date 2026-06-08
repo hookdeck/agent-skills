@@ -4,6 +4,10 @@ Instructions for AI agents working on the Hookdeck Agent Skills repository.
 
 Read this file before creating, modifying, or reviewing any skill in this repo.
 
+## hookdeck.com discovery index
+
+Product skills under **`skills/event-gateway/`**, **`skills/hookdeck/`**, and **`skills/outpost/`** are packaged at build time by the **[`hookdeck/website`](https://github.com/hookdeck/website)** repo and served from `https://hookdeck.com/.well-known/agent-skills/` (RFC v0.2.0 discovery index + `.tar.gz` archives). When those paths change on **`main`**, [`.github/workflows/trigger-website-deploy.yml`](.github/workflows/trigger-website-deploy.yml) notifies Hookdeck, which triggers a Vercel production deploy of the site (same Hookdeck source as Outpost docs; both configured as Actions secrets: `HOOKDECK_WEBSITE_DEPLOY_SOURCE_URL`, `VERCEL_WEBSITE_DEPLOY_HOOK_SOURCE_API_KEY`). See [website `scripts/agent-skills-discovery.md`](https://github.com/hookdeck/website/blob/main/scripts/agent-skills-discovery.md) for packaging details.
+
 ## Specification
 
 All skills MUST conform to the [Agent Skills specification](https://agentskills.io/specification) and follow the [authoring best practices](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices).

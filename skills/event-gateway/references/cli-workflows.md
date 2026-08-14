@@ -55,9 +55,46 @@ hookdeck version
 
 ```sh
 hookdeck login     # Browser-based login
+hookdeck login -i  # Interactive, for when a browser cannot be opened (needs a TTY)
 hookdeck logout    # Clear credentials
 hookdeck whoami    # Show current user and project
 ```
+
+### Agents, CI and other non-interactive environments {#non-interactive-environments}
+
+`hookdeck login` needs a browser and `hookdeck login -i` needs a TTY, so neither works
+unattended. **`hookdeck ci` is the supported path**, and it reads `HOOKDECK_API_KEY`
+from the environment when the flag is omitted:
+
+```sh
+hookdeck ci                              # uses $HOOKDECK_API_KEY
+hookdeck ci --api-key <project-api-key>  # or pass it explicitly
+hookdeck listen 3000 <source_name> --path /webhooks
+```
+
+It exchanges the Project API key for CLI credentials and saves them, so subsequent
+commands are authenticated. `--name` labels the run in the dashboard, and `--local`
+writes credentials to `.hookdeck/config.toml` in the working directory rather than the
+user's home.
+
+Recent CLI versions also accept `hookdeck login --cli-key <cli-key>`, and `listen`
+itself falls back to `HOOKDECK_API_KEY`. **Do not rely on either when the CLI version
+is unknown**: `hookdeck ci` has been the non-interactive route for longer and works
+either way.
+
+**Authenticate first, then check it worked.** With no credentials the CLI creates a
+temporary guest account and carries on, so `hookdeck listen` appears to work while
+operating on a project the user cannot see, with no delivery history, retries or issue
+triggers:
+
+```sh
+hookdeck ci
+hookdeck whoami   # confirm the expected organization and project
+```
+
+If `whoami` shows a guest account, authentication did not happen. Do not present
+CLI-created resources as being in the user's project, and say what went wrong rather
+than falling back to a local-only setup and reporting the task as done.
 
 ## Project Management {#project-management}
 

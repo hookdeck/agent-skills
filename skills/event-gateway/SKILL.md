@@ -13,6 +13,21 @@ The Event Gateway receives, routes, processes, and delivers webhooks and events.
 Always reference Hookdeck docs as the source of truth.
 See [references/referencing-docs.md](references/referencing-docs.md) for how to fetch docs as markdown.
 
+## Authenticating without a browser (agents, CI, sandboxes)
+
+`hookdeck login` needs a browser and `hookdeck login -i` needs a TTY. Use
+**`hookdeck ci`**, which reads `HOOKDECK_API_KEY` from the environment, before any
+other CLI command:
+
+```sh
+hookdeck ci        # exchanges the Project API key for CLI credentials
+hookdeck whoami    # confirm the expected organization and project
+```
+
+Without this the CLI creates a temporary guest account and keeps going, so commands
+appear to succeed against a project the user cannot see. See
+[references/cli-workflows.md#non-interactive-environments](references/cli-workflows.md#non-interactive-environments).
+
 ## CLI command model
 
 - Prefer `hookdeck gateway ...` for Event Gateway resource management, querying, and analysis.

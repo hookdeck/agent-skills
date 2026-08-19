@@ -141,7 +141,7 @@ The `--source-type` flag uses a [Source Type](https://hookdeck.com/docs/sources#
 | `HOOKDECK_API_KEY` | API key for programmatic access. Found in [Dashboard > Settings > Secrets](https://dashboard.hookdeck.com/settings/project/secrets). |
 | `HOOKDECK_WEBHOOK_SECRET` | Signing secret for verifying the [Hookdeck Signature](https://hookdeck.com/docs/authentication#hookdeck-webhook-signature-verification) on forwarded events. Found in the same settings page. |
 
-Set these in your environment or `.env` file. The CLI uses browser-based auth via `hookdeck login` and does not require `HOOKDECK_API_KEY` for interactive CLI use.
+Set these in your environment or `.env` file. Interactive CLI use authenticates via `hookdeck login` and does not need `HOOKDECK_API_KEY`. Without a browser or a TTY, run [`hookdeck ci`](cli-workflows.md#non-interactive-environments) instead, which reads `HOOKDECK_API_KEY` and exchanges it for CLI credentials.
 
 ## Next Step
 

@@ -19,13 +19,25 @@ How the Hookdeck Event Gateway authenticates requests -- both inbound (from webh
 
 | Method | Use case |
 |--------|----------|
-| **[Source Types](https://hookdeck.com/docs/sources#source-types)** | Provider presets (Stripe, Shopify, GitHub, etc.) that auto-configure verification. **Default choice.** |
+| **[Source Types](https://hookdeck.com/docs/sources#source-types)** | Provider presets that auto-configure verification. **Default choice.** Over 150 providers have one, far beyond the well-known names -- check before assuming a provider is unsupported. |
 | **API Key** | Provider sends a static key in a header or query parameter |
 | **Basic Auth** | Provider sends Basic HTTP credentials |
 
 ### Source Types (Recommended)
 
-Source Types are platform presets that auto-configure signature verification for a provider:
+Source Types are platform presets that auto-configure signature verification for a provider. There are over 150, covering far more than the handful of names that appear in examples: AI platforms, payment processors, e-commerce, CRM, infrastructure and more.
+
+**Check whether your provider has one before falling back to a generic source.** A generic `WEBHOOK` source with hand-rolled verification is the wrong answer when a preset exists, because the preset already knows the provider's algorithm, header and encoding:
+
+```sh
+# List every available source type
+curl -s https://api.hookdeck.com/2025-07-01/openapi \
+  | jq -r '.components.schemas | keys[] | select(startswith("SourceTypeConfig")) | ltrimstr("SourceTypeConfig")'
+```
+
+The [Sources documentation](https://hookdeck.com/docs/sources#source-types) lists them with the configuration each one takes.
+
+Using a preset:
 
 Production-style (**HTTPS** destination):
 

@@ -31,7 +31,7 @@ Source Types are platform presets that auto-configure signature verification for
 
 ```sh
 # List every available source type
-curl -s https://api.hookdeck.com/2025-07-01/openapi \
+curl -s https://api.hookdeck.com/latest/openapi \
   | jq -r '.components.schemas | keys[] | select(startswith("SourceTypeConfig")) | ltrimstr("SourceTypeConfig")'
 ```
 

@@ -10,6 +10,21 @@ Outbound event delivery: publish platform events to **tenants’ destinations** 
 
 **Single source of truth:** Use [Hookdeck Outpost documentation](https://hookdeck.com/docs/outpost) for concepts, API, quickstarts, and UI guidance. This skill links there and adds agent workflow notes under `references/`.
 
+## API base URL and credentials
+
+The managed Outpost API is at **`https://api.outpost.hookdeck.com/2025-07-01`** — not `api.hookdeck.com`. Authenticate with a Hookdeck **project API key that belongs to an Outpost project** ([Hookdeck Dashboard](https://dashboard.hookdeck.com) → your Outpost project → Settings → Secrets), sent as a bearer token. Keep the key server-side.
+
+```sh
+export OUTPOST_API_BASE_URL="https://api.outpost.hookdeck.com/2025-07-01"
+export OUTPOST_API_KEY="..."   # key from an Outpost project
+
+# Upsert a tenant: 201 if Outpost created it, 200 if it already existed
+curl --request PUT "$OUTPOST_API_BASE_URL/tenants/customer_acme_001" \
+  --header "Authorization: Bearer $OUTPOST_API_KEY"
+```
+
+Hookdeck has one credential type — a project API key — so the **project it belongs to** is what matters. A key for a non-Outpost project authenticates against `api.hookdeck.com` and works with the Hookdeck CLI, so it looks correct, but returns `404 Not Found` on most Outpost routes. Read a `404` here as *this key is for the wrong project*, not "Outpost is not provisioned on this account", and ask the user for a key from an Outpost project. Do not fall back to building the task on `api.hookdeck.com` — that is the [Event Gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md), a different product.
+
 ## Documentation index for agents
 
 - **`llms.txt`:** [https://hookdeck.com/docs/outpost/llms.txt](https://hookdeck.com/docs/outpost/llms.txt) — plain-text map of doc pages as `.md` URLs; fetch once when you need the full tree or many pages.
@@ -66,7 +81,7 @@ Dashboard-style guidance (no `{{PLACEHOLDERS}}` — those stay dashboard-only):
 - **Managed:** [Hookdeck Outpost docs](https://hookdeck.com/docs/outpost) and per-language quickstarts.
 - **Self-hosted quickstarts:** [Docker](https://hookdeck.com/docs/outpost/self-hosting/quickstarts/docker), [Kubernetes](https://hookdeck.com/docs/outpost/self-hosting/quickstarts/kubernetes), [Railway](https://hookdeck.com/docs/outpost/self-hosting/quickstarts/railway), [Configuration](https://hookdeck.com/docs/outpost/self-hosting/configuration).
 - **API reference:** [Outpost REST / OpenAPI](https://hookdeck.com/docs/outpost/api).
-- **Base URL note:** Managed API base is project-specific (quickstarts currently show `https://api.outpost.hookdeck.com/2025-07-01`); verify live docs/project settings if unsure.
+- **Base URL and auth:** `https://api.outpost.hookdeck.com/2025-07-01` with a project API key for an Outpost project — see [API base URL and credentials](#api-base-url-and-credentials).
 
 ## Full-stack reference examples (advanced)
 
@@ -77,7 +92,7 @@ Dashboard-style guidance (no `{{PLACEHOLDERS}}` — those stay dashboard-only):
 - Next.js: [references/nextjs-saas-integration-map.md](references/nextjs-saas-integration-map.md)
 - FastAPI: [references/fastapi-saas-integration-map.md](references/fastapi-saas-integration-map.md)
 
-**Treat examples as references, not copy-paste scaffolds.** Prefer the user’s codebase and use maps for Outpost-specific behavior (server-only admin key, tenant mapping, BFF routes, domain `publish`).
+**Treat examples as references, not copy-paste scaffolds.** Prefer the user’s codebase and use maps for Outpost-specific behavior (server-only Outpost project API key, tenant mapping, BFF routes, domain `publish`).
 
 | Example | Stack | Location |
 |---------|--------|----------|

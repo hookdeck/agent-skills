@@ -26,6 +26,8 @@ Get your API key from [Dashboard > Settings > Secrets](https://dashboard.hookdec
 
 To find the current API version, fetch the [OpenAPI spec](https://api.hookdeck.com/latest/openapi) and check the `servers` section.
 
+Always use the current API version. Older versions keep legacy behavior for backward compatibility. For example, on older versions transformations always run before filters, whatever order the rules are sent in (see [connection-rules.md](connection-rules.md#rule-order)). Don't copy a dated version from an old example.
+
 ## Core Resources
 
 | Resource | Create | List | Get | Update | Delete |

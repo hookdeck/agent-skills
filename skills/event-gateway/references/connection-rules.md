@@ -3,6 +3,7 @@
 ## Contents
 
 - [Overview](#overview)
+- [Rule Order](#rule-order)
 - [Filters](#filters)
 - [Transformations](#transformations)
 - [Retries](#retries)
@@ -15,6 +16,26 @@
 [Rules](https://hookdeck.com/docs/connections) are processing logic attached to a Connection. Each Connection can have multiple Rules. Five types: filter, transform, retry, delay, deduplicate.
 
 **CLI:** Prefer **`hookdeck gateway connection upsert`** over `create` when scripting so runs are idempotent. **`hookdeck gateway connection upsert --help`** lists rule-related flags (`--rules`, `--rule-filter-body`, `--rule-retry-*`, `--destination-rate-limit`, etc.) and all inline source/destination options—examples below are **not exhaustive**. **Do not** use **`--destination-type HTTP`** with **`http://localhost:…`** in these patterns; use **`https://…`** for HTTP destinations or a **CLI** destination for local `listen` (see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations)).
+
+## Rule Order
+
+Filter, transform and deduplicate rules run in the order they appear in the `rules` array. Delay and retry rules can go anywhere in the array. Order changes behavior: a filter placed before a transform matches the original payload, and a filter placed after it matches the transformed payload.
+
+To filter on the original payload and then transform it:
+
+```sh
+hookdeck gateway connection upsert stripe-orders \
+  --source-name "stripe" \
+  --source-type STRIPE \
+  --destination-name "orders" \
+  --destination-type HTTP \
+  --destination-url https://api.example.com/webhooks \
+  --rules '[{"type":"filter","body":{"type":{"$eq":"payment_intent.succeeded"}}},{"type":"transform","transformation_id":"trs_123"}]'
+```
+
+- **Use `--rules` (or `--rules-file`) whenever order matters.** The CLI keeps the array exactly as given.
+- **Send the whole array on every update.** Updating a Connection replaces its stored rules, so read the current `rules`, edit the array, and send it back in the order you want.
+- **Use the current API version for REST calls.** On older API versions, transformations always run before filters, whatever order the rules are sent in, so a filter-then-transform order is lost on every save. See [api-patterns.md](api-patterns.md#authentication) for finding the current version.
 
 ## Filters
 

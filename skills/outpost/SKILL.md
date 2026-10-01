@@ -23,7 +23,9 @@ curl --request PUT "$OUTPOST_API_BASE_URL/tenants/customer_acme_001" \
   --header "Authorization: Bearer $OUTPOST_API_KEY"
 ```
 
-Hookdeck has one credential type — a project API key — so the **project it belongs to** is what matters. A key for a non-Outpost project authenticates against `api.hookdeck.com` and works with the Hookdeck CLI, so it looks correct, but returns `404 Not Found` on most Outpost routes. Read a `404` here as *this key is for the wrong project*, not "Outpost is not provisioned on this account", and ask the user for a key from an Outpost project. Do not fall back to building the task on `api.hookdeck.com` — that is the [Event Gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md), a different product.
+Hookdeck has **organization API keys and project API keys**; the Outpost API additionally accepts a **short-lived tenant JWT** from `GET /tenants/{tenant_id}/token`, which is what the tenant-facing portal uses for browser calls. For server-side Outpost work, use a project API key — and **the project it belongs to is what matters**.
+
+A key for a non-Outpost project authenticates against `api.hookdeck.com` and works with the Hookdeck CLI, so it looks correct, but returns `404 Not Found` on most Outpost routes. Read that `404` as *this key is for the wrong project*, not "Outpost is not provisioned on this account", and ask the user for a key from an Outpost project. Do not fall back to building the task on `api.hookdeck.com` — that is the [Event Gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md), a different product.
 
 ## Documentation index for agents
 

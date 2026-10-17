@@ -1,0 +1,11 @@
+{
+  "name": "hookdeck/inspect",
+  "version": "0.1.0",
+  "summary": "Hookdeck Inspect skill — free webhook test URLs: create one, wait for requests and read them",
+  "private": false,
+  "skills": {
+    "inspect": {
+      "path": "SKILL.md"
+    }
+  }
+}

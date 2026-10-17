@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `inspect` skill for Hookdeck Inspect's free webhook test URLs: create a URL, wait for requests, read exact bodies, send realistic test webhooks, check signatures and forward to localhost
+- The `hookdeck` router skill sends webhook-testing tasks to `inspect`
+
 ## [0.2.0] - 2025-02-21
 
 ### Added

@@ -2,7 +2,7 @@
   "name": "agent-skills",
   "version": "0.2.0",
   "private": true,
-  "description": "Hookdeck agent skills - event-gateway, hookdeck router, outpost",
+  "description": "Hookdeck agent skills - event-gateway, hookdeck router, outpost, inspect",
   "scripts": {
     "test:examples": "./scripts/test-examples.sh",
     "skill:lint": "for d in skills/*/; do tessl skill lint \"$d\" || exit 1; done",

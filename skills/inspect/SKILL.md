@@ -12,7 +12,9 @@ allowed-tools: WebFetch
 
 ## Two URLs per Source
 
-Each test URL is a **Source** (Inspect's UI lists them as "Source URLs"). A Source has two addresses:
+**Terms:** users say "test URL", "webhook URL", "endpoint" or "bin". In Inspect, each one is a **Source** (the UI lists them as "Source URLs"), and the address they paste into a provider is its **ingest URL**. What a Source captures are **requests**.
+
+A Source has two addresses:
 
 | URL | Reply field | What it's for |
 |---|---|---|
@@ -32,7 +34,22 @@ Anyone with either URL can send requests to the Source and read what it received
 curl -s -X POST https://inspect.hookdeck.com/
 ```
 
-The JSON reply has `ingest_url`, `inspect_url`, `requests_url` (the call to wait on), `cmd_hint` (a ready-to-run `hookdeck listen` command) and a `note` saying what to do next.
+The reply (`201`):
+
+```json
+{
+  "ingest_url": "https://inspect.hookdeck.com/e/k3x9m2p7q4w1zt",
+  "inspect_url": "https://inspect.hookdeck.com/k3x9m2p7q4w1zt",
+  "requests_url": "https://inspect.hookdeck.com/k3x9m2p7q4w1zt/requests?timeout=25",
+  "type": "WEBHOOK",
+  "name": "source",
+  "cli_key": "<cli_key>",
+  "cmd_hint": "npx hookdeck-cli listen [port] source --path /webhooks --cli-key <cli_key>",
+  "note": "Send webhooks to ingest_url. To wait for the next request, GET requests_url: …"
+}
+```
+
+`requests_url` is the call to wait on (step 2). `cmd_hint` is a ready-to-run `npx hookdeck-cli listen …` command that forwards requests to a local server ([references/forwarding.md](references/forwarding.md)). Every field is described in [references/reading-requests.md](references/reading-requests.md#the-create-reply).
 
 To pin a platform's [Source Type](https://hookdeck.com/docs/sources#source-types), send it as the JSON body:
 
@@ -40,7 +57,7 @@ To pin a platform's [Source Type](https://hookdeck.com/docs/sources#source-types
 curl -s -X POST https://inspect.hookdeck.com/ -H 'content-type: application/json' -d '{"type":"STRIPE"}'
 ```
 
-A type Inspect doesn't support returns `422` with the list of valid types.
+The reply is the same, with `"type": "STRIPE"`. A type Inspect doesn't support returns `422` with the list of valid types. A few platforms, such as Zoom, send nothing until the user saves their secret on the Source's page: see [Gotchas](#gotchas).
 
 Give the user the `ingest_url` to paste into the provider, and the `inspect_url` so they can watch too: a Source you create doesn't appear in their own Inspect sidebar.
 
@@ -50,10 +67,54 @@ Give the user the `ingest_url` to paste into the provider, and the `inspect_url`
 curl -s "https://inspect.hookdeck.com/{id}/requests?timeout=25"
 ```
 
-This is one normal HTTP call. It returns as soon as a request arrives, or after 25 seconds with `timed_out: true` and a `resume` URL, so there's no need to poll or sleep:
+This is one normal HTTP call. It returns as soon as a request arrives, or after 25 seconds, so there's no need to poll or sleep.
 
-- **Requests returned:** to keep waiting, GET `next_url`. If `more` is true, more are ready, so call it straight away.
-- **Timed out:** GET `resume` to wait again from the same point.
+**A request arrived** (headers and body shortened here):
+
+```json
+{
+  "requests": [
+    {
+      "id": "req_5mQx2LbV8nTc4RkW9yZd",
+      "received_at": "2026-10-19T16:13:45.618916Z",
+      "already_arrived": false,
+      "method": "POST",
+      "verb": "POST",
+      "path": "/webhooks",
+      "query": "",
+      "headers": {
+        "content-type": "application/json",
+        "stripe-signature": "t=1792400000,v1=5257a869…"
+      },
+      "body": { "id": "evt_1Q2w3E4r5T6y7U8i", "type": "checkout.session.completed" },
+      "body_raw": "{\"id\":\"evt_1Q2w3E4r5T6y7U8i\",\"type\":\"checkout.session.completed\"}",
+      "body_url": "https://inspect.hookdeck.com/k3x9m2p7q4w1zt/requests/req_5mQx2LbV8nTc4RkW9yZd/body",
+      "verified": false,
+      "rejection_cause": null
+    }
+  ],
+  "more": false,
+  "note": "To wait for the next request, GET next_url. …",
+  "next_url": "https://inspect.hookdeck.com/k3x9m2p7q4w1zt/requests?next=eyJ0Ijo…&timeout=25"
+}
+```
+
+**Nothing arrived in time:**
+
+```json
+{
+  "timed_out": true,
+  "requests": [],
+  "note": "No new request arrived in 25s. This is normal. To keep waiting, GET resume.",
+  "resume": "https://inspect.hookdeck.com/k3x9m2p7q4w1zt/requests?next=eyJ0Ijo…&timeout=25&r=1",
+  "read": "https://inspect.hookdeck.com/k3x9m2p7q4w1zt?format=json"
+}
+```
+
+What to call next:
+
+- **`next_url` is always there** when requests come back. It continues after them, and when nothing new is waiting it waits for the next request. `more: true` means more requests are ready now, so call `next_url` straight away to get them too.
+- **`resume` is a URL.** After a timeout, GET it to wait again from the same point. It changes on every call, so always use the newest one.
 
 **Wait in the foreground.** Make the call and stay in your turn. Don't start a background watcher and end your turn: in a one-shot or headless session the watcher stops with the turn and the webhook is missed.
 
@@ -67,7 +128,7 @@ Show the user:
 
 - the **full body in a code block**, not a summary (`body_raw` is the exact text);
 - the key headers, such as `content-type` and any signature header;
-- `verified` and `rejection_cause`, when they matter.
+- `rejection_cause`, when Hookdeck refused the request.
 
 Then stop and ask whether to keep waiting, unless the user asked you to keep watching.
 
@@ -75,27 +136,31 @@ Then stop and ask whether to keep waiting, unless the user asked you to keep wat
 
 | Call | Returns |
 |---|---|
-| `GET {inspect_url}?format=json` | The Source and its newest requests |
+| `GET {inspect_url}?format=json` | The Source and its 10 newest requests |
 | `GET {inspect_url}/requests` | Requests from the start, oldest first, without waiting. Follow `next_url` while `more` is true |
-| `GET {body_url}` (on each request) | One body exactly as it arrived, text or binary |
+| `GET {inspect_url}/requests/{request_id}/body` | One body exactly as it arrived, text or binary. Each request gives this URL as its `body_url` |
 
-Field meanings, body size limits and cursors: [references/reading-requests.md](references/reading-requests.md).
+Sending `Accept: application/json` to the inspect URL returns the same JSON as `?format=json`. Prefer `?format=json`: it returns JSON whatever `Accept` header your HTTP tool sends.
+
+Every field, body size limits and cursors: [references/reading-requests.md](references/reading-requests.md).
 
 ## Gotchas
 
 - **Never `GET` the ingest URL to read it.** That captures a new request instead of reading the Source.
 - **Read bodies with `curl`, not a page-summarising fetch tool.** Summarisers can drop or reword fields.
 - **The sample payload on Inspect's home page isn't real data.** Only requests returned by the calls above are.
-- **`429`:** wait `retry_after` seconds, then retry.
+- **`verified: false` is normal.** Inspect doesn't check signatures for most platforms, so `false` doesn't mean a signature is wrong. To check one, see [references/verify-signatures.md](references/verify-signatures.md).
+- **Zoom, X, eBay, LinkedIn, Xero, Smartcar and Exact Online send nothing until the Source has their secret.** They check the URL before sending any webhooks, and passing that check needs the platform's secret or token. It can only be saved on the Source's page, not through the API: ask the user to open the `inspect_url`, pick the platform under **Use with a specific platform** if it isn't set yet, and save the secret in the card that appears. If the platform reports that URL validation failed, this is why.
+- **`rejection_cause`** is set when Hookdeck refused the request (for example broken JSON or an unsupported method). `null` means it was accepted.
+- **`429`:** too many calls (over 60 a minute to one Source). Wait the seconds in the `Retry-After` header, or the reply's `retry_after`, then retry the same URL.
 - **`404`:** no Source has that ID (a typo or a deleted URL). Ask the user for the URL again; don't guess IDs.
-- **`rejection_cause`** is set when Hookdeck refused the request (for example broken JSON, a failed signature check or an unsupported method). `null` means it was accepted.
 - **`cli_key` and `cmd_hint` contain a key** that lets anyone listen to the Source. Run `cmd_hint` yourself; don't paste it into chats, issues or docs.
 
 ## Going further
 
 | Task | Reference |
 |---|---|
-| Field meanings, body size limits, paging | [references/reading-requests.md](references/reading-requests.md) |
+| Every field, body size limits, paging | [references/reading-requests.md](references/reading-requests.md) |
 | Send realistic test webhooks from 150+ platforms | [references/send-test-webhooks.md](references/send-test-webhooks.md) |
 | Check a webhook's signature | [references/verify-signatures.md](references/verify-signatures.md) |
 | Forward requests to localhost or another URL | [references/forwarding.md](references/forwarding.md) |
@@ -103,4 +168,4 @@ Field meanings, body size limits and cursors: [references/reading-requests.md](r
 ## Related skills
 
 - **[event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md):** production webhook infrastructure with a Hookdeck account: connections, retries, filters, transformations and monitoring.
-- **[hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills):** each provider's signature scheme, event types and SDK verification, for example `npx skills add hookdeck/webhook-skills --skill stripe-webhooks`.
+- **[hookdeck/webhook-skills](https://github.com/hookdeck/webhook-skills):** each provider's signature scheme, event types and SDK verification. Install one with `npx skills add hookdeck/webhook-skills --skill {provider}-webhooks`.

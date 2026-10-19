@@ -30,4 +30,4 @@ curl -s -X POST "$INGEST_URL" -H 'content-type: application/json' \
 
 ## Signatures on samples
 
-A sample's signature header was made with someone else's secret, so it won't pass a check with the user's secret, and Inspect's `verified` stays `false`. For a request that verifies, have the provider send a test event to the ingest URL, from its dashboard or its CLI.
+A sample's signature header was made with someone else's secret, so it won't pass a check with the user's secret. For a request whose signature you can check, have the provider send a test event to the ingest URL, from its dashboard or its CLI.

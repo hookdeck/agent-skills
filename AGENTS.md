@@ -108,12 +108,12 @@ hookdeck/agent-skills/
         nextjs-saas/
         fastapi-saas/
     inspect/                           # Inspect skill: free webhook test URLs (curl only, no examples)
-      SKILL.md                         # Two URLs per Source, create → wait → report, gotchas
+      SKILL.md                         # Terms, two URLs per Source, create → wait → report with example replies, gotchas
       references/
-        reading-requests.md            # Reads, cursors, request fields, body size limits
+        reading-requests.md            # Every reply's fields, cursors, body size limits, errors
         send-test-webhooks.md          # Plain test requests and samples.hookdeck.com payloads
-        verify-signatures.md           # Exact body, Inspect's check vs SDK check (webhook-skills)
-        forwarding.md                  # hookdeck listen to localhost, HTTP destinations
+        verify-signatures.md           # Exact body, SDK check (webhook-skills), platforms that need a secret
+        forwarding.md                  # npx hookdeck-cli listen to localhost, HTTP destinations
   AGENTS.md                            # This file
   CLAUDE.md
   CONTRIBUTING.md

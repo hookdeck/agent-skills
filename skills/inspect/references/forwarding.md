@@ -9,7 +9,11 @@ Use the [Hookdeck CLI](https://hookdeck.com/docs/cli)'s `listen` command, run as
 - **A Source you created:** run the `cmd_hint` from the `POST /` reply as given, replacing `[port]` with the local server's port (or a full local URL). It has the shape `npx hookdeck-cli listen [port] {source name} --path /webhooks --cli-key …`. Change `--path` to the path the local handler listens on.
 - **A Source the user gave you:** there's no `cmd_hint`. Ask the user to copy the command from the Source page's **Forward → Localhost** tab, then run it.
 
+**Give the provider the bare `ingest_url`.** The CLI adds whatever path the request was sent to onto `--path`: a request to `{ingest_url}/webhooks` with `--path /webhooks` reaches the local server as `/webhooks/webhooks`.
+
 The `listen` command keeps running until it's stopped. Start it in the background or in a separate terminal, and keep making the wait call in the foreground.
+
+When it starts, `listen` prints a `console.hookdeck.com/e/…` URL. Keep giving the user the Inspect `ingest_url`.
 
 `npx hookdeck-cli` needs no install. To install the CLI instead: `brew install hookdeck` on macOS, or `npm install hookdeck-cli -g` anywhere with Node.js ([other options](https://hookdeck.com/docs/cli)), then run the same command as `hookdeck listen …`. The key in `cmd_hint` already gives the CLI access to the Source, so no login is needed.
 

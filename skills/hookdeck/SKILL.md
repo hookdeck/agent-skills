@@ -14,6 +14,8 @@ description: "Routes to the correct Hookdeck product skill. Covers Event Gateway
 | **Send webhooks/events to customers** | outpost |
 | **Get a free webhook test URL, or see what a webhook sent (no account)** | inspect |
 
+Both event-gateway and inspect can forward webhooks to localhost. With no Hookdeck account, or when the user just needs a URL, use inspect. For a lasting setup with an account, use event-gateway.
+
 ## Event Gateway
 
 Inbound [event infrastructure](https://hookdeck.com/docs/). One skill covers all use cases:

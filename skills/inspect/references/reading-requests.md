@@ -99,16 +99,16 @@ From `{inspect_url}?format=json`:
 | `path`, `query` | What came after the ingest URL |
 | `headers` | The captured headers |
 | `received_at` | When it arrived |
-| `body` | The body, parsed when it's JSON, otherwise a string |
-| `body_raw` | The body exactly as it arrived, as text. Wait replies only |
-| `body_base64` | A small binary body's exact bytes. Wait replies only |
+| `body` | The body: an object when it's JSON or a form (`application/x-www-form-urlencoded`), `null` when it's binary, otherwise a string |
+| `body_raw` | The body exactly as it arrived, as text. `null` for a binary body. `/requests` replies only |
+| `body_base64` | A small binary body's exact bytes. `/requests` replies only |
 | `body_url` | Downloads the exact body, text or binary: `{inspect_url}/requests/{id}/body` |
-| `already_arrived` | It came in before this call started. It's still a real request and counts as the one you were waiting for. Wait replies only |
+| `already_arrived` | It came in before this call started. It's still a real request and counts as the one you were waiting for. `/requests` replies only |
 | `verified` | `true` when Hookdeck checked the signature and it matched. Hookdeck only checks it for platforms whose secret the user saved on the Source's page, such as Zoom, so for most requests it's `false`, which is normal |
 | `rejection_cause` | Why Hookdeck refused it. `null` when accepted, including when the Source has no destination |
 | `body_read_failed` | The exact body couldn't be read just now. Download it from `body_url` |
 
-## Body sizes in wait replies
+## Body sizes in `/requests` replies
 
 | Body | Included as | Otherwise |
 |---|---|---|
@@ -123,6 +123,6 @@ The snapshot never includes `body_raw` or `body_base64`. Use `body_url` there wh
 | Status | Meaning |
 |---|---|
 | `400` | A bad `timeout`, `limit` or `next`. The reply's `read_url` starts again from the beginning |
-| `404` | No Source with that ID, or it can no longer be read. Don't guess IDs |
+| `404` | No Source with that ID, or it can no longer be read. Don't guess IDs, and don't follow the reply's `read_url`: it points at the same Source |
 | `429` | More than 60 calls a minute from you to this Source. Retry the same URL after the `Retry-After` header's seconds |
 | `502`, `503` | A temporary failure. Retry the same URL, after `Retry-After` when it's given |

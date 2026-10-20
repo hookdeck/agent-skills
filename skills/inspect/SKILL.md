@@ -1,14 +1,14 @@
 ---
 name: inspect
 description: "Free webhook test URLs from Hookdeck Inspect, with no account or login. Creates a URL with one HTTP call, waits for webhooks to arrive, and reads their headers and exact bodies as JSON. Use when asked to get a webhook test URL, see what a webhook sent, wait or watch for a webhook, debug a webhook payload or signature, or send test webhooks, or when given an inspect.hookdeck.com URL. For permanent webhook setups with connections, retries and an account, use event-gateway instead."
-allowed-tools: WebFetch
+allowed-tools: Bash(curl:*)
 ---
 
 # Hookdeck Inspect
 
 [Hookdeck Inspect](https://inspect.hookdeck.com) gives free webhook test URLs: no account, no login and no CLI needed. Every call below is a plain HTTP request, so use `curl`.
 
-**Source of truth:** Inspect's live [llms.txt](https://inspect.hookdeck.com/llms.txt) and [OpenAPI description](https://inspect.hookdeck.com/openapi.json). Inspect is in beta and its API may change. When a reply disagrees with this skill, follow the reply's `note` and the live docs.
+**Source of truth:** Inspect's live [llms.txt](https://inspect.hookdeck.com/llms.txt) and [OpenAPI description](https://inspect.hookdeck.com/openapi.json). Inspect is in beta and its API may change. When a reply disagrees with this skill, follow the reply's `note` and the live docs, except on a `404` (see [Gotchas](#gotchas)).
 
 ## Two URLs per Source
 
@@ -57,7 +57,7 @@ To pin a platform's [Source Type](https://hookdeck.com/docs/sources#source-types
 curl -s -X POST https://inspect.hookdeck.com/ -H 'content-type: application/json' -d '{"type":"STRIPE"}'
 ```
 
-The reply is the same, with `"type": "STRIPE"`. A type Inspect doesn't support returns `422` with the list of valid types. A few platforms, such as Zoom, send nothing until the user saves their secret on the Source's page: see [Gotchas](#gotchas).
+The reply is the same, with `"type": "STRIPE"`. Types are uppercase and must match exactly: `stripe` returns `422`, and X's type is `TWITTER`, not `X`. A type Inspect doesn't support returns `422` with the list of valid types. A few platforms, such as Zoom, send nothing until the user saves their secret on the Source's page: see [Gotchas](#gotchas).
 
 Give the user the `ingest_url` to paste into the provider, and the `inspect_url` so they can watch too: a Source you create doesn't appear in their own Inspect sidebar.
 
@@ -67,7 +67,9 @@ Give the user the `ingest_url` to paste into the provider, and the `inspect_url`
 curl -s "https://inspect.hookdeck.com/{id}/requests?timeout=25"
 ```
 
-This is one normal HTTP call. It returns as soon as a request arrives, or after 25 seconds, so there's no need to poll or sleep.
+This is one normal HTTP call. It returns as soon as a request arrives, or after 25 seconds, so there's no need to poll or sleep. It can take a few seconds longer than that, so if your HTTP tool has a time limit, allow about 35 seconds (for example `curl -m 35`).
+
+**Sent a test request yourself? Wait for it with this call.** A request takes a few seconds to be captured, so a read made straight after sending can come back empty.
 
 **A request arrived** (headers and body shortened here):
 
@@ -80,7 +82,7 @@ This is one normal HTTP call. It returns as soon as a request arrives, or after 
       "already_arrived": false,
       "method": "POST",
       "verb": "POST",
-      "path": "/webhooks",
+      "path": "/",
       "query": "",
       "headers": {
         "content-type": "application/json",
@@ -126,7 +128,7 @@ If a few waits in a row time out (about a minute), tell the user nothing has arr
 
 Show the user:
 
-- the **full body in a code block**, not a summary (`body_raw` is the exact text);
+- the **full body in a code block**, not a summary (`body_raw` is the exact text). For a body over about 20 KB, show the start and give its `body_url` for the rest;
 - the key headers, such as `content-type` and any signature header;
 - `rejection_cause`, when Hookdeck refused the request.
 
@@ -150,10 +152,10 @@ Every field, body size limits and cursors: [references/reading-requests.md](refe
 - **Read bodies with `curl`, not a page-summarising fetch tool.** Summarisers can drop or reword fields.
 - **The sample payload on Inspect's home page isn't real data.** Only requests returned by the calls above are.
 - **`verified: false` is normal.** Inspect doesn't check signatures for most platforms, so `false` doesn't mean a signature is wrong. To check one, see [references/verify-signatures.md](references/verify-signatures.md).
-- **Zoom, X, eBay, LinkedIn, Xero, Smartcar and Exact Online send nothing until the Source has their secret.** They check the URL before sending any webhooks, and passing that check needs the platform's secret or token. It can only be saved on the Source's page, not through the API: ask the user to open the `inspect_url`, pick the platform under **Use with a specific platform** if it isn't set yet, and save the secret in the card that appears. If the platform reports that URL validation failed, this is why.
+- **Zoom, X (type `TWITTER`), eBay, LinkedIn, Xero, Smartcar and Exact Online send nothing until the Source has their secret.** They check the URL before sending any webhooks, and passing that check needs the platform's secret or token. It can only be saved on the Source's page, not through the API: ask the user to open the `inspect_url`, pick the platform under **Use with a specific platform** if it isn't set yet, and save the secret in the card that appears. If the platform reports that URL validation failed, this is why.
 - **`rejection_cause`** is set when Hookdeck refused the request (for example broken JSON or an unsupported method). `null` means it was accepted.
 - **`429`:** too many calls (over 60 a minute to one Source). Wait the seconds in the `Retry-After` header, or the reply's `retry_after`, then retry the same URL.
-- **`404`:** no Source has that ID (a typo or a deleted URL). Ask the user for the URL again; don't guess IDs.
+- **`404`:** no Source has that ID (a typo or a deleted URL). Ask the user for the URL again; don't guess IDs. Don't follow the reply's `read_url`: it points at the same missing Source.
 - **`cli_key` and `cmd_hint` contain a key** that lets anyone listen to the Source. Run `cmd_hint` yourself; don't paste it into chats, issues or docs.
 
 ## Going further

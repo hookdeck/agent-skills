@@ -8,7 +8,7 @@ Providers sign the exact bytes they send. Check a signature against the exact bo
 
 | Where | Exact body |
 |---|---|
-| Wait replies (`/requests`) | `body_raw` for text, `body_base64` for small binary bodies |
+| `/requests` replies | `body_raw` for text, `body_base64` for small binary bodies |
 | Anywhere else, or when both are null | Download it from `body_url` |
 
 ## Check it in code

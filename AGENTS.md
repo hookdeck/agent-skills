@@ -6,7 +6,7 @@ Read this file before creating, modifying, or reviewing any skill in this repo.
 
 ## hookdeck.com discovery index
 
-Product skills under **`skills/event-gateway/`**, **`skills/hookdeck/`**, and **`skills/outpost/`** are packaged at build time by the **[`hookdeck/website`](https://github.com/hookdeck/website)** repo and served from `https://hookdeck.com/.well-known/agent-skills/` (RFC v0.2.0 discovery index + `.tar.gz` archives). When those paths change on **`main`**, [`.github/workflows/trigger-website-deploy.yml`](.github/workflows/trigger-website-deploy.yml) notifies Hookdeck, which triggers a Vercel production deploy of the site (same Hookdeck source as Outpost docs; both configured as Actions secrets: `HOOKDECK_WEBSITE_DEPLOY_SOURCE_URL`, `VERCEL_WEBSITE_DEPLOY_HOOK_SOURCE_API_KEY`). See [website `scripts/agent-skills-discovery.md`](https://github.com/hookdeck/website/blob/main/scripts/agent-skills-discovery.md) for packaging details.
+Product skills under **`skills/event-gateway/`**, **`skills/hookdeck/`**, **`skills/inspect/`**, and **`skills/outpost/`** are packaged at build time by the **[`hookdeck/website`](https://github.com/hookdeck/website)** repo and served from `https://hookdeck.com/.well-known/agent-skills/` (RFC v0.2.0 discovery index + `.tar.gz` archives). When those paths change on **`main`**, [`.github/workflows/trigger-website-deploy.yml`](.github/workflows/trigger-website-deploy.yml) notifies Hookdeck, which triggers a Vercel production deploy of the site (same Hookdeck source as Outpost docs; both configured as Actions secrets: `HOOKDECK_WEBSITE_DEPLOY_SOURCE_URL`, `VERCEL_WEBSITE_DEPLOY_HOOK_SOURCE_API_KEY`). See [website `scripts/agent-skills-discovery.md`](https://github.com/hookdeck/website/blob/main/scripts/agent-skills-discovery.md) for packaging details.
 
 ## Specification
 
@@ -39,8 +39,9 @@ All skills MUST conform to the [Agent Skills specification](https://agentskills.
 - **Hookdeck** = the company brand, carried by the repo name (`hookdeck/agent-skills`)
 - **Event Gateway** ("Hookdeck Event Gateway") = the inbound product. Receives, routes, processes, and delivers webhooks/events. [Docs](https://hookdeck.com/docs/).
 - **Outpost** ("Hookdeck Outpost") = the outbound product. Open-source infrastructure for sending webhooks and events to user-preferred destinations (HTTP, SQS, RabbitMQ, Pub/Sub, and more—see docs for the current matrix). [Docs](https://hookdeck.com/docs/outpost). [GitHub](https://github.com/hookdeck/outpost).
+- **Inspect** ("Hookdeck Inspect") = free webhook test URLs, with no account. Create a URL, send webhooks to it, and read what it received in a browser or as JSON. [Site](https://inspect.hookdeck.com). [llms.txt](https://inspect.hookdeck.com/llms.txt).
 
-Skills are prefixed by product name: `event-gateway` or `outpost`. The company brand is not repeated in skill names because it's carried by the repo.
+Skills are prefixed by product name: `event-gateway`, `outpost` or `inspect`. The company brand is not repeated in skill names because it's carried by the repo.
 
 ---
 
@@ -106,6 +107,13 @@ hookdeck/agent-skills/
       examples/
         nextjs-saas/
         fastapi-saas/
+    inspect/                           # Inspect skill: free webhook test URLs (curl only, no examples)
+      SKILL.md                         # Terms, two URLs per Source, create → wait → report with example replies, gotchas
+      references/
+        reading-requests.md            # Every reply's fields, cursors, body size limits, errors
+        send-test-webhooks.md          # Plain test requests and samples.hookdeck.com payloads
+        verify-signatures.md           # Exact body, SDK check (webhook-skills), platforms that need a secret
+        forwarding.md                  # npx hookdeck-cli listen to localhost, HTTP destinations
   AGENTS.md                            # This file
   CLAUDE.md
   CONTRIBUTING.md
@@ -117,7 +125,7 @@ hookdeck/agent-skills/
 ### Naming convention
 
 - Skill directory name must exactly match the `name` field in its SKILL.md frontmatter
-- Product prefix: `event-gateway` or `outpost`
+- Product prefix: `event-gateway`, `outpost` or `inspect`
 - Install command: `npx skills add hookdeck/agent-skills --skill event-gateway`
 
 ---
@@ -235,7 +243,7 @@ Before merging a new or updated skill, verify:
 - [ ] No general webhook/API education that agents already know
 - [ ] No time-sensitive information (dates, version predictions)
 - [ ] Consistent terminology throughout all files in the skill
-- [ ] Skill name has product prefix (`event-gateway` or `outpost`, or `hookdeck` for the skill router)
+- [ ] Skill name has product prefix (`event-gateway`, `outpost` or `inspect`, or `hookdeck` for the skill router)
 
 ### Quality
 

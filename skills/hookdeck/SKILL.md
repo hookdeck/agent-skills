@@ -1,6 +1,6 @@
 ---
 name: hookdeck
-description: "Routes to the correct Hookdeck product skill. Covers Event Gateway (inbound: receive webhooks, webhook endpoints, local dev, event queue) and Outpost (outbound: send webhooks to customers). Use when working with any Hookdeck product and unsure which skill to use."
+description: "Routes to the correct Hookdeck product skill. Covers Event Gateway (inbound: receive webhooks, webhook endpoints, local dev, event queue), Outpost (outbound: send webhooks to customers) and Inspect (free webhook test URLs with no account: see what a webhook sent). Use when working with any Hookdeck product and unsure which skill to use."
 ---
 
 # Hookdeck
@@ -12,6 +12,9 @@ description: "Routes to the correct Hookdeck product skill. Covers Event Gateway
 | **Build asynchronous APIs (IoT, SDKs, web analytics)** | event-gateway |
 | **Test and debug webhooks on localhost** | event-gateway |
 | **Send webhooks/events to customers** | outpost |
+| **Get a free webhook test URL, or see what a webhook sent (no account)** | inspect |
+
+Both event-gateway and inspect can forward webhooks to localhost. With no Hookdeck account, or when the user just needs a URL, use inspect. For a lasting setup with an account, use event-gateway.
 
 ## Event Gateway
 
@@ -32,6 +35,15 @@ Outbound event delivery to HTTP, SQS, RabbitMQ, Pub/Sub, and more.
 - Skill: [outpost](https://github.com/hookdeck/agent-skills/blob/main/skills/outpost/SKILL.md)
 - Install: `npx skills add hookdeck/agent-skills --skill outpost`
 - Docs: https://hookdeck.com/docs/outpost
+
+## Inspect
+
+Free webhook test URLs, with no account or login: create a URL with one HTTP call,
+wait for webhooks to arrive, and read their headers and exact bodies as JSON.
+
+- Skill: [inspect](https://github.com/hookdeck/agent-skills/blob/main/skills/inspect/SKILL.md)
+- Install: `npx skills add hookdeck/agent-skills --skill inspect`
+- Docs: https://inspect.hookdeck.com/llms.txt
 
 ## Provider Webhook Skills
 

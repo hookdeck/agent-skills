@@ -4,12 +4,12 @@
     "name": "Hookdeck",
     "email": "phil@hookdeck.com"
   },
-  "description": "Hookdeck plugin marketplace: skills for Hookdeck Event Gateway and Hookdeck Outpost.",
+  "description": "Hookdeck plugin marketplace: skills for Hookdeck Event Gateway, Hookdeck Outpost and Hookdeck Inspect.",
   "plugins": [
     {
       "name": "hookdeck",
       "source": "./",
-      "description": "Skills for working with Hookdeck Event Gateway (receive, queue, route, and deliver webhooks) and Hookdeck Outpost (send webhooks and events to user-preferred destinations). Includes a router skill that delegates to event-gateway or outpost based on the task."
+      "description": "Skills for working with Hookdeck Event Gateway (receive, queue, route, and deliver webhooks), Hookdeck Outpost (send webhooks and events to user-preferred destinations) and Hookdeck Inspect (free webhook test URLs: create one, wait for webhooks, and read what they sent). Includes a router skill that delegates to event-gateway, outpost or inspect based on the task."
     }
   ]
 }

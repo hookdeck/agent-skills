@@ -1,6 +1,6 @@
 # Hookdeck Agent Skills
 
-Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, and build outbound webhook delivery with [Hookdeck Outpost](https://hookdeck.com/docs/outpost).
+Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, build outbound webhook delivery with [Hookdeck Outpost](https://hookdeck.com/docs/outpost), and get free webhook test URLs with [Hookdeck Inspect](https://inspect.hookdeck.com).
 
 <!-- Cursor plugin pending marketplace acceptance
 ## Install (Cursor)
@@ -21,6 +21,7 @@ Or install a specific skill:
 ```bash
 npx skills add hookdeck/agent-skills --skill event-gateway
 npx skills add hookdeck/agent-skills --skill outpost
+npx skills add hookdeck/agent-skills --skill inspect
 ```
 
 ## Available Skills
@@ -30,6 +31,7 @@ npx skills add hookdeck/agent-skills --skill outpost
 | `hookdeck` | Skill router | You need help with any Hookdeck product and aren't sure which skill to use |
 | `event-gateway` | Receive, route, and deliver webhooks | Getting started with Hookdeck, receiving webhooks, configuring connections, local development, monitoring, or API automation |
 | `outpost` | Send webhooks to customers | Sending events to customer endpoints via HTTP, SQS, RabbitMQ, Pub/Sub, or other destinations |
+| `inspect` | Free webhook test URLs | Getting a test URL with no account, waiting for a webhook, seeing exactly what it sent, or sending test webhooks |
 
 ## You Say -> Skill Used
 
@@ -42,6 +44,8 @@ npx skills add hookdeck/agent-skills --skill outpost
 | "Why are my webhooks failing?" | `event-gateway` |
 | "Create a connection via the API" | `event-gateway` |
 | "Send webhooks to my users" | `outpost` |
+| "Give me a webhook test URL" | `inspect` |
+| "Wait for the Stripe webhook and show me what it sent" | `inspect` |
 
 ## Event Gateway Workflow
 

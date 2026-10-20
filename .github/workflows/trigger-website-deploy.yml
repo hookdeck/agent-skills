@@ -20,6 +20,7 @@ on:
     paths:
       - "skills/event-gateway/**"
       - "skills/hookdeck/**"
+      - "skills/inspect/**"
       - "skills/outpost/**"
 
 jobs:

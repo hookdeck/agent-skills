@@ -76,7 +76,7 @@ Logical operators: `$and`, `$or`, `$not`
 ]}
 ```
 
-**Available operators:** `$eq`, `$neq`, `$in`, `$nin`, `$gt`, `$gte`, `$lt`, `$lte`, `$startsWith`, `$endsWith`, `$exist`
+**Available operators:** `$eq`, `$neq`, `$in`, `$nin`, `$gt`, `$gte`, `$lt`, `$lte`, `$startsWith`, `$endsWith`, `$exist`, `$ref`, plus the logical operators `$or`, `$and` and `$not`. That is the full set in the [filters docs](https://hookdeck.com/docs/filters). There is no regex operator; for pattern matching, use a transformation.
 
 For full operator reference: fetch [/docs/filters.md](https://hookdeck.com/docs/filters.md)
 

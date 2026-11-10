@@ -19,6 +19,7 @@ on:
       - main
     paths:
       - "skills/event-gateway/**"
+      - "skills/event-gateway-webhook-backup/**"
       - "skills/hookdeck/**"
       - "skills/inspect/**"
       - "skills/outpost/**"

@@ -22,6 +22,7 @@ Or install a specific skill:
 npx skills add hookdeck/agent-skills --skill event-gateway
 npx skills add hookdeck/agent-skills --skill outpost
 npx skills add hookdeck/agent-skills --skill inspect
+npx skills add hookdeck/agent-skills --skill event-gateway-webhook-backup
 ```
 
 ## Available Skills
@@ -30,6 +31,7 @@ npx skills add hookdeck/agent-skills --skill inspect
 |---|---|---|
 | `hookdeck` | Skill router | You need help with any Hookdeck product and aren't sure which skill to use |
 | `event-gateway` | Receive, route, and deliver webhooks | Getting started with Hookdeck, receiving webhooks, configuring connections, local development, monitoring, or API automation |
+| `event-gateway-webhook-backup` | Standby webhook backup and recovery | Preparing for Black Friday / Cyber Monday or other peak traffic with existing webhook infrastructure, or recovering webhooks missed during an outage |
 | `outpost` | Send webhooks to customers | Sending events to customer endpoints via HTTP, SQS, RabbitMQ, Pub/Sub, or other destinations |
 | `inspect` | Free webhook test URLs | Getting a test URL with no account, waiting for a webhook, seeing exactly what it sent, or sending test webhooks |
 
@@ -43,6 +45,8 @@ npx skills add hookdeck/agent-skills --skill inspect
 | "Filter events by type" | `event-gateway` |
 | "Why are my webhooks failing?" | `event-gateway` |
 | "Create a connection via the API" | `event-gateway` |
+| "Set up a webhook backup before Black Friday" | `event-gateway-webhook-backup` |
+| "Our webhook endpoint was down, replay what we missed" | `event-gateway-webhook-backup` |
 | "Send webhooks to my users" | `outpost` |
 | "Give me a webhook test URL" | `inspect` |
 | "Wait for the Stripe webhook and show me what it sent" | `inspect` |

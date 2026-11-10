@@ -1,6 +1,6 @@
 ---
 name: hookdeck
-description: "Routes to the correct Hookdeck product skill. Covers Event Gateway (inbound: receive webhooks, webhook endpoints, local dev, event queue), Outpost (outbound: send webhooks to customers) and Inspect (free webhook test URLs with no account: see what a webhook sent). Use when working with any Hookdeck product and unsure which skill to use."
+description: "Routes to the correct Hookdeck product skill. Covers Event Gateway (inbound: receive webhooks, webhook endpoints, local dev, event queue, webhook backup and outage recovery), Outpost (outbound: send webhooks to customers) and Inspect (free webhook test URLs with no account: see what a webhook sent). Use when working with any Hookdeck product and unsure which skill to use."
 ---
 
 # Hookdeck
@@ -11,6 +11,7 @@ description: "Routes to the correct Hookdeck product skill. Covers Event Gateway
 | **Route events between third-party services** | event-gateway |
 | **Build asynchronous APIs (IoT, SDKs, web analytics)** | event-gateway |
 | **Test and debug webhooks on localhost** | event-gateway |
+| **Back up existing webhooks for BFCM or peak traffic, or recover missed webhooks after an outage** | event-gateway-webhook-backup |
 | **Send webhooks/events to customers** | outpost |
 | **Get a free webhook test URL, or see what a webhook sent (no account)** | inspect |
 
@@ -27,6 +28,14 @@ For Event Gateway operations and analysis, prefer `hookdeck gateway ...`; root `
 - Skill: [event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md)
 - Install: `npx skills add hookdeck/agent-skills --skill event-gateway`
 - Docs: https://hookdeck.com/docs/
+
+## Event Gateway webhook backup
+
+For teams that already receive webhooks on their own infrastructure: Hookdeck captures a copy in
+parallel and delivers nothing, then replays the outage window at a rate limit when the endpoint recovers.
+
+- Skill: [event-gateway-webhook-backup](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway-webhook-backup/SKILL.md)
+- Install: `npx skills add hookdeck/agent-skills --skill event-gateway-webhook-backup`
 
 ## Outpost
 

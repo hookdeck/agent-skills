@@ -6,7 +6,7 @@ Read this file before creating, modifying, or reviewing any skill in this repo.
 
 ## hookdeck.com discovery index
 
-Product skills under **`skills/event-gateway/`**, **`skills/hookdeck/`**, **`skills/inspect/`**, and **`skills/outpost/`** are packaged at build time by the **[`hookdeck/website`](https://github.com/hookdeck/website)** repo and served from `https://hookdeck.com/.well-known/agent-skills/` (RFC v0.2.0 discovery index + `.tar.gz` archives). When those paths change on **`main`**, [`.github/workflows/trigger-website-deploy.yml`](.github/workflows/trigger-website-deploy.yml) notifies Hookdeck, which triggers a Vercel production deploy of the site (same Hookdeck source as Outpost docs; both configured as Actions secrets: `HOOKDECK_WEBSITE_DEPLOY_SOURCE_URL`, `VERCEL_WEBSITE_DEPLOY_HOOK_SOURCE_API_KEY`). See [website `scripts/agent-skills-discovery.md`](https://github.com/hookdeck/website/blob/main/scripts/agent-skills-discovery.md) for packaging details.
+Product skills under **`skills/event-gateway/`**, **`skills/event-gateway-webhook-backup/`**, **`skills/hookdeck/`**, **`skills/inspect/`**, and **`skills/outpost/`** are packaged at build time by the **[`hookdeck/website`](https://github.com/hookdeck/website)** repo and served from `https://hookdeck.com/.well-known/agent-skills/` (RFC v0.2.0 discovery index + `.tar.gz` archives). When those paths change on **`main`**, [`.github/workflows/trigger-website-deploy.yml`](.github/workflows/trigger-website-deploy.yml) notifies Hookdeck, which triggers a Vercel production deploy of the site (same Hookdeck source as Outpost docs; both configured as Actions secrets: `HOOKDECK_WEBSITE_DEPLOY_SOURCE_URL`, `VERCEL_WEBSITE_DEPLOY_HOOK_SOURCE_API_KEY`). See [website `scripts/agent-skills-discovery.md`](https://github.com/hookdeck/website/blob/main/scripts/agent-skills-discovery.md) for packaging details.
 
 ## Specification
 
@@ -96,6 +96,11 @@ hookdeck/agent-skills/
         express/                       # Hookdeck signature verification handler
         nextjs/                        # Hookdeck signature verification handler
         fastapi/                       # Hookdeck signature verification handler
+    event-gateway-webhook-backup/      # Standby backup + outage recovery for existing webhook infra (BFCM)
+      SKILL.md                         # Arm → incident → recover → revert/stay, gotchas
+      references/
+        recovery.md                    # Bulk retry via MCP/API/dashboard, sizing, verifying
+        runbook-template.md            # Runbook written into the user's repo
     outpost/                           # Outpost skill (separate product)
       SKILL.md
       references/

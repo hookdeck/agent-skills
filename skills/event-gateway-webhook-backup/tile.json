@@ -1,0 +1,11 @@
+{
+  "name": "hookdeck/event-gateway-webhook-backup",
+  "version": "0.1.0",
+  "summary": "Hookdeck Event Gateway as a standby webhook backup for BFCM and peak traffic, with outage recovery",
+  "private": false,
+  "skills": {
+    "event-gateway-webhook-backup": {
+      "path": "SKILL.md"
+    }
+  }
+}

@@ -106,14 +106,16 @@ curl -X POST https://api.hookdeck.com/$API_VERSION/bulk/events/retry \
   -d '{"query": {"webhook_id": "web_xxx", "status": "FAILED"}}'
 ```
 
-Estimate before executing:
+Estimate before executing. The plan endpoint is a `GET` and takes the query in bracket notation:
 
 ```sh
-curl -X POST https://api.hookdeck.com/$API_VERSION/bulk/events/retry/plan \
+curl -G https://api.hookdeck.com/$API_VERSION/bulk/events/retry/plan \
   -H "Authorization: Bearer $HOOKDECK_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"query": {"webhook_id": "web_xxx", "status": "FAILED"}}'
+  --data-urlencode 'query[webhook_id]=web_xxx' \
+  --data-urlencode 'query[status]=FAILED'
 ```
+
+Array filters repeat the key with `[]` (for example `--data-urlencode 'query[source_id][]=src_xxx'`). The Hookdeck CLI and MCP server use this encoding; the bulk API reference shows `query` as a JSON type but does not show how to send it on a `GET`.
 
 For full bulk operations reference, fetch [/docs/api/bulk.md](https://hookdeck.com/docs/api/bulk.md).
 

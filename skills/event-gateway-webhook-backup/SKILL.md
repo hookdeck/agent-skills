@@ -47,7 +47,7 @@ hookdeck gateway connection upsert shopify-backup \
   --output json
 ```
 
-- Use `MOCK_API`. The `upsert` help text lists `MOCK`, which the CLI rejects.
+- The type is `MOCK_API`, not `MOCK`. Older CLI versions list `MOCK` in the `upsert` help, but it is rejected.
 - Give each provider its **own destination**. Recovery edits the destination in place, and a shared destination would switch every provider at once.
 - Leave [Source Authentication](https://hookdeck.com/docs/authentication) off; the user's endpoint already verifies the provider signature and still receives the original headers.
 - From the JSON, record the connection `id`, `destination.id` and `source.url` (`https://hkdk.events/...`).

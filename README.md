@@ -64,7 +64,7 @@ The Hookdeck MCP server lets AI apps like Claude, ChatGPT, Cursor, and VS Code w
 https://mcp.hookdeck.com
 ```
 
-The same URL works for Event Gateway and managed Outpost projects. Use it to investigate delivery issues in-session: trace a request through to its delivery attempts, look into issues and metrics, and, with write access, retry events, pause connections, or change your setup. Access is **Read only** by default; you choose **Read and write** when you sign in.
+The same URL works for Event Gateway and managed Outpost projects. Use it to investigate delivery issues in-session: trace a request through to its delivery attempts, look into issues and metrics, pause connections, and, with write access, retry events or change your setup. Access is **Read only** by default; you choose **Read and write** when you sign in.
 
 To add it to several coding agents at once (Claude Code, Cursor, VS Code, Codex, Windsurf, Gemini CLI, and others):
 
@@ -78,6 +78,8 @@ Then sign in with Hookdeck when each agent asks. For Claude Code on its own:
 claude mcp add --transport http hookdeck https://mcp.hookdeck.com
 ```
 
+Then run `/mcp` in Claude Code, select `hookdeck`, and sign in with Hookdeck.
+
 For apps that can't sign in with OAuth, like scripts or CI, send a key from **Keys & Sessions** as an `Authorization: Bearer` header. See [Hookdeck MCP](https://hookdeck.com/docs/mcp) for setup in each app, access, and the full tool list.
 
 ### MCP or skills
@@ -90,12 +92,12 @@ For apps that can't sign in with OAuth, like scripts or CI, send a key from **Ke
 
 The hosted server has no `outpost_publish` tool, because publishing needs an Outpost project API key that a sign-in doesn't have. Publish events with the [Outpost API](https://hookdeck.com/docs/outpost/api).
 
-The MCP server built into the Hookdeck CLI (`hookdeck gateway mcp`) will be deprecated. If you use it, switch to `https://mcp.hookdeck.com`: tool names and inputs are the same. See the migration notes in [Hookdeck MCP](https://hookdeck.com/docs/mcp).
+The MCP server built into the Hookdeck CLI (`hookdeck gateway mcp`) will be deprecated. If you use it, switch to `https://mcp.hookdeck.com`: tool names and inputs are the same, except that `outpost_publish` isn't served. See [Migrate from the CLI MCP](https://hookdeck.com/docs/mcp#migrate-from-the-cli-mcp).
 
 ## Documentation
 
 - [Event Gateway docs](https://hookdeck.com/docs/)
-- [Hookdeck MCP & Skills](https://hookdeck.com/docs/mcp)
+- [MCP & Skills](https://hookdeck.com/docs/mcp)
 - [Hookdeck CLI](https://hookdeck.com/docs/cli)
 - [Outpost docs](https://hookdeck.com/docs/outpost)
 - [Outpost API reference](https://hookdeck.com/docs/outpost/api)

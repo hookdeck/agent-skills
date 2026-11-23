@@ -4,7 +4,7 @@ Debug failures, fix your code, and replay events until everything works.
 
 ## Debugging Surfaces
 
-Three tools for inspecting and replaying events:
+Tools for inspecting and replaying events:
 
 ### CLI TUI
 

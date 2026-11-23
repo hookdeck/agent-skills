@@ -22,7 +22,7 @@ Inbound [event infrastructure](https://hookdeck.com/docs/). One skill covers all
 staged integration workflow, connections, rules, authentication,
 local dev, monitoring, and API.
 
-For Event Gateway operations and analysis, prefer `hookdeck gateway ...`; root `hookdeck connection ...` remains a deprecated compatibility alias. If the [Hookdeck MCP](https://hookdeck.com/docs/mcp) tools (`gateway_*`) are in your session, use them to query and inspect a live project; the event-gateway skill covers when.
+For Event Gateway operations and analysis, prefer `hookdeck gateway ...`; root `hookdeck connection ...` remains a deprecated compatibility alias. If the [Hookdeck MCP](https://hookdeck.com/docs/mcp) tools (`gateway_*`) are in your session, use them to query and inspect a live project; see the event-gateway skill's Hookdeck MCP section for when and how.
 
 - Skill: [event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md)
 - Install: `npx skills add hookdeck/agent-skills --skill event-gateway`

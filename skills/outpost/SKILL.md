@@ -71,7 +71,7 @@ The [Hookdeck MCP](https://hookdeck.com/docs/mcp) at `https://mcp.hookdeck.com` 
 - `outpost_tenants_read` and `outpost_destinations_read` for what a tenant has set up
 - `outpost_topics_read` to reconcile the topics your code publishes with the project's topics
 
-The hosted server has no `outpost_publish` tool, because publishing needs an Outpost project API key that a sign-in doesn't have. Publish through the Outpost API or SDK as above. Credentials in answers come back as `[redacted]`, so take the project API key from the Dashboard, not from an MCP answer.
+The hosted server has no `outpost_publish` tool, because publishing needs an Outpost project API key that a sign-in doesn't have. Publish through the Outpost API or SDK as above. Most credentials in answers come back as `[redacted]` (a tenant's token or portal link, and a webhook destination's signing secret when you create or update one, are returned), so take the project API key from the Dashboard, not from an MCP answer.
 
 ## Scope and verification (agent workflow)
 

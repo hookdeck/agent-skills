@@ -17,7 +17,7 @@
 - [CLI: metrics](#cli-metrics)
 - [Documentation](#documentation)
 
-How to monitor webhook deliveries, debug failures, and replay events. For monitoring and debugging, the **CLI** is usually the right first touch (TUI, list/get, metrics, retry). When the [Hookdeck MCP](https://hookdeck.com/docs/mcp) tools are in your session, use them for querying instead: see [MCP: list and inspect](#mcp-querying). The **API** is valid for querying and for automation driven from application or test code. See **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** for full CLI vs API vs Dashboard guidance. Querying (events, requests, attempts, metrics) can also be done via the API — see the [API inspect docs](https://hookdeck.com/docs/api/inspect.md).
+How to monitor webhook deliveries, debug failures, and replay events. If the [Hookdeck MCP](https://hookdeck.com/docs/mcp) tools (`gateway_*`) are in your session, query with them: see [MCP: list and inspect](#mcp-querying). Otherwise the **CLI** is the first touch for monitoring and debugging (TUI, list/get, metrics, retry). The **API** is valid for querying and for automation driven from application or test code. See **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** for full CLI vs API vs Dashboard guidance. Querying (events, requests, attempts, metrics) can also be done via the API — see the [API inspect docs](https://hookdeck.com/docs/api/inspect.md).
 
 **Prerequisite:** Before any `hookdeck …` commands in this file, [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite).
 
@@ -156,7 +156,7 @@ When to use: the `gateway_*` tools from the [Hookdeck MCP](https://hookdeck.com/
 | Retry after a fix (write access) | `gateway_event_write` (`retry`), or `gateway_request_write` (`retry`) to route a request again |
 | Retry many events (write access) | `gateway_bulk_read` (`plan`, to see how many it touches), then `gateway_bulk_write` (`create`) |
 
-Call `gateway_help` for a tool's inputs and filters. On the hosted server, credentials in answers come back as `[redacted]` and write tools refuse them, so don't copy them from a read answer into a write call.
+Call `gateway_help` for a tool's inputs and filters. Most credentials in answers come back as `[redacted]` (`raw_body` and secrets the server can't recognize don't), and write tools refuse `[redacted]` values, so don't copy them from a read answer into a write call.
 
 ## CLI: list and inspect {#cli-querying}
 

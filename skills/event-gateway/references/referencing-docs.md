@@ -41,6 +41,7 @@ Each use case has an overview and a quickstart:
 | Issues | `/docs/issues.md` |
 | Metrics | `/docs/metrics.md` |
 | Bookmarks | `/docs/bookmarks.md` |
+| Hookdeck MCP (hosted server setup, access, tools) | `/docs/mcp.md` |
 
 ## Production (going live)
 

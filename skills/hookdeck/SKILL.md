@@ -22,7 +22,7 @@ Inbound [event infrastructure](https://hookdeck.com/docs/). One skill covers all
 staged integration workflow, connections, rules, authentication,
 local dev, monitoring, and API.
 
-For Event Gateway operations and analysis, prefer `hookdeck gateway ...`; root `hookdeck connection ...` remains a deprecated compatibility alias.
+For Event Gateway operations and analysis, prefer `hookdeck gateway ...`; root `hookdeck connection ...` remains a deprecated compatibility alias. If the [Hookdeck MCP](https://hookdeck.com/docs/mcp) tools (`gateway_*`) are in your session, use them to query and inspect a live project; the event-gateway skill covers when.
 
 - Skill: [event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md)
 - Install: `npx skills add hookdeck/agent-skills --skill event-gateway`
@@ -30,7 +30,7 @@ For Event Gateway operations and analysis, prefer `hookdeck gateway ...`; root `
 
 ## Outpost
 
-Outbound event delivery to HTTP, SQS, RabbitMQ, Pub/Sub, and more.
+Outbound event delivery to HTTP, SQS, RabbitMQ, Pub/Sub, and more. On managed Outpost projects, the same [Hookdeck MCP](https://hookdeck.com/docs/mcp) serves `outpost_*` tools for inspecting tenants, destinations, events, and attempts.
 
 - Skill: [outpost](https://github.com/hookdeck/agent-skills/blob/main/skills/outpost/SKILL.md)
 - Install: `npx skills add hookdeck/agent-skills --skill outpost`

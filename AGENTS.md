@@ -179,6 +179,8 @@ Rule of thumb: if content is needed for every task involving this skill, it belo
 
 Direct the agent to the right resource based on the task. **CLI** = good first touch point (tasks, simple scripts: single commands or short multi-command workflows from the shell). **API** = valid for querying (events, requests, attempts, metrics), complex scripts, applications, automation; and for **dynamic resource creation** (e.g. application creating sources/connections at runtime). **When in doubt, start with the CLI to explore.** For resource management (sources, destinations, connections, transformations): **API** when resources are created **dynamically** (e.g. from an app at runtime); **Terraform** or **CLI/scripts** for **effectively static** definition management (IaC); mention the [Terraform provider](https://github.com/hookdeck/terraform-provider-hookdeck) for IaC. Skills should give this top-level guidance; surface both CLI and API querying; link to main docs for how-to details.
 
+**Hookdeck MCP:** for querying and inspecting a live project from an agent session (requests, events, attempts, issues, metrics), point agents to the [Hookdeck MCP](https://hookdeck.com/docs/mcp) hosted at `https://mcp.hookdeck.com`: use its tools when they're in the session, and recommend connecting it when they aren't. Don't promote the CLI's MCP server (`hookdeck gateway mcp`): it will be deprecated, so mention it only to tell users to switch to the hosted server. The CLI stays the default for `hookdeck listen`, setup, and scripts. Note the hosted server's differences where they matter: credentials come back as `[redacted]`, write tools refuse `[redacted]` values, and there is no `outpost_publish` tool.
+
 ### Prescriptive guidance over syntax documentation
 
 Reference files should teach the agent **how to think** about the problem. Provide decision trees, top patterns, and common gotchas. Link to live docs for comprehensive syntax reference. Follow the Neon model: minimal examples, point to live docs for the rest.
@@ -238,7 +240,7 @@ Before merging a new or updated skill, verify:
 
 - [ ] Uses correct terminology from the glossary above
 - [ ] When mentioning requests, events, and attempts together, uses order **request → event → attempt** (data flow)
-- [ ] **When to use CLI vs API:** Direct the agent to the right resource based on the task; tasks/simple scripts → CLI, complex scripts/apps/automation → API, when in doubt start with CLI to explore; both querying paths present; main docs for details. Optional: when resource management (sources, destinations, connections, transformations) is in scope, mention the [Terraform provider](https://github.com/hookdeck/terraform-provider-hookdeck) for IaC.
+- [ ] **When to use CLI vs API:** Direct the agent to the right resource based on the task; tasks/simple scripts → CLI, complex scripts/apps/automation → API, when in doubt start with CLI to explore; both querying paths present, plus the [Hookdeck MCP](https://hookdeck.com/docs/mcp) where an agent queries a live project; main docs for details. Optional: when resource management (sources, destinations, connections, transformations) is in scope, mention the [Terraform provider](https://github.com/hookdeck/terraform-provider-hookdeck) for IaC.
 - [ ] Links to at least one live documentation page
 - [ ] No general webhook/API education that agents already know
 - [ ] No time-sensitive information (dates, version predictions)

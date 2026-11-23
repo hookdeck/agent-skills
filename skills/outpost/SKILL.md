@@ -63,6 +63,16 @@ When you need a **throwaway HTTPS URL** for a webhook destination (quickstarts, 
 4. Use [references/outpost-verify.md](references/outpost-verify.md) before finishing.
 5. Open full-stack examples only when the task clearly requires BFF/UI integration patterns.
 
+## Checking deliveries with the Hookdeck MCP (managed Outpost)
+
+The [Hookdeck MCP](https://hookdeck.com/docs/mcp) at `https://mcp.hookdeck.com` serves `outpost_*` tools for managed Outpost projects. If they're in your session, use them to check the result of a publish instead of writing throwaway API calls:
+
+- `outpost_events_read` for the published event, and `outpost_attempts_read` for each delivery attempt with the destination's response
+- `outpost_tenants_read` and `outpost_destinations_read` for what a tenant has set up
+- `outpost_topics_read` to reconcile the topics your code publishes with the project's topics
+
+The hosted server has no `outpost_publish` tool, because publishing needs an Outpost project API key that a sign-in doesn't have. Publish through the Outpost API or SDK as above. Credentials in answers come back as `[redacted]`, so take the project API key from the Dashboard, not from an MCP answer.
+
 ## Scope and verification (agent workflow)
 
 Dashboard-style guidance (no `{{PLACEHOLDERS}}` — those stay dashboard-only):

@@ -5,12 +5,25 @@ Equip your AI coding agent with webhook and event-driven architecture expertise.
 <!-- Cursor plugin pending marketplace acceptance
 ## Install (Cursor)
 
-**Cursor users:** Add the Hookdeck plugin from the [Cursor Marketplace](https://cursor.com/marketplace) or use `/add-plugin hookdeck` in Cursor. The plugin provides skills for Event Gateway and Outpost.
+**Cursor users:** Add the Hookdeck plugin from the [Cursor Marketplace](https://cursor.com/marketplace) or use `/add-plugin hookdeck` in Cursor. The plugin provides skills for Event Gateway, Outpost and Inspect, and connects the hosted Hookdeck MCP server (see [Hosted MCP server](#hosted-mcp-server)).
 -->
+
+## Install (Claude Code)
+
+The plugin bundles the skills and the hosted Hookdeck MCP server:
+
+```bash
+/plugin marketplace add hookdeck/agent-skills
+/plugin install hookdeck@hookdeck-agent-skills
+```
+
+## Hosted MCP server
+
+Installing the plugin (Claude Code, or Cursor once listed) also connects the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `mcp` (Claude Code shows it as `plugin:hookdeck:mcp`). It covers Event Gateway and managed Outpost projects. You sign in with OAuth the first time you use it, so there is no API key to configure. See [MCP & Skills](https://hookdeck.com/docs/mcp) for setup and what the tools can do. To use the MCP server without the plugin, add it yourself as described there.
 
 ## Install (Agent Skills / Other Agents)
 
-For Claude, ChatGPT, and other agents that support the [Agent Skills specification](https://agentskills.io/):
+For ChatGPT and other agents that support the [Agent Skills specification](https://agentskills.io/) (this installs skills only, not the MCP server):
 
 ```bash
 npx skills add hookdeck/agent-skills

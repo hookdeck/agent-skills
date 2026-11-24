@@ -264,10 +264,17 @@ This repo is packaged as a Cursor Marketplace plugin. The plugin structure lives
 
 ```
 .cursor-plugin/plugin.json    # Manifest (name, displayName, description, version, keywords, skills, rules, logo)
+.claude-plugin/plugin.json    # Claude Code manifest (+ marketplace.json)
+mcp.json                      # Hosted Hookdeck MCP server for Cursor (discovered at the plugin root)
+.mcp.json                     # Same server for Claude Code (type: http)
 assets/logo.svg               # Hookdeck brand icon (1:1/square)
 rules/*.mdc                   # Cursor rules (optional)
 CHANGELOG.md                  # Keep a Changelog format, required for marketplace
 ```
+
+### Hosted MCP server
+
+Both plugins bundle the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `mcp`, which Claude Code shows as `plugin:hookdeck:mcp`. It signs in with OAuth on first use, so the config holds no key or Authorization header. Cursor reads `mcp.json` and Claude Code reads `.mcp.json`, both at the plugin root, so keep the two files in sync. The Claude Code file needs `"type": "http"`. Link [MCP & Skills](https://hookdeck.com/docs/mcp) for setup.
 
 ### Skill cross-references
 

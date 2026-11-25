@@ -7,5 +7,6 @@
     "email": "phil@hookdeck.com"
   },
   "homepage": "https://github.com/hookdeck/agent-skills",
+  "icon": "./assets/logo.svg",
   "privacyPolicyUrl": "https://hookdeck.com/privacy"
 }

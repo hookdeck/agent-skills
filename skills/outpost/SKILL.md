@@ -1,0 +1,126 @@
+---
+name: outpost
+description: "Sets up and configures Hookdeck Outpost for outbound event delivery to customer endpoints. Use when sending webhooks to customers, building webhook delivery infrastructure, managing tenants and destinations with supported types (webhooks, Hookdeck Event Gateway, AWS SQS/Kinesis/S3, Azure Service Bus, GCP Pub/Sub, RabbitMQ, Kafka), or aligning topics and publishes. EventBridge support is tracked in GitHub issues."
+---
+
+# Hookdeck Outpost
+
+Outbound event delivery: publish platform events to **tenants’ destinations** (webhooks, queues, cloud buses—see [supported destinations](https://hookdeck.com/docs/outpost/overview#supported-destinations)). [Open source on GitHub](https://github.com/hookdeck/outpost); managed on Hookdeck Cloud or self-hosted.
+
+**Single source of truth:** Use [Hookdeck Outpost documentation](https://hookdeck.com/docs/outpost) for concepts, API, quickstarts, and UI guidance. This skill links there and adds agent workflow notes under `references/`.
+
+## API base URL and credentials
+
+The managed Outpost API is at **`https://api.outpost.hookdeck.com/2025-07-01`** — not `api.hookdeck.com`. Authenticate with a Hookdeck **project API key that belongs to an Outpost project** ([Hookdeck Dashboard](https://dashboard.hookdeck.com) → your Outpost project → Settings → Secrets), sent as a bearer token. Keep the key server-side.
+
+```sh
+export OUTPOST_API_BASE_URL="https://api.outpost.hookdeck.com/2025-07-01"
+export OUTPOST_API_KEY="..."   # key from an Outpost project
+
+# Upsert a tenant: 201 if Outpost created it, 200 if it already existed
+curl --request PUT "$OUTPOST_API_BASE_URL/tenants/customer_acme_001" \
+  --header "Authorization: Bearer $OUTPOST_API_KEY"
+```
+
+Hookdeck has **organization API keys and project API keys**. For Outpost server work, use a project API key — and **the project it belongs to is what matters**.
+
+A key for a non-Outpost project authenticates against `api.hookdeck.com` and works with the Hookdeck CLI, so it looks correct, but returns `404 Not Found` on most Outpost routes. Read that `404` as *this key is for the wrong project*, not "Outpost is not provisioned on this account", and ask the user for a key from an Outpost project. Do not fall back to building the task on `api.hookdeck.com` — that is the [Event Gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md), a different product.
+
+## Documentation index for agents
+
+- **`llms.txt`:** [https://hookdeck.com/docs/outpost/llms.txt](https://hookdeck.com/docs/outpost/llms.txt) — plain-text map of doc pages as `.md` URLs; fetch once when you need the full tree or many pages.
+- **Concepts:** [Tenants, destinations, topics, publish](https://hookdeck.com/docs/outpost/concepts)
+- **API reference:** [REST / OpenAPI](https://hookdeck.com/docs/outpost/api); self-hosted spec file: `https://github.com/hookdeck/outpost/blob/main/docs/apis/openapi.yaml`
+- **SDKs:** [Overview](https://hookdeck.com/docs/outpost/sdks) — for TypeScript, Python, or Go, follow that language’s **quickstart** for correct signatures.
+- **Building your own UI:** [Guide](https://hookdeck.com/docs/outpost/guides/building-your-own-ui) — screen flow, BFF pattern, implementation checklists.
+- **Destinations / topics:** [Destination types](https://hookdeck.com/docs/outpost/destinations) · [Topics and subscriptions](https://hookdeck.com/docs/outpost/features/topics)
+
+## Quickstarts (smallest path first)
+
+Use the official managed-Outpost walkthroughs before opening full-stack examples in this repo:
+
+| | |
+|--|--|
+| curl (HTTP only) | [Hookdeck Outpost curl quickstart](https://hookdeck.com/docs/outpost/quickstarts/hookdeck-outpost-curl) |
+| TypeScript | [TypeScript quickstart](https://hookdeck.com/docs/outpost/quickstarts/hookdeck-outpost-typescript) |
+| Python | [Python quickstart](https://hookdeck.com/docs/outpost/quickstarts/hookdeck-outpost-python) |
+| Go | [Go quickstart](https://hookdeck.com/docs/outpost/quickstarts/hookdeck-outpost-go) |
+
+Compact link list: [references/outpost-quickstarts.md](references/outpost-quickstarts.md).
+
+## Test webhook destination URLs (README and docs)
+
+When you need a **throwaway HTTPS URL** for a webhook destination (quickstarts, curl examples, “verify delivery”):
+
+- **Prefer [Hookdeck Console](https://console.hookdeck.com)** — create a Source, copy its URL (e.g. `https://hkdk.events/…`), and inspect or replay deliveries in one place. This is the Hookdeck-native default for agents and humans.
+
+## Fast path for agents
+
+1. Start with [references/outpost-scope.md](references/outpost-scope.md) to pick Quick path vs New minimal app vs Existing app.
+2. If scope is ambiguous, default to the smallest quickstart-shaped artifact.
+3. Fetch only the language quickstart you need (curl, TypeScript, Python, Go).
+4. Use [references/outpost-verify.md](references/outpost-verify.md) before finishing.
+5. Open full-stack examples only when the task clearly requires BFF/UI integration patterns.
+
+## Checking deliveries with the Hookdeck MCP (managed Outpost)
+
+The [Hookdeck MCP](https://hookdeck.com/docs/mcp) at `https://mcp.hookdeck.com` serves `outpost_*` tools for managed Outpost projects. If they're in your session, use them to check the result of a publish instead of writing throwaway API calls:
+
+- `outpost_events_read` for the published event, and `outpost_attempts_read` for each delivery attempt with the destination's response
+- `outpost_tenants_read` and `outpost_destinations_read` for what a tenant has set up
+- `outpost_topics_read` to reconcile the topics your code publishes with the project's topics
+
+The hosted server has no `outpost_publish` tool, because publishing needs an Outpost project API key that a sign-in doesn't have. Publish through the Outpost API or SDK as above. Most credentials in answers come back as `[redacted]` (a tenant's token or portal link, and a webhook destination's signing secret when you create or update one, are returned), so take the project API key from the Dashboard, not from an MCP answer.
+
+## Scope and verification (agent workflow)
+
+Dashboard-style guidance (no `{{PLACEHOLDERS}}` — those stay dashboard-only):
+
+- [references/outpost-scope.md](references/outpost-scope.md) — three-path ladder, default-to-smallest, language vs architecture, topic reconciliation, SDK vs OpenAPI / BFF pointers with links to **Building your own UI** anchors.
+- [references/outpost-verify.md](references/outpost-verify.md) — trimmed “before you stop” checklist.
+
+**BFF / wire JSON:** [Authentication](https://hookdeck.com/docs/outpost/guides/building-your-own-ui#authentication) · [Wire JSON, SDK responses, and your UI](https://hookdeck.com/docs/outpost/guides/building-your-own-ui#wire-json-sdk-responses-and-your-ui)
+
+## Supported destination types
+
+**Available:** Webhooks (HTTP), Hookdeck Event Gateway, AWS SQS, AWS Kinesis, AWS S3, Azure Service Bus, GCP Pub/Sub, RabbitMQ (AMQP), Kafka
+
+**Planned:** [AWS EventBridge](https://github.com/hookdeck/outpost/issues/201)
+
+## Deployment and API pointers
+
+- **Managed:** [Hookdeck Outpost docs](https://hookdeck.com/docs/outpost) and per-language quickstarts.
+- **Self-hosted quickstarts:** [Docker](https://hookdeck.com/docs/outpost/self-hosting/quickstarts/docker), [Kubernetes](https://hookdeck.com/docs/outpost/self-hosting/quickstarts/kubernetes), [Railway](https://hookdeck.com/docs/outpost/self-hosting/quickstarts/railway), [Configuration](https://hookdeck.com/docs/outpost/self-hosting/configuration).
+- **API reference:** [Outpost REST / OpenAPI](https://hookdeck.com/docs/outpost/api).
+- **Base URL and auth:** `https://api.outpost.hookdeck.com/2025-07-01` with a project API key for an Outpost project — see [API base URL and credentials](#api-base-url-and-credentials).
+
+## Full-stack reference examples (advanced)
+
+**Use only when** the task needs realistic BFF + dashboard patterns—not for “smallest example” (use **Quickstarts** and **`llms.txt`** first).
+
+**Integration maps (read before opening trees):**
+
+- Next.js: [references/nextjs-saas-integration-map.md](references/nextjs-saas-integration-map.md)
+- FastAPI: [references/fastapi-saas-integration-map.md](references/fastapi-saas-integration-map.md)
+
+**Treat examples as references, not copy-paste scaffolds.** Prefer the user’s codebase and use maps for Outpost-specific behavior (server-only Outpost project API key, tenant mapping, BFF routes, domain `publish`).
+
+| Example | Stack | Location |
+|---------|--------|----------|
+| SaaS (Next.js) | App Router + `@hookdeck/outpost-sdk` + dashboard UI | [examples/nextjs-saas/](https://github.com/hookdeck/agent-skills/tree/main/skills/outpost/examples/nextjs-saas) — [README](https://github.com/hookdeck/agent-skills/blob/main/skills/outpost/examples/nextjs-saas/README.md) |
+| SaaS (FastAPI + React) | FastAPI BFF (`httpx` → Outpost) + template UI | [examples/fastapi-saas/](https://github.com/hookdeck/agent-skills/tree/main/skills/outpost/examples/fastapi-saas) — [README](https://github.com/hookdeck/agent-skills/blob/main/skills/outpost/examples/fastapi-saas/README.md) |
+
+Dependency and version pins live in the example manifests (`package.json`, `pyproject.toml`).
+
+**How to use the examples:** Read the integration maps and README overviews first; open other files only when they match the user’s task.
+
+**Tests:** `npm test` in `nextjs-saas` (Vitest); `pytest test_outpost_wire.py` in `fastapi-saas/backend` via `./scripts/test-examples.sh outpost`. Next.js example uses **npm**.
+
+## Future skills
+
+Destination-specific skills (`outpost-webhooks`, `outpost-sqs`, …) may be added as documentation matures.
+
+## Related skills
+
+- [hookdeck](https://github.com/hookdeck/agent-skills/blob/main/skills/hookdeck/SKILL.md) — skill router for Hookdeck products
+- [event-gateway](https://github.com/hookdeck/agent-skills/blob/main/skills/event-gateway/SKILL.md) — Hookdeck Event Gateway (inbound webhooks)

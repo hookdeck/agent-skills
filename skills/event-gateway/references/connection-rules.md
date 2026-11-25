@@ -1,0 +1,241 @@
+# Connection Rules
+
+## Contents
+
+- [Overview](#overview)
+- [Rule Order](#rule-order)
+- [Filters](#filters)
+- [Transformations](#transformations)
+- [Retries](#retries)
+- [Deduplication](#deduplication)
+- [Delay](#delay)
+- [Decision Tree](#decision-tree)
+
+## Overview
+
+[Rules](https://hookdeck.com/docs/connections) are processing logic attached to a Connection. Each Connection can have multiple Rules. Five types: filter, transform, retry, delay, deduplicate.
+
+**CLI:** Prefer **`hookdeck gateway connection upsert`** over `create` when scripting so runs are idempotent. **`hookdeck gateway connection upsert --help`** lists rule-related flags (`--rules`, `--rule-filter-body`, `--rule-retry-*`, `--destination-rate-limit`, etc.) and all inline source/destination options—examples below are **not exhaustive**. **Do not** use **`--destination-type HTTP`** with **`http://localhost:…`** in these patterns; use **`https://…`** for HTTP destinations or a **CLI** destination for local `listen` (see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations)).
+
+## Rule Order
+
+Filter, transform and deduplicate rules run in the order they appear in the `rules` array. Delay and retry rules can go anywhere in the array. Order changes behavior: a filter placed before a transform matches the original payload, and a filter placed after it matches the transformed payload.
+
+To filter on the original payload and then transform it:
+
+```sh
+hookdeck gateway connection upsert stripe-orders \
+  --source-name "stripe" \
+  --source-type STRIPE \
+  --destination-name "orders" \
+  --destination-type HTTP \
+  --destination-url https://api.example.com/webhooks \
+  --rules '[{"type":"filter","body":{"type":{"$eq":"payment_intent.succeeded"}}},{"type":"transform","transformation_id":"trs_123"}]'
+```
+
+- **Use `--rules` (or `--rules-file`) whenever order matters.** The CLI keeps the array exactly as given.
+- **Send the whole array on every update.** Updating a Connection replaces its stored rules, so read the current `rules`, edit the array, and send it back in the order you want.
+- **Use the current API version for REST calls.** On older API versions, transformations always run before filters, whatever order the rules are sent in, so a filter-then-transform order is lost on every save. See [api-patterns.md](api-patterns.md#authentication) for finding the current version.
+
+## Filters
+
+Accept or reject [Events](https://hookdeck.com/docs/events) based on request properties (body, headers, query, path). Events that don't match the filter are rejected and not delivered.
+
+**Top patterns:**
+
+Filter by event type:
+
+```sh
+hookdeck gateway connection upsert stripe-payments \
+  --source-name "stripe" \
+  --source-type WEBHOOK \
+  --destination-name "payments" \
+  --destination-type HTTP \
+  --destination-url https://api.example.com/webhooks \
+  --rules '[{"type":"filter","body":{"type":{"$eq":"payment_intent.succeeded"}}}]'
+```
+
+Filter by multiple types:
+
+```json
+{"type": "filter", "body": {"type": {"$in": ["payment_intent.succeeded", "invoice.paid"]}}}
+```
+
+Filter by nested field:
+
+```json
+{"type": "filter", "body": {"data": {"object": {"amount": {"$gte": 1000}}}}}
+```
+
+Logical operators: `$and`, `$or`, `$not`
+
+```json
+{"type": "filter", "$or": [
+  {"body": {"type": {"$eq": "payment_intent.succeeded"}}},
+  {"body": {"type": {"$eq": "invoice.paid"}}}
+]}
+```
+
+**Available operators:** `$eq`, `$neq`, `$in`, `$nin`, `$gt`, `$gte`, `$lt`, `$lte`, `$startsWith`, `$endsWith`, `$exist`, `$ref`, plus the logical operators `$or`, `$and` and `$not`. That is the full set in the [filters docs](https://hookdeck.com/docs/filters). There is no regex operator; for pattern matching, use a transformation.
+
+For full operator reference: fetch [/docs/filters.md](https://hookdeck.com/docs/filters.md)
+
+## Transformations
+
+Modify the Event payload, headers, or path using JavaScript (ES6, V8 isolate).
+
+**Handler signature:**
+
+```javascript
+addHandler("transform", (request, context) => {
+  // request: { headers, body, query, path, parsed_query }
+  // context: { env (environment variables) }
+  // Return the modified request
+  return request;
+});
+```
+
+**Top patterns:**
+
+Restructure payload:
+
+```javascript
+addHandler("transform", (request, context) => {
+  request.body = {
+    event_type: request.body.type,
+    data: request.body.data.object,
+    timestamp: new Date().toISOString()
+  };
+  return request;
+});
+```
+
+Add headers:
+
+```javascript
+addHandler("transform", (request, context) => {
+  request.headers['x-api-key'] = context.env.DEST_API_KEY;
+  return request;
+});
+```
+
+Reject conditionally (return `undefined` or falsy to reject):
+
+```javascript
+addHandler("transform", (request, context) => {
+  if (request.body.test_mode) return; // Reject test events
+  return request;
+});
+```
+
+**CLI usage:**
+
+Inline code:
+
+```sh
+--rule-transform-code 'addHandler("transform", (request, context) => { ... return request; })'
+```
+
+Named transform (created via CLI, Dashboard, or API):
+
+```sh
+--rule-transform-name my-transform
+```
+
+For full reference: fetch [/docs/transformations.md](https://hookdeck.com/docs/transformations.md)
+
+## Retries
+
+Automatically retry failed deliveries (non-2xx responses) with configurable backoff.
+
+**Strategies:**
+
+| Strategy | Behavior |
+|----------|----------|
+| `linear` | Fixed interval between retries |
+| `exponential` | Doubling interval between retries |
+
+**Configuration:**
+
+| Field | Description |
+|-------|-------------|
+| `strategy` | `linear` or `exponential` |
+| `interval` | Base interval in milliseconds |
+| `count` | Maximum retry attempts (up to 50) |
+| `response_status_codes` | HTTP status codes that trigger retry (default: all non-2xx) |
+
+**CLI example:**
+
+```sh
+hookdeck gateway connection upsert with-retries \
+  --source-name "my-source" \
+  --source-type WEBHOOK \
+  --destination-name "my-api" \
+  --destination-type HTTP \
+  --destination-url https://api.example.com/webhooks \
+  --rules '[{"type":"retry","strategy":"exponential","interval":60000,"count":5}]'
+```
+
+**Manual replay:** Use the CLI TUI, web console, or Dashboard to replay individual events. Use the API for bulk replay — see [Bulk operations](https://hookdeck.com/docs/api/bulk.md) and [Inspect API](https://hookdeck.com/docs/api/inspect.md).
+
+For full reference: fetch [/docs/retries.md](https://hookdeck.com/docs/retries.md)
+
+## Deduplication
+
+Prevent duplicate Events from being delivered. Uses a time window to detect duplicates.
+
+**Configuration:**
+
+| Field | Description |
+|-------|-------------|
+| `window` | Time window in milliseconds to check for duplicates |
+| `include_fields` | Specific fields to compare (e.g., `body.id`) |
+| `exclude_fields` | Fields to ignore when comparing |
+
+**Top patterns:**
+
+Full payload match (default):
+
+```json
+{"type": "deduplicate", "window": 3600000}
+```
+
+Field-based deduplication:
+
+```json
+{"type": "deduplicate", "window": 3600000, "include_fields": ["body.id", "body.type"]}
+```
+
+**CLI example:**
+
+```sh
+hookdeck gateway connection upsert deduped \
+  --source-name "my-source" \
+  --source-type WEBHOOK \
+  --destination-name "my-api" \
+  --destination-type HTTP \
+  --destination-url https://api.example.com/webhooks \
+  --rules '[{"type":"deduplicate","window":3600000,"include_fields":["body.id"]}]'
+```
+
+For full reference: fetch [/docs/deduplication.md](https://hookdeck.com/docs/deduplication.md)
+
+## Delay
+
+Hold Events for a specified duration before delivery. Useful for rate-limiting or batching scenarios.
+
+```json
+{"type": "delay", "delay": 5000}
+```
+
+## Decision Tree
+
+| Scenario | Rule |
+|----------|------|
+| Only process specific event types | Filter |
+| Restructure payload before delivery | Transform |
+| Add auth headers to destination requests | Transform (with `context.env`) |
+| Handle transient destination failures | Retry |
+| Rate-limit delivery to a destination | Delay |
+| Provider sends duplicate webhooks | Deduplicate |
+| Conditionally reject events based on complex logic | Transform (return falsy) |

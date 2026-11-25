@@ -1,0 +1,107 @@
+# Authentication
+
+How the Hookdeck Event Gateway authenticates requests -- both inbound (from webhook providers) and outbound (to your application).
+
+## Decision Tree
+
+| Question | Answer |
+|----------|--------|
+| Want Hookdeck to verify provider signatures before forwarding? | **Source Authentication** |
+| Want to verify requests from Hookdeck in your handler? | **Hookdeck Signature** (Destination Authentication) |
+| Want maximum security? | **Both** -- Source Authentication at the edge, Hookdeck Signature in your handler |
+| Just getting started? | Start with Hookdeck Signature only (simplest setup) |
+
+## Source Authentication (Inbound)
+
+[Source Authentication](https://hookdeck.com/docs/authentication) verifies incoming requests at the [Source](https://hookdeck.com/docs/sources) before they reach your Connection. Requests that fail authentication are rejected.
+
+### Methods
+
+| Method | Use case |
+|--------|----------|
+| **[Source Types](https://hookdeck.com/docs/sources#source-types)** | Provider presets that auto-configure verification. **Default choice.** Over 150 providers have one, far beyond the well-known names -- check before assuming a provider is unsupported. |
+| **API Key** | Provider sends a static key in a header or query parameter |
+| **Basic Auth** | Provider sends Basic HTTP credentials |
+
+### Source Types (Recommended)
+
+Source Types are platform presets that auto-configure signature verification for a provider. There are over 150, covering far more than the handful of names that appear in examples: AI platforms, payment processors, e-commerce, CRM, infrastructure and more.
+
+**Check whether your provider has one before falling back to a generic source.** A generic `WEBHOOK` source with hand-rolled verification is the wrong answer when a preset exists, because the preset already knows the provider's algorithm, header and encoding:
+
+The [Sources documentation](https://hookdeck.com/docs/sources#source-types) lists every Source Type. For a machine-readable list, fetch the [OpenAPI document](https://api.hookdeck.com/latest/openapi) and read the `SourceTypeConfig*` schema names under `components.schemas`; each suffix is a Source Type.
+
+Using a preset:
+
+Production-style (**HTTPS** destination):
+
+```sh
+hookdeck gateway connection upsert stripe-verified \
+  --source-name "stripe" \
+  --source-type STRIPE \
+  --source-webhook-secret "whsec_..." \
+  --destination-name "my-api" \
+  --destination-type HTTP \
+  --destination-url https://api.example.com/webhooks
+```
+
+Local dev with **`hookdeck listen`**: use **`--destination-type CLI`** and **`--destination-cli-path`** (see [03-listen.md](03-listen.md#local-delivery-listen-vs-http-destinations)); do not use HTTP to `localhost`.
+
+When Source Authentication is enabled and verification succeeds, Hookdeck adds `x-hookdeck-verified: true` to the forwarded request. Your handler can check this header to confirm the provider's signature was verified.
+
+For the full list of Source Types, fetch [/docs/sources.md](https://hookdeck.com/docs/sources.md) and look for the Source Types section.
+
+### API Key Authentication
+
+```sh
+hookdeck gateway connection upsert custom-auth \
+  --source-name "my-source" \
+  --source-type WEBHOOK \
+  --source-config '{"auth_type":"API_KEY","auth":{"header_key":"x-api-key","api_key":"my-secret-key"}}' \
+  --destination-name "my-api" \
+  --destination-type HTTP \
+  --destination-url https://api.example.com/webhooks
+```
+
+### What Happens When Authentication Fails
+
+The request is rejected with a `403` response. It does not create a [Request](https://hookdeck.com/docs/requests) or [Event](https://hookdeck.com/docs/events) in Hookdeck.
+
+## Destination Authentication (Outbound)
+
+[Destination Authentication](https://hookdeck.com/docs/authentication#destination-authentication) controls how Hookdeck authenticates to your application when forwarding events.
+
+### Methods
+
+| Method | Description |
+|--------|-------------|
+| **Hookdeck Signature** (default) | HMAC SHA-256 signature in `x-hookdeck-signature` header |
+| **Custom SHA-256** | Your own signing secret, same HMAC format |
+| **Basic Auth** | HTTP Basic credentials |
+| **API Key** | Static key in a configurable header |
+| **Bearer Token** | Bearer token in the `Authorization` header |
+
+### Hookdeck Signature (Default)
+
+Enabled by default on all Destinations. Hookdeck adds an `x-hookdeck-signature` header (HMAC SHA-256, base64-encoded) to every forwarded request.
+
+Your signing secret is at: [Dashboard > Settings > Secrets](https://dashboard.hookdeck.com/settings/project/secrets)
+
+For verification code, see [verification-code.md](verification-code.md). Runnable, proven, tested example codebases: [examples/express/](https://github.com/hookdeck/agent-skills/tree/main/skills/event-gateway/examples/express), [examples/nextjs/](https://github.com/hookdeck/agent-skills/tree/main/skills/event-gateway/examples/nextjs), [examples/fastapi/](https://github.com/hookdeck/agent-skills/tree/main/skills/event-gateway/examples/fastapi).
+
+## Can You Use Both?
+
+Yes. Source Authentication and Destination Authentication serve different purposes:
+
+- **Source Authentication**: Hookdeck verifies the provider's signature (e.g., Stripe's `stripe-signature`) before forwarding
+- **Destination Authentication**: Your handler verifies Hookdeck's signature to confirm the request came from Hookdeck
+
+Using both provides defense in depth. See [02-scaffold.md](02-scaffold.md) for the recommended pattern.
+
+## Documentation
+
+- [Authentication overview](https://hookdeck.com/docs/authentication)
+- [Source Authentication](https://hookdeck.com/docs/authentication#source-authentication)
+- [Source Types](https://hookdeck.com/docs/sources#source-types)
+- [Destination Authentication](https://hookdeck.com/docs/authentication#destination-authentication)
+- [Hookdeck Signature](https://hookdeck.com/docs/authentication#hookdeck-webhook-signature-verification)

@@ -4,7 +4,7 @@ Debug failures, fix your code, and replay events until everything works.
 
 ## Debugging Surfaces
 
-Three tools for inspecting and replaying events:
+Tools for inspecting and replaying events:
 
 ### CLI TUI
 
@@ -58,6 +58,10 @@ hookdeck gateway attempt get att_xxx
 
 For full options and flags, fetch [Request commands](https://hookdeck.com/docs/cli/request.md), [Event commands](https://hookdeck.com/docs/cli/event.md), and [Attempt commands](https://hookdeck.com/docs/cli/attempt.md).
 
+### Hookdeck MCP
+
+When the `gateway_*` tools from the [Hookdeck MCP](https://hookdeck.com/docs/mcp) are in your session, inspect with them instead of the CLI commands above: `gateway_events_read` to find the failed event, `gateway_attempts_read` for your handler's response, and, with write access, `gateway_event_write` (`retry`) to replay it after a fix. Keep `hookdeck listen` running in the terminal; the MCP doesn't replace the tunnel. Tool map: [monitoring-debugging.md#mcp-querying](monitoring-debugging.md#mcp-querying).
+
 ## Troubleshooting Flowchart
 
 **Events not arriving at your Source?**
@@ -84,9 +88,9 @@ For full options and flags, fetch [Request commands](https://hookdeck.com/docs/c
 The replay loop is the core of the iterate stage:
 
 1. Send or receive a webhook event
-2. Inspect the event and response in the CLI TUI, web console, Dashboard, or via `hookdeck gateway request get` / `event get` / `attempt list`
+2. Inspect the event and response in the CLI TUI, web console, Dashboard, via `hookdeck gateway request get` / `event get` / `attempt list`, or with the Hookdeck MCP tools
 3. If the delivery failed, fix your handler code
-4. Replay the same event (from CLI TUI, web console, Dashboard, or `hookdeck gateway event retry evt_xxx`)
+4. Replay the same event (from CLI TUI, web console, Dashboard, `hookdeck gateway event retry evt_xxx`, or `gateway_event_write` with write access)
 5. Repeat until successful
 
 This avoids having to re-trigger events from the provider each time you make a change.

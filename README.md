@@ -56,21 +56,49 @@ The `event-gateway` skill includes a staged integration workflow:
 3. **Listen** -- Start `hookdeck listen`, trigger test events
 4. **Iterate** -- Debug failures, fix code, replay events
 
-## Hookdeck CLI MCP (reference)
+## Hookdeck MCP
 
-The [Hookdeck CLI](https://hookdeck.com/docs/cli) includes a **beta** MCP server (`hookdeck gateway mcp`) that exposes Event Gateway data as MCP tools over stdio. In practice it is **operational support**: query, inspect, and diagnose connections, requests, events, attempts, issues, and metrics from your agent or IDE—without replacing the full CLI or API for creating resources, retries, or local tunnel workflows.
+The Hookdeck MCP server lets AI apps like Claude, ChatGPT, Cursor, and VS Code work with your Hookdeck projects. Add one URL and sign in with Hookdeck:
 
-For setup, client configuration, available tools, and what MCP can and cannot do, see the official docs:
+```
+https://mcp.hookdeck.com
+```
 
-- [MCP & Skills](https://hookdeck.com/docs/mcp) — overview and when to pair MCP with agent skills
-- [Hookdeck CLI](https://hookdeck.com/docs/cli) — MCP is linked from the Event Gateway operations table (command usage, auth, client configuration)
+The same URL works for Event Gateway and managed Outpost projects. Use it to investigate delivery issues in-session: trace a request through to its delivery attempts, look into issues and metrics, pause connections, and, with write access, retry events or change your setup. Access is **Read only** by default; you choose **Read and write** when you sign in.
 
-The skills in this repository remain the primary way to guide an agent through **product workflows** (setup, handlers, `hookdeck listen`, Outpost, API usage). Use CLI MCP when you want **read-heavy inspection and analysis** against your live Hookdeck project.
+To add it to several coding agents at once (Claude Code, Cursor, VS Code, Codex, Windsurf, Gemini CLI, and others):
+
+```bash
+npx -y add-mcp https://mcp.hookdeck.com -g
+```
+
+Then sign in with Hookdeck when each agent asks. For Claude Code on its own:
+
+```bash
+claude mcp add --transport http hookdeck https://mcp.hookdeck.com
+```
+
+Then run `/mcp` in Claude Code, select `hookdeck`, and sign in with Hookdeck.
+
+For apps that can't sign in with OAuth, like scripts or CI, send a key from **Keys & Sessions** as an `Authorization: Bearer` header. See [Hookdeck MCP](https://hookdeck.com/docs/mcp) for setup in each app, access, and the full tool list.
+
+### MCP or skills
+
+| Goal | Use |
+|---|---|
+| Query and inspect Hookdeck resources, events, issues, and metrics from your AI app | **Hookdeck MCP** |
+| Set up an integration: create connections, build a handler, run `hookdeck listen`, integrate Outpost | **These skills**, which guide the agent through the CLI and API |
+| Create or change resources from your AI app | **Hookdeck MCP** with write access, or these skills for a guided CLI/API workflow |
+
+The hosted server has no `outpost_publish` tool, because publishing needs an Outpost project API key that a sign-in doesn't have. Publish events with the [Outpost API](https://hookdeck.com/docs/outpost/api).
+
+The MCP server built into the Hookdeck CLI (`hookdeck gateway mcp`) will be deprecated. If you use it, switch to `https://mcp.hookdeck.com`: tool names and inputs are the same, except that `outpost_publish` isn't served. See [Migrate from the CLI MCP](https://hookdeck.com/docs/mcp#migrate-from-the-cli-mcp).
 
 ## Documentation
 
 - [Event Gateway docs](https://hookdeck.com/docs/)
-- [MCP & Skills](https://hookdeck.com/docs/mcp); [Hookdeck CLI](https://hookdeck.com/docs/cli) (MCP under Event Gateway operations)
+- [MCP & Skills](https://hookdeck.com/docs/mcp)
+- [Hookdeck CLI](https://hookdeck.com/docs/cli)
 - [Outpost docs](https://hookdeck.com/docs/outpost)
 - [Outpost API reference](https://hookdeck.com/docs/outpost/api)
 - [Hookdeck REST API](https://hookdeck.com/docs/api)

@@ -12,11 +12,12 @@
   - [Troubleshooting Flowchart](#troubleshooting-flowchart)
   - [Issues and Notifications](#issues-and-notifications)
   - [Replay](#replay)
+- [MCP: list and inspect](#mcp-querying)
 - [CLI: list and inspect](#cli-querying)
 - [CLI: metrics](#cli-metrics)
 - [Documentation](#documentation)
 
-How to monitor webhook deliveries, debug failures, and replay events. For monitoring and debugging, the **CLI** is usually the right first touch (TUI, list/get, metrics, retry). The **API** is valid for querying and for automation driven from application or test code. See **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** for full CLI vs API vs Dashboard guidance. Querying (events, requests, attempts, metrics) can also be done via the API — see the [API inspect docs](https://hookdeck.com/docs/api/inspect.md).
+How to monitor webhook deliveries, debug failures, and replay events. If the [Hookdeck MCP](https://hookdeck.com/docs/mcp) tools (`gateway_*`) are in your session, query with them: see [MCP: list and inspect](#mcp-querying). Otherwise the **CLI** is the first touch for monitoring and debugging (TUI, list/get, metrics, retry). The **API** is valid for querying and for automation driven from application or test code. See **[SKILL.md — Development & Operations](../SKILL.md#development--operations)** for full CLI vs API vs Dashboard guidance. Querying (events, requests, attempts, metrics) can also be done via the API — see the [API inspect docs](https://hookdeck.com/docs/api/inspect.md).
 
 **Prerequisite:** Before any `hookdeck …` commands in this file, [Hookdeck CLI installed](cli-workflows.md#hookdeck-cli-prerequisite).
 
@@ -136,6 +137,26 @@ curl -X POST https://api.hookdeck.com/$API_VERSION/bulk/events/retry \
 ```
 
 **[Bookmarks](https://hookdeck.com/docs/bookmarks)**: Save a Request as a bookmark in the Dashboard, then replay it whenever you need to re-test.
+
+## MCP: list and inspect {#mcp-querying}
+
+When to use: the `gateway_*` tools from the [Hookdeck MCP](https://hookdeck.com/docs/mcp) are in your session (hosted at `https://mcp.hookdeck.com`). They cover the same questions as the CLI commands below and return JSON. Confirm the project first with `hookdeck_projects_read` (see [Before querying or running metrics](#before-querying-or-running-metrics)). Order reflects data flow: request → events → attempts.
+
+| Question | Tool (action) |
+|----------|---------------|
+| Which requests arrived, or were rejected? | `gateway_requests_read` (`list`) |
+| What exactly did one request contain? | `gateway_request_read` (`get`, or `raw_body` for the exact payload) |
+| Which events failed, or what did a request produce? | `gateway_events_read` (`list`) |
+| What did one event deliver? | `gateway_event_read` (`get`, or `raw_body`) |
+| What did the destination reply? | `gateway_attempts_read` (`list` for an event, `get`) |
+| What's failing repeatedly? | `gateway_issues_read` (`list`, `get`) |
+| Volume, failure rate, backlog, latency | `gateway_metrics_read` (`events`, `requests`, `attempts`, `transformations`) |
+| How is a connection, source, or destination set up? | `gateway_connections_read`, `gateway_sources_read`, `gateway_destinations_read` |
+| Stop deliveries while investigating | `gateway_connections_pause` (`pause`, `unpause`; works read-only, and paused events are held) |
+| Retry after a fix (write access) | `gateway_event_write` (`retry`), or `gateway_request_write` (`retry`) to route a request again |
+| Retry many events (write access) | `gateway_bulk_read` (`plan`, to see how many it touches), then `gateway_bulk_write` (`create`) |
+
+Call `gateway_help` for a tool's inputs and filters. Most credentials in answers come back as `[redacted]` (`raw_body` and secrets the server can't recognize don't), and write tools refuse `[redacted]` values, so don't copy them from a read answer into a write call.
 
 ## CLI: list and inspect {#cli-querying}
 

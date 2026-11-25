@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `icon` in the Claude Code plugin manifest (`assets/logo.svg`), for the listing in Anthropic's plugin directory
+
 ## [0.3.0]
 
 ### Added

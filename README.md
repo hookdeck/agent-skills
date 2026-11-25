@@ -19,7 +19,7 @@ The plugin bundles the skills and the hosted Hookdeck MCP server:
 
 ## Hosted MCP server
 
-Installing the plugin (Claude Code, or Cursor once listed) also connects the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `mcp` (Claude Code shows it as `plugin:hookdeck:mcp`). It covers Event Gateway and managed Outpost projects. You sign in with OAuth the first time you use it, so there is no API key to configure. See [MCP & Skills](https://hookdeck.com/docs/mcp) for setup and what the tools can do. To use the MCP server without the plugin, add it yourself as described there.
+Installing the plugin (Claude Code, or Cursor once listed) also connects the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `hookdeck` (Claude Code shows it as `plugin:hookdeck:hookdeck`). It covers Event Gateway and managed Outpost projects. You sign in with OAuth the first time you use it, so there is no API key to configure. See [MCP & Skills](https://hookdeck.com/docs/mcp) for setup and what the tools can do. To use the MCP server without the plugin, add it yourself as described there. If you already added a Hookdeck MCP server yourself, remove it after installing the plugin, so the agent doesn't see two.
 
 ## Install (Agent Skills / Other Agents)
 

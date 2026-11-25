@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "mcp": {
+    "hookdeck": {
       "type": "http",
       "url": "https://mcp.hookdeck.com"
     }

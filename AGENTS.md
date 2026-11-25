@@ -274,7 +274,7 @@ CHANGELOG.md                  # Keep a Changelog format, required for marketplac
 
 ### Hosted MCP server
 
-Both plugins bundle the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `mcp`, which Claude Code shows as `plugin:hookdeck:mcp`. It signs in with OAuth on first use, so the config holds no key or Authorization header. Cursor reads `mcp.json` and Claude Code reads `.mcp.json`, both at the plugin root, so keep the two files in sync. The Claude Code file needs `"type": "http"`. Link [MCP & Skills](https://hookdeck.com/docs/mcp) for setup.
+Both plugins bundle the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `hookdeck`, which Claude Code shows as `plugin:hookdeck:hookdeck`. Keep the brand as the name, as other vendors' plugins do: people see it in Cursor's MCP settings and Claude Code's `/mcp`, and agents see it in every tool name (`mcp__plugin_hookdeck_hookdeck__<tool>`). It signs in with OAuth on first use, so the config holds no key or Authorization header. Cursor reads `mcp.json` and Claude Code reads `.mcp.json`, both at the plugin root, so keep the two files in sync. The Claude Code file needs `"type": "http"`. Link [MCP & Skills](https://hookdeck.com/docs/mcp) for setup.
 
 ### Skill cross-references
 

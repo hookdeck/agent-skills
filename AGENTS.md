@@ -114,6 +114,9 @@ hookdeck/agent-skills/
         send-test-webhooks.md          # Plain test requests and samples.hookdeck.com payloads
         verify-signatures.md           # Exact body, SDK check (webhook-skills), platforms that need a secret
         forwarding.md                  # npx hookdeck-cli listen to localhost, HTTP destinations
+  scripts/
+    build-directory.mjs                # Generates the directory-only build (see "Directory branch")
+    check-directory-build.mjs          # Fails on anything the plugin directory refuses
   AGENTS.md                            # This file
   CLAUDE.md
   CONTRIBUTING.md
@@ -204,6 +207,18 @@ This repo (`hookdeck/agent-skills`) is the **depth layer**. The [`hookdeck/webho
 | [`outpost`](https://github.com/hookdeck/webhook-skills/tree/main/skills/outpost) | `outpost` | webhook-skills has product overview; this repo has setup + detailed configuration |
 
 This repo is self-contained -- Hookdeck users should not need to install skills from webhook-skills for Hookdeck-specific tasks. Provider-specific webhook knowledge (Stripe event types, Shopify verification, etc.) lives in webhook-skills and is referenced from `02-scaffold.md`.
+
+---
+
+## Directory branch (Anthropic plugin directory)
+
+The `directory` branch is **generated**. Never edit it by hand and never open a PR against it: edit `main`, and [`.github/workflows/build-directory-branch.yml`](.github/workflows/build-directory-branch.yml) rebuilds the branch on every push to `main` (a normal commit on top of the branch, no force-push, skipped when nothing changed).
+
+Hookdeck's directory organization isn't Verified, so the directory accepts only Markdown, text, JSON, YAML and a few image types, with no `#!` files, package-manager files, `CLAUDE.md`/`AGENTS.md`, or `.svg` other than the plugin icon, and skills may only grant `Read`, `Grep`, `Glob` and `LS` in `allowed-tools`. `scripts/build-directory.mjs` therefore builds a plugin containing `.claude-plugin/plugin.json`, `.mcp.json`, `assets/logo.svg`, `README.md`, `LICENSE` and every Markdown file under `skills/` except `skills/*/examples/`. It removes `allowed-tools` from `SKILL.md` frontmatter and rewrites relative links to omitted files into absolute `https://github.com/hookdeck/agent-skills/blob/main/...` (or `/tree/main/`) URLs. `scripts/check-directory-build.mjs` fails on anything the directory refuses; the script and the `Validate and Lint` workflow both run it.
+
+- **Run it locally:** `node scripts/build-directory.mjs` (writes `dist/directory/`), then `claude plugin validate dist/directory`.
+- **Keep skills buildable:** don't put `curl ... | sh`-style download-and-run commands in skill Markdown (the directory flags them). Link to the tool's install instructions instead. Link to examples with a relative path as usual; the build rewrites it.
+- **Submission:** set the submission's **Branch or tag** to `directory`.
 
 ---
 

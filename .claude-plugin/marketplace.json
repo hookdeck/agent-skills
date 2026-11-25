@@ -9,7 +9,7 @@
     {
       "name": "hookdeck",
       "source": "./",
-      "description": "Skills for working with Hookdeck Event Gateway (receive, queue, route, and deliver webhooks), Hookdeck Outpost (send webhooks and events to user-preferred destinations) and Hookdeck Inspect (free webhook test URLs: create one, wait for webhooks, and read what they sent). Includes a router skill that delegates to event-gateway, outpost or inspect based on the task."
+      "description": "Skills for working with Hookdeck Event Gateway (receive, queue, route, and deliver webhooks), Hookdeck Outpost (send webhooks and events to user-preferred destinations) and Hookdeck Inspect (free webhook test URLs: create one, wait for webhooks, and read what they sent). Includes a router skill that delegates to event-gateway, outpost or inspect based on the task. Also connects the hosted Hookdeck MCP server."
     }
   ]
 }

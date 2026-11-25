@@ -29,13 +29,7 @@ Source Types are platform presets that auto-configure signature verification for
 
 **Check whether your provider has one before falling back to a generic source.** A generic `WEBHOOK` source with hand-rolled verification is the wrong answer when a preset exists, because the preset already knows the provider's algorithm, header and encoding:
 
-```sh
-# List every available source type
-curl -s https://api.hookdeck.com/latest/openapi \
-  | jq -r '.components.schemas | keys[] | select(startswith("SourceTypeConfig")) | ltrimstr("SourceTypeConfig")'
-```
-
-The [Sources documentation](https://hookdeck.com/docs/sources#source-types) lists them with the configuration each one takes.
+The [Sources documentation](https://hookdeck.com/docs/sources#source-types) lists every Source Type. For a machine-readable list, fetch the [OpenAPI document](https://api.hookdeck.com/latest/openapi) and read the `SourceTypeConfig*` schema names under `components.schemas`; each suffix is a Source Type.
 
 Using a preset:
 

@@ -2,7 +2,7 @@
   "name": "hookdeck",
   "displayName": "Hookdeck",
   "description": "Receive, queue, route, and deliver webhooks and events with Hookdeck Event Gateway. Send webhooks to customers with Outpost. Get free webhook test URLs with Inspect. Set up webhook endpoints, test locally with the Hookdeck CLI, configure event routing and filtering, manage connections via the API, and troubleshoot delivery issues. Also connects the hosted Hookdeck MCP server.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Hookdeck",
     "email": "support@hookdeck.com"

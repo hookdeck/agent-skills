@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### Added
 
-- The Claude Code and Cursor plugins now bundle the hosted Hookdeck MCP server (`https://mcp.hookdeck.com`, signs in with OAuth) via `.mcp.json` and `mcp.json`
+- The Claude Code and Cursor plugins now bundle the hosted Hookdeck MCP server (`https://mcp.hookdeck.com`, signs in with OAuth) via `.mcp.json` and `mcp.json`, as a server named `hookdeck`
 - `inspect` skill for Hookdeck Inspect's free webhook test URLs: create a URL, wait for requests, read exact bodies, send realistic test webhooks, check signatures and forward to localhost
 - The `hookdeck` router skill sends webhook-testing tasks to `inspect`
 

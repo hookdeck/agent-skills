@@ -28,7 +28,8 @@ const FORBIDDEN_NAMES = new Set([
 const ALLOWED_TOOLS = new Set(["Read", "Grep", "Glob", "LS"]);
 const KNOWN_MANIFEST_FIELDS = new Set([
   "name", "version", "description", "author", "homepage", "repository", "license", "keywords",
-  "displayName", "icon", "privacyPolicyUrl", "skills", "commands", "agents", "hooks",
+  "displayName", "icon", "privacyPolicyUrl", "termsOfServiceUrl", "supportUrl",
+  "documentationUrl", "classification", "skills", "commands", "agents", "hooks",
   "mcpServers", "lspServers", "userConfig", "outputStyles", "monitors", "themes", "channels",
   "dependencies", "settings",
 ]);

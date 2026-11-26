@@ -1,0 +1,11 @@
+{
+  "name": "hookdeck",
+  "version": "0.3.0",
+  "description": "Receive, route and deliver webhooks with Hookdeck Event Gateway, send webhooks to customers with Outpost, get free test URLs with Inspect, and connect the hosted Hookdeck MCP server.",
+  "mcpServers": {
+    "hookdeck": {
+      "type": "http",
+      "url": "https://mcp.hookdeck.com"
+    }
+  }
+}

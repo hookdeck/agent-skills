@@ -1,0 +1,44 @@
+{
+  "$schema": "https://antigravity.google/schemas/v1/plugin.json",
+  "name": "hookdeck",
+  "displayName": "Hookdeck",
+  "description": "Receive, route and deliver webhooks with Hookdeck Event Gateway, send them to customers with Outpost, and debug deliveries with the hosted Hookdeck MCP.",
+  "version": "0.3.0",
+  "author": {
+    "name": "Hookdeck",
+    "email": "support@hookdeck.com",
+    "url": "https://hookdeck.com"
+  },
+  "homepage": "https://hookdeck.com",
+  "repository": "https://github.com/hookdeck/agent-skills",
+  "license": "MIT",
+  "keywords": [
+    "webhooks",
+    "webhook-delivery",
+    "send-webhooks",
+    "event-gateway",
+    "event-driven",
+    "event-destinations",
+    "hookdeck",
+    "queue",
+    "event-queue",
+    "serverless-queue",
+    "webhook-relay",
+    "event-processing",
+    "async-messaging",
+    "webhook-infrastructure",
+    "webhook-testing",
+    "webhook-test-url",
+    "webhook-inspector",
+    "webhook-retry",
+    "event-routing",
+    "webhook-verification",
+    "local-development"
+  ],
+  "logo": "assets/logo.svg",
+  "suggestedPrompts": [
+    "Why are events to my destination failing? Show the latest failed attempts.",
+    "Set up Hookdeck to receive Stripe webhooks and test them locally.",
+    "Give me a free webhook test URL and show me what arrives."
+  ]
+}

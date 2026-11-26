@@ -284,6 +284,9 @@ This repo is packaged as a Cursor Marketplace plugin. The plugin structure lives
 .claude-plugin/plugin.json    # Claude Code manifest (+ marketplace.json)
 mcp.json                      # Hosted Hookdeck MCP server for Cursor (discovered at the plugin root)
 .mcp.json                     # Same server for Claude Code (type: http)
+gemini-extension.json         # Gemini CLI extension manifest, with the same server (type: http)
+.antigravity-plugin/plugin.json  # Antigravity manifest (in its own folder so Cursor doesn't read it)
+mcp_config.json               # Same server for Antigravity (serverUrl)
 assets/logo.svg               # Hookdeck brand icon (1:1/square)
 rules/*.mdc                   # Cursor rules (optional)
 CHANGELOG.md                  # Keep a Changelog format, required for marketplace
@@ -291,7 +294,9 @@ CHANGELOG.md                  # Keep a Changelog format, required for marketplac
 
 ### Hosted MCP server
 
-Both plugins bundle the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `hookdeck`, which Claude Code shows as `plugin:hookdeck:hookdeck`. Keep the brand as the name, as other vendors' plugins do: people see it in Cursor's MCP settings and Claude Code's `/mcp`, and agents see it in every tool name (`mcp__plugin_hookdeck_hookdeck__<tool>`). It signs in with OAuth on first use, so the config holds no key or Authorization header. Cursor reads `mcp.json` and Claude Code reads `.mcp.json`, both at the plugin root, so keep the two files in sync. The Claude Code file needs `"type": "http"`. Link [MCP & Skills](https://hookdeck.com/docs/mcp) for setup.
+Both plugins bundle the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `hookdeck`, which Claude Code shows as `plugin:hookdeck:hookdeck`. Keep the brand as the name, as other vendors' plugins do: people see it in Cursor's MCP settings and Claude Code's `/mcp`, and agents see it in every tool name (`mcp__plugin_hookdeck_hookdeck__<tool>`). It signs in with OAuth on first use, so the config holds no key or Authorization header. Cursor reads `mcp.json`, Claude Code `.mcp.json`, Antigravity `mcp_config.json` and Gemini CLI the `mcpServers` in `gemini-extension.json`, all at the repo root, so keep the four in sync. The Claude Code and Gemini CLI entries need `"type": "http"`; Antigravity's uses `serverUrl`. Keep `version` the same in every manifest.
+
+`agy plugin validate .` passes with three warnings about other tools' files (`mcp.json`, `.mcp.json`, `AGENTS.md`), which Antigravity doesn't load; `--strict` fails on them. Check the Gemini CLI extension with `gemini extensions validate .`. Link [MCP & Skills](https://hookdeck.com/docs/mcp) for setup.
 
 ### Skill cross-references
 

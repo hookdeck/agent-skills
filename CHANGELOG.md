@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `icon` in the Claude Code plugin manifest (`assets/logo.svg`), for the listing in Anthropic's plugin directory
 - `scripts/build-directory.mjs` and `scripts/check-directory-build.mjs` generate and check a directory-only build of the plugin (Markdown, text, JSON and the icon only; no `allowed-tools`; links to examples rewritten to absolute GitHub URLs), and a workflow commits it to the generated `directory` branch on every push to `main`. Anthropic's plugin directory tracks that branch because Hookdeck's directory organization isn't Verified
+- `SECURITY.md` with how to report a security issue
+- README sections for installing in Cursor (including the two Cursor rules) and for data and privacy
 
 ### Changed
 

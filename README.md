@@ -2,11 +2,20 @@
 
 Equip your AI coding agent with webhook and event-driven architecture expertise. Receive, queue, route, and deliver webhooks with [Hookdeck Event Gateway](https://hookdeck.com), test webhooks locally with the Hookdeck CLI, build outbound webhook delivery with [Hookdeck Outpost](https://hookdeck.com/docs/outpost), and get free webhook test URLs with [Hookdeck Inspect](https://inspect.hookdeck.com).
 
-<!-- Cursor plugin pending marketplace acceptance
 ## Install (Cursor)
 
-**Cursor users:** Add the Hookdeck plugin from the [Cursor Marketplace](https://cursor.com/marketplace) or use `/add-plugin hookdeck` in Cursor. The plugin provides skills for Event Gateway, Outpost and Inspect, and connects the hosted Hookdeck MCP server (see [Hosted MCP server](#hosted-mcp-server)).
--->
+The plugin bundles the skills, two Cursor rules and the hosted Hookdeck MCP server. Once the plugin is listed in the [Cursor Marketplace](https://cursor.com/marketplace), add it from there or run `/add-plugin hookdeck` in Cursor.
+
+Until then, install it as a local plugin and reload Cursor:
+
+```bash
+git clone https://github.com/hookdeck/agent-skills ~/.cursor/plugins/local/hookdeck
+```
+
+The agent applies each rule when it is relevant to the task:
+
+- `local-webhook-development`: test webhooks locally with `hookdeck listen` rather than ngrok, a public endpoint or production.
+- `webhook-best-practices`: enable source authentication, verify the Hookdeck signature and handle webhooks idempotently.
 
 ## Install (Claude Code)
 
@@ -19,7 +28,7 @@ The plugin bundles the skills and the hosted Hookdeck MCP server:
 
 ## Hosted MCP server
 
-Installing the plugin (Claude Code, or Cursor once listed) also connects the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `hookdeck` (Claude Code shows it as `plugin:hookdeck:hookdeck`). It covers Event Gateway and managed Outpost projects. You sign in with OAuth the first time you use it, so there is no API key to configure. See [MCP & Skills](https://hookdeck.com/docs/mcp) for setup and what the tools can do. To use the MCP server without the plugin, add it yourself as described there. If you already added a Hookdeck MCP server yourself, remove it after installing the plugin, so the agent doesn't see two.
+Installing the plugin in Claude Code or Cursor also connects the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `hookdeck` (Claude Code shows it as `plugin:hookdeck:hookdeck`). It covers Event Gateway and managed Outpost projects. You sign in with OAuth the first time you use it, so there is no API key to configure. See [MCP & Skills](https://hookdeck.com/docs/mcp) for setup and what the tools can do. To use the MCP server without the plugin, add it yourself as described there. If you already added a Hookdeck MCP server yourself, remove it after installing the plugin, so the agent doesn't see two.
 
 ## Install (Agent Skills / Other Agents)
 
@@ -106,6 +115,14 @@ For apps that can't sign in with OAuth, like scripts or CI, send a key from **Ke
 The hosted server has no `outpost_publish` tool, because publishing needs an Outpost project API key that a sign-in doesn't have. Publish events with the [Outpost API](https://hookdeck.com/docs/outpost/api).
 
 The MCP server built into the Hookdeck CLI (`hookdeck gateway mcp`) will be deprecated. If you use it, switch to `https://mcp.hookdeck.com`: tool names and inputs are the same, except that `outpost_publish` isn't served. See [Migrate from the CLI MCP](https://hookdeck.com/docs/mcp#migrate-from-the-cli-mcp).
+
+## Data and privacy
+
+- **Hosted MCP server:** you sign in to Hookdeck with OAuth and choose the projects and access level (**Read only** or **Read and write**) the server gets. Data the MCP tools return, such as request and event payloads, goes into your AI app's context, and from there to the app's model provider.
+- **Skills:** the skills are Markdown instructions. They have the agent fetch Hookdeck docs from `hookdeck.com` and run the Hookdeck CLI or call the Hookdeck API with your own credentials.
+- **Inspect:** the `inspect` skill creates test URLs at `inspect.hookdeck.com` with no account. Anyone with a test URL can read the requests it received, so don't send real customer data to one.
+
+See the [Hookdeck privacy policy](https://hookdeck.com/privacy). To report a security issue, see [SECURITY.md](SECURITY.md).
 
 ## Documentation
 

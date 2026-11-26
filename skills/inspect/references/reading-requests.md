@@ -114,7 +114,7 @@ From `{inspect_url}?format=json`:
 |---|---|---|
 | Text up to 1 MB | `body_raw` | |
 | Binary up to 64 KB | `body_base64` | |
-| Larger, past 2 MB of bodies in one reply, or `body_read_failed: true` | Neither | `curl -s -o body.bin "{body_url}"` |
+| Larger, past 2 MB of bodies in one reply, or `body_read_failed: true` | Neither | Fetch `body_url` with a plain GET and save the response bytes to a file |
 
 The snapshot never includes `body_raw` or `body_base64`. Use `body_url` there when you need the exact bytes.
 

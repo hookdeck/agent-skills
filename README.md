@@ -26,9 +26,29 @@ The plugin bundles the skills and the hosted Hookdeck MCP server:
 /plugin install hookdeck@hookdeck-agent-skills
 ```
 
+## Install (Gemini CLI)
+
+The extension bundles the skills and the hosted Hookdeck MCP server:
+
+```bash
+gemini extensions install https://github.com/hookdeck/agent-skills
+```
+
+Then run `/mcp auth hookdeck` in Gemini CLI and sign in with Hookdeck.
+
+## Install (Antigravity)
+
+The plugin bundles the skills and the hosted Hookdeck MCP server:
+
+```bash
+agy plugin install https://github.com/hookdeck/agent-skills
+```
+
+Antigravity asks you to sign in with Hookdeck when the MCP server first connects.
+
 ## Hosted MCP server
 
-Installing the plugin in Claude Code or Cursor also connects the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `hookdeck` (Claude Code shows it as `plugin:hookdeck:hookdeck`). It covers Event Gateway and managed Outpost projects. You sign in with OAuth the first time you use it, so there is no API key to configure. See [MCP & Skills](https://hookdeck.com/docs/mcp) for setup and what the tools can do. To use the MCP server without the plugin, add it yourself as described there. If you already added a Hookdeck MCP server yourself, remove it after installing the plugin, so the agent doesn't see two.
+Installing the plugin in Claude Code, Cursor or Antigravity, or the Gemini CLI extension, also connects the hosted Hookdeck MCP server at `https://mcp.hookdeck.com` as a server named `hookdeck` (Claude Code shows it as `plugin:hookdeck:hookdeck`). It covers Event Gateway and managed Outpost projects. You sign in with OAuth the first time you use it, so there is no API key to configure. See [MCP & Skills](https://hookdeck.com/docs/mcp) for setup and what the tools can do. To use the MCP server without the plugin, add it yourself as described there. If you already added a Hookdeck MCP server yourself, remove it after installing the plugin, so the agent doesn't see two.
 
 ## Install (Agent Skills / Other Agents)
 

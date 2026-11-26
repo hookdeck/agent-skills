@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `icon` in the Claude Code plugin manifest (`assets/logo.svg`), for the listing in Anthropic's plugin directory
+- `SECURITY.md` with how to report a security issue
+- README sections for installing in Cursor (including the two Cursor rules) and for data and privacy
 
 ## [0.3.0]
 
